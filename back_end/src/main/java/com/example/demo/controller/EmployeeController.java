@@ -2,10 +2,9 @@ package com.example.demo.controller;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.example.demo.model.Employee;
+import com.example.demo.model.Role;
 import com.example.demo.service.EmployeeService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +26,11 @@ public class EmployeeController {
         return employeeService.searchById(id);
     }
 
+    @PostMapping("/{id}")
+    public Optional<Employee> getOneHere(@PathVariable("id") Integer id) {
+        return employeeService.searchById(id);
+    }
+
     // @GetMapping("/{name}")
     // public User getUser(@PathVariable("name") String name) {
     //     return userRepository.findByName(name);
@@ -45,9 +49,17 @@ public class EmployeeController {
         return employeeService.deleteEmployee(emp_id);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/update/{id}")
+    @PostMapping(value = "/update/{id}")
     public String updateUser(@RequestBody Employee employee, @PathVariable("id") Integer id) {
         return employeeService.updateEmployee(id, employee);
+    }
+
+    @GetMapping("/supervisor")
+    public List<Employee> findSupervisors() {
+        Role role = new Role();
+        role.setRole_id(1);;
+        role.setRole_name("Supervisor");
+        return employeeService.searchSupervisors(role);
     }
 
     // @PostMapping(value = "/login")
@@ -57,22 +69,13 @@ public class EmployeeController {
     // }
 
 
-    // @GetMapping("/change/{id}")
-    // public Optional<User> changePassword(@PathVariable("id") Integer id) {
-    //     return userRepository.findById(id);
-        
-    // }
+    @GetMapping("/change/{id}")
+    public Optional<Employee> changePassword(@PathVariable("id") Integer id) {
+        return employeeService.changePassword(id);
+    }
 
-    // @PostMapping(value = "/changepassword")
-    // public Boolean changeToNew(@RequestBody User user) {
-    //     Integer id = user.getUser_id();
-    //     String password = user.password;
-
-    //     User data = userRepository.getOne(id);
-
-    //     data.setPassword(password);
-    //     userRepository.save(data);
-    //     return true;
-        
-    // }
+    @PostMapping(value = "/changepassword")
+    public Boolean changeToNew(@RequestBody Employee employee) {
+        return employeeService.changeToNew(employee);
+    }
 }

@@ -26,6 +26,7 @@ public class LeaveRequest {
     @Column(name = "end_date")
     private String end_date;
 
+    
     @Column(name = "number_of_leave_days")
     private Integer number_of_leave_days;
 

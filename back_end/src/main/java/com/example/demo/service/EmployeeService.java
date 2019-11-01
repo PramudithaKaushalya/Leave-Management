@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.model.Employee;
+import com.example.demo.model.Role;
 import com.example.demo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class EmployeeService {
     private EmployeeRepository employeeRepository;
 
     public List<Employee> getAll() {
-        System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        System.out.println("Get All Details of Employees!!!");
         return employeeRepository.findAll();
     }
 
@@ -29,6 +30,7 @@ public class EmployeeService {
     }
 
     public String updateEmployee(Integer id, Employee employee) {
+        System.out.println("Update Employee: "+ employee);
         Employee employeeToUpdate = employeeRepository.getOne(id);
         employeeToUpdate.setFirst_name(employee.getFirst_name());
         employeeToUpdate.setSecond_name(employee.getSecond_name());
@@ -50,5 +52,26 @@ public class EmployeeService {
 
     public Optional<Employee> searchById(Integer id) {
         return employeeRepository.findById(id);
+    }
+
+    public List<Employee> searchSupervisors(Role role) {
+        return employeeRepository.findByRole(role);
+    }
+
+    public Optional<Employee> changePassword(Integer id) {
+        return employeeRepository.findById(id);
+    }
+
+    public Boolean changeToNew(Employee employee) {
+        Integer id = employee.getEmp_id();
+        String password = employee.getPassword();
+
+        Employee data = employeeRepository.getOne(id);
+
+        data.setPassword(password);
+
+        employeeRepository.save(data);
+        return true;
+        
     }
 }

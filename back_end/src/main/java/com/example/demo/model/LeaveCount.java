@@ -11,48 +11,25 @@ public class LeaveCount {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "casual")
-    private Integer casual;
+    @ManyToOne( fetch = FetchType.EAGER )
+    @JoinColumn(name = "emp_id")
+    private Employee employee;
 
-    @Column(name = "medical")
-    private Integer medical;
+    @ManyToOne( fetch = FetchType.EAGER )
+    @JoinColumn(name = "leave_type")
+    private LeaveType type;
 
-    @Column(name = "maternity")
-    private Integer maternity;
-
-    @Column(name = "paternity")
-    private Integer paternity;
-
-    @Column(name = "annual")
-    private Integer annual;
-
-    @Column(name = "lieu")
-    private Integer lieu;
-
-    @Column(name = "special")
-    private Integer special;
-
-    @Column(name = "coverup")
-    private Integer coverup;
-
-    @Column(name = "nopay")
-    private Integer nopay;
+    @Column(name = "count")
+    private Float count;
 
     public LeaveCount () {
 
     }
 
-    public LeaveCount (Integer id, Integer annual, Integer casual, Integer medical, Integer lieu, Integer special, Integer maternity, Integer paternity, Integer coverup, Integer nopay) {
-        this.id = id;
-        this.annual = annual;
-        this.casual = casual;
-        this.medical =medical;
-        this.lieu = lieu;
-        this.special = special;
-        this.maternity = maternity;
-        this.paternity = paternity;
-        this.coverup = coverup;
-        this.nopay = nopay;
+    public LeaveCount (Employee employee, LeaveType leaveType, Float count) {
+        this.employee = employee;
+        this.type = leaveType;
+        this.count = count;
     }
 
     public Integer getId() {
@@ -63,75 +40,29 @@ public class LeaveCount {
         this.id = id;
     }
 
-    public Integer getCasual() {
-        return casual;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setCasual(Integer casual) {
-        this.casual = casual;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public Integer getMedical() {
-        return medical;
+    public Float getCount() {
+        return count;
     }
 
-    public void setMedical(Integer medical) {
-        this.medical = medical;
+    public void setCount(Float count) {
+        this.count = count;
     }
 
-    public Integer getMaternity() {
-        return maternity;
+    public LeaveType getType() {
+        return type;
     }
 
-    public void setMaternity(Integer maternity) {
-        this.maternity = maternity;
+    public void setType(LeaveType type) {
+        this.type = type;
     }
 
-    public Integer getPaternity() {
-        return paternity;
-    }
-
-    public void setPaternity(Integer paternity) {
-        this.paternity = paternity;
-    }
-
-    public Integer getAnnual() {
-        return annual;
-    }
-
-    public void setAnnual(Integer annual) {
-        this.annual = annual;
-    }
-
-    public Integer getLieu() {
-        return lieu;
-    }
-
-    public void setLieu(Integer lieu) {
-        this.lieu = lieu;
-    }
-
-    public Integer getSpecial() {
-        return special;
-    }
-
-    public void setSpecial(Integer special) {
-        this.special = special;
-    }
-
-    public Integer getCoverup() {
-        return coverup;
-    }
-
-    public void setCoverup(Integer coverup) {
-        this.coverup = coverup;
-    }
-
-    public Integer getNopay() {
-        return nopay;
-    }
-
-    public void setNopay(Integer nopay) {
-        this.nopay = nopay;
-    }
+    
 }    

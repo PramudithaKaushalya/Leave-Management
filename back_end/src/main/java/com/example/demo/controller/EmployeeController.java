@@ -43,10 +43,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/delete/{id}")
-    public String DeleteById(@PathVariable("id") Employee id) {
-        Integer emp_id = id.getEmp_id();
-        // System.out.println('iiiiiiiiiiiiiiiiiiiiiiiiiiiii'+ emp_id);
-        return employeeService.deleteEmployee(emp_id);
+    public String DeleteById(@PathVariable("id") Integer id) {
+        return employeeService.resignEmployee(id);
     }
 
     @PostMapping(value = "/update/{id}")

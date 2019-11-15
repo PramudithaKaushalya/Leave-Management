@@ -26,9 +26,11 @@ public class LeaveRequest {
     @Column(name = "end_date")
     private String end_date;
 
+    @Column(name = "half_day")
+    private String half_day;
     
     @Column(name = "number_of_leave_days")
-    private Integer number_of_leave_days;
+    private Float number_of_leave_days;
 
     @ManyToOne( fetch = FetchType.EAGER )
     @JoinColumn(name = "duties_covered_by")
@@ -37,18 +39,28 @@ public class LeaveRequest {
     @Column(name = "special_notes")
     private String special_notes;
 
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "added_on")
+    private String formatDateTime;
+    
     public LeaveRequest(){
 
     }
 
-    public LeaveRequest(Integer leave_id, LeaveType leave_type, Integer half_day, String start_date, String end_date, Integer number_of_leave_days, Employee duties_covered_by, String special_notes){
+    public LeaveRequest(Integer leave_id, LeaveType leave_type, String start_date, String end_date, String half_day, Float number_of_leave_days, Employee duties_covered_by, String special_notes, String status, String formatDateTime){
+        
         this.leave_id = leave_id;
         this.leave_type = leave_type;
         this.start_date = start_date;
         this.end_date = end_date;
+        this.half_day = half_day;
         this.number_of_leave_days = number_of_leave_days;
         this.duty = duties_covered_by;
         this.special_notes = special_notes;
+        this.status = status;
+        this.formatDateTime = formatDateTime;
     }
 
     public Integer getLeave_id() {
@@ -83,11 +95,11 @@ public class LeaveRequest {
         this.end_date = end_date;
     }
 
-    public Integer getNumber_of_leave_days() {
+    public Float getNumber_of_leave_days() {
         return number_of_leave_days;
     }
 
-    public void setNumber_of_leave_days(Integer number_of_leave_days) {
+    public void setNumber_of_leave_days(Float number_of_leave_days) {
         this.number_of_leave_days = number_of_leave_days;
     }
 
@@ -113,5 +125,29 @@ public class LeaveRequest {
 
     public void setDuty(Employee duty) {
         this.duty = duty;
+    }
+
+    public String getHalf_day() {
+        return half_day;
+    }
+
+    public void setHalf_day(String half_day) {
+        this.half_day = half_day;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getFormatDateTime() {
+        return formatDateTime;
+    }
+
+    public void setFormatDateTime(String formatDateTime) {
+        this.formatDateTime = formatDateTime;
     }
 }

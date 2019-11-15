@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import java.sql.Blob;
-import javax.persistence.*;
 
 public class EmployeeDTO {
 

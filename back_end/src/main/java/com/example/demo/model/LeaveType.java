@@ -26,6 +26,10 @@ public class LeaveType {
     @OneToMany(mappedBy = "leave_type", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LeaveRequest> leaveRequests ;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LeaveCount> leaveCounts ;
+
     public LeaveType () {
 
     }

@@ -3,7 +3,6 @@ package com.example.demo.model;
 import java.sql.Blob;
 import java.util.List;
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -63,6 +62,9 @@ public class Employee {
 	@Column(name = "image")
     private Blob image;
 
+    @Column(name = "status")
+    private String status;
+
     @JsonIgnore
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LeaveRequest> leaveRequests;
@@ -71,11 +73,19 @@ public class Employee {
     @OneToMany(mappedBy = "duty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LeaveRequest> leaveDuty;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LeaveCount> leaveCounts;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Contact> contacts;
+
     public Employee() {
 
     }
     
-    public Employee( Integer emp_id, String first_name, String second_name, String initials, Integer gender, String email, String residence, String contact, Role role, Department department, String supervisor1, String supervisor2, String join_date, String confirm_date, String password, Blob image) {
+    public Employee( Integer emp_id, String first_name, String second_name, String initials, Integer gender, String email, String residence, String contact, Role role, Department department, String supervisor1, String supervisor2, String join_date, String confirm_date, String password, Blob image, String status) {
         this.emp_id = emp_id;
         this.first_name = first_name;
         this.second_name = second_name;
@@ -92,6 +102,7 @@ public class Employee {
         this.confirm_date = confirm_date; 
         this.password = password;
         this.image = image;
+        this.status = status;
 	}
 
     public Integer getEmp_id() {
@@ -222,5 +233,46 @@ public class Employee {
         this.image = image;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<LeaveRequest> getLeaveRequests() {
+        return leaveRequests;
+    }
+
+    public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
+        this.leaveRequests = leaveRequests;
+    }
+
+    public List<LeaveRequest> getLeaveDuty() {
+        return leaveDuty;
+    }
+
+    public void setLeaveDuty(List<LeaveRequest> leaveDuty) {
+        this.leaveDuty = leaveDuty;
+    }
+
+    public List<LeaveCount> getLeaveCounts() {
+        return leaveCounts;
+    }
+
+    public void setLeaveCounts(List<LeaveCount> leaveCounts) {
+        this.leaveCounts = leaveCounts;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    
     
 }

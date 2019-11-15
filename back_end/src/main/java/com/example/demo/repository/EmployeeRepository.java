@@ -10,6 +10,14 @@ import com.example.demo.model.Role;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
 
 	List<Employee> findByRole(Role role);
+
+	Employee findByEmail(String email);
+
+	boolean existsByEmail(String email);
+
+	Employee findBySupervisor1(String supervisor1);
+
+	Employee findBySupervisor2(String supervisor2);
     
 }
 		 

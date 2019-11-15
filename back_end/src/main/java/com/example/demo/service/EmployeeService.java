@@ -2,10 +2,11 @@ package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.example.demo.model.Employee;
+import com.example.demo.model.LeaveCount;
 import com.example.demo.model.Role;
 import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.LeaveCountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private LeaveCountRepository leaveCountRepository;
+
     public List<Employee> getAll() {
         System.out.println("Get All Details of Employees!!!");
         return employeeRepository.findAll();
@@ -22,13 +26,21 @@ public class EmployeeService {
 
     public void addEmployee(Employee employee) {
         employeeRepository.save(employee);
+        LeaveCount add = new LeaveCount();
+        leaveCountRepository.save(add);
     }
 
-    public String deleteEmployee(Integer id) {
-        employeeRepository.deleteById(id);
-        return "Employee Deleted!!!";
-    }
+    // public String deleteEmployee(Integer id) {
+    //     employeeRepository.deleteById(id);
+    //     return "Employee is Deleted!!!";
+    // }
 
+    public String resignEmployee(Integer id) {
+        Employee employee = employeeRepository.getOne(id);
+        employee.setStatus("Resign");
+        employeeRepository.save(employee);
+        return "Employee resign succesfully!";
+    }
     public String updateEmployee(Integer id, Employee employee) {
         System.out.println("Update Employee: "+ employee);
         Employee employeeToUpdate = employeeRepository.getOne(id);
@@ -47,7 +59,7 @@ public class EmployeeService {
         employeeToUpdate.setConfirm_date(employee.getConfirm_date());
 
         employeeRepository.save(employeeToUpdate);
-        return "Employee Updated!!!";
+        return "Employee is Updated!!!";
     }
 
     public Optional<Employee> searchById(Integer id) {

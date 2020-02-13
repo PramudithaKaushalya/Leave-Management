@@ -12,8 +12,8 @@ public class LeaveCount {
     private Integer id;
 
     @ManyToOne( fetch = FetchType.EAGER )
-    @JoinColumn(name = "emp_id")
-    private Employee employee;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne( fetch = FetchType.EAGER )
     @JoinColumn(name = "leave_type")
@@ -26,8 +26,8 @@ public class LeaveCount {
 
     }
 
-    public LeaveCount (Employee employee, LeaveType leaveType, Float count) {
-        this.employee = employee;
+    public LeaveCount (User user, LeaveType leaveType, Float count) {
+        this.user = user;
         this.type = leaveType;
         this.count = count;
     }
@@ -38,14 +38,6 @@ public class LeaveCount {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     public Float getCount() {
@@ -64,5 +56,11 @@ public class LeaveCount {
         this.type = type;
     }
 
-    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }    

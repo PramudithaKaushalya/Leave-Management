@@ -14,50 +14,40 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")
-    private Integer department_id;
+    private Long id;
 
     @Column(name = "department_name")
-    private String department_name;
+    private String name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Employee> employees;
+    private List<User> employees;
     
     public Department(){
 
     }
 
-    public Department(Integer id, String name){
-        this.department_id = id;
-        this.department_name = name;
+    public Department(Long id, String name){
+        this.id = id;
+        this.name = name;
     }
 
-    public int getDepartment_id() {
-        return department_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setDepartment_id(int department_id) {
-        this.department_id = department_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getDepartment_name() {
-        return department_name;
+    public String getName() {
+        return name;
     }
 
-    public void setDepartment_name(String department_name) {
-        this.department_name = department_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDepartment_id(Integer department_id) {
-        this.department_id = department_id;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
+  
     
 }

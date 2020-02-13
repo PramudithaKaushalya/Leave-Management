@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import com.example.demo.model.Contact;
-import com.example.demo.model.Employee;
+import com.example.demo.model.User;
+import com.example.demo.payload.ApiResponse;
+import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.ContactService;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -14,26 +17,52 @@ import org.springframework.web.bind.annotation.*;
 public class ContactController {
 
     @Autowired
-    private ContactService contactService;
+    private ContactService contactService;    
+    
+    @Autowired
+    JwtTokenProvider tokenProvider;
 
-    @GetMapping("/all")
-    public List<Contact> getAll() {
-        return contactService.getAll();
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
     @PostMapping(value = "/add")
-    public String addEmployee(@RequestBody Contact contact) {
-        return contactService.addContact(contact);
+    public ResponseEntity<?> addEmployee(@RequestHeader("Authorization") String token, @RequestBody Contact contact) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return contactService.addContact(contact, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 
     @PostMapping(value = "/employee")
-    public List<Contact> getOne(@RequestBody Employee employee) {
-        return contactService.getOne(employee);
+    public ResponseEntity<?> getOne(@RequestHeader("Authorization") String token, @RequestBody User employee) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return contactService.getOne(employee, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 
     @GetMapping("/delete/{id}")
-    public String DeleteById(@PathVariable("id") Contact contact) {
-        Integer contact_id = contact.getContact_id();
-        return contactService.deleteContact(contact_id);
+    public ResponseEntity<?> DeleteById(@RequestHeader("Authorization") String token, @PathVariable("id") Integer contact) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return contactService.deleteContact(contact, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 }

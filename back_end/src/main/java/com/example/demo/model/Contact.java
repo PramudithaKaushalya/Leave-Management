@@ -21,19 +21,19 @@ public class Contact {
     private String relation;
 
     @ManyToOne( fetch = FetchType.EAGER )
-    @JoinColumn(name = "emp_id")
-    private Employee employee;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Contact() {
 
     }
 
-    public Contact(Integer id, String name, String contact, String relation, Employee employee) {
+    public Contact(Integer id, String name, String contact, String relation, User user) {
         this.contact_id = id;
         this.contact = contact;
         this.relation = relation;
         this.name = name;
-        this.employee = employee;
+        this.user = user;
     }
 
     public Integer getContact_id() {
@@ -68,13 +68,12 @@ public class Contact {
         this.relation = relation;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public User getUser() {
+        return user;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setUser(User user) {
+        this.user = user;
     }
-
     
 }

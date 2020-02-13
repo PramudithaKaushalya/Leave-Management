@@ -1,18 +1,22 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.example.demo.model.Employee;
 import com.example.demo.model.LeaveCount;
 import com.example.demo.model.LeaveRequest;
 import com.example.demo.model.LeaveType;
+import com.example.demo.model.User;
+import com.example.demo.payload.ApiResponse;
+import com.example.demo.payload.LeaveRecord;
 import com.example.demo.repository.LeaveCountRepository;
 import com.example.demo.repository.LeaveRequestRepository;
-
+import com.example.demo.repository.UserRepository;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -27,76 +31,279 @@ public class LeaveRequestService {
     private LeaveCountRepository leaveCountRepository;
 
     @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
     private JavaMailSender javaMailSender;
     
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveRequestService.class);
 
-    public List<LeaveRequest> getAll() {
-        System.out.println("Get All Requests !!!");
-        return leaveRequestRepository.findAll();
-    }
+    public ResponseEntity<?> getAll(Long userId) {
+        try {
+            List<LeaveRequest> all = leaveRequestRepository.findAll();
+            List<LeaveRecord> requests = new ArrayList<LeaveRecord>();
 
-    public List<LeaveRequest> getOneEmployeeLeaveRequests(Employee employee) {
-        return leaveRequestRepository.findByEmployee(employee);
-    }
-
-    public String addRequest(LeaveRequest leaveRequest) {
-        LocalDateTime datetime1 = LocalDateTime.now();  
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
-        String formatDateTime = datetime1.format(format);
-        
-        leaveRequest.setFormatDateTime(formatDateTime);
-
-        leaveRequestRepository.save(leaveRequest);
-        return "Request the leave !!!";
-    }
-
-    public List<LeaveRequest> getPending(String pending) {
-        System.out.println("Get All Pending Requests !!!");
-        return leaveRequestRepository.findByStatus(pending);
-    }
-
-    public String deleteLeave(Integer id) {
-        leaveRequestRepository.deleteById(id);
-        return "Remove Leave Request!!!";
-    }
-
-    public String approveRequest(LeaveRequest leaveRequest) {
-        Integer id = leaveRequest.getLeave_id();
-        LeaveRequest request = leaveRequestRepository.getOne(id);
-        request.setStatus("Approved");
-        leaveRequestRepository.save(request);
-
-        Employee emp = request.getEmployee();
-        LeaveType type = request.getLeave_type();
-        Float days = request.getNumber_of_leave_days();
-
-        if(leaveCountRepository.existsByEmployee(emp) && leaveCountRepository.existsByType(type)) {
+            for (LeaveRequest request : all) {
+                if(request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    requests.add(record);
+                }else if(!request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    requests.add(record);
+                }else if(request.getStatus().equals("Pending") && request.getDuty()!=null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    requests.add(record);
+                }else{
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                    request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(),
+                                                    request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime() , request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    requests.add(record);
+                }                                      
+            }
             
-            LeaveCount filter = leaveCountRepository.findByEmployeeAndType(emp, type);
-            filter.setCount(filter.getCount()+days);
-            leaveCountRepository.save(filter);
-        }else{
-            LeaveCount count = new LeaveCount(emp, type, days);
-            leaveCountRepository.save(count);
+            LOGGER.info(">>> Successfully get all leave requests. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, requests));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get all leave requests. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get all leave requests"));
         }
-        acceptRequest(leaveRequest);
-        mailDutyCover(leaveRequest.getDuty() , leaveRequest);
-        LOGGER.info(">>> Accept Leave Request");
-        return "Accept Leave Request!!!";
     }
 
-    private void mailDutyCover (Employee duty, LeaveRequest leave ) {
+    public ResponseEntity<?> getOneEmployeeLeaveRequests(Long employeeId, Long userId) {
+        try {
+            User employee = userRepository.getOne(employeeId);
+            List<LeaveRequest> all = leaveRequestRepository.findByUser(employee);
+            List<LeaveRecord> requests = new ArrayList<LeaveRecord>();
 
-        Employee employee = leave.getEmployee();
+            for (LeaveRequest request : all) {
+                if(request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    requests.add(record);
+                }else if(!request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    requests.add(record);
+                }else if(request.getStatus().equals("Pending") && request.getDuty()!=null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    requests.add(record);
+                }else{
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                    request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(),
+                                                    request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime() , request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    requests.add(record);
+                }                                      
+            }
+
+            LOGGER.info(">>> Successfully get leave requests of "+employee.getUserId()+". (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, requests));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get leave requests of user "+employeeId+". (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave requests"));
+        }
+    }
+
+    public ResponseEntity<?> addRequest(LeaveRequest leaveRequest, Long userId) {
+        try {
+            LocalDateTime datetime1 = LocalDateTime.now();  
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");  
+            String formatDateTime = datetime1.format(format);
+            leaveRequest.setFormatDateTime(formatDateTime);
+            leaveRequest.setUser(userRepository.getOne(userId));
+            leaveRequestRepository.save(leaveRequest);
+            LOGGER.info(">>> Successfully add the leave request. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, "Successfully submit your leave request"));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to add the leave request. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to add the leave request"));
+        }
+    }
+
+    public ResponseEntity<?> getPending(String pending, Long userId) {
+        try {
+            List<LeaveRequest> pendingLeaves = leaveRequestRepository.findByStatus(pending);
+            List<LeaveRecord> requests = new ArrayList<LeaveRecord>();
+
+            for (LeaveRequest request : pendingLeaves) {
+                if(request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime());
+                    requests.add(record);
+                }else{
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                                                    request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(),
+                                                    request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime());
+                    requests.add(record);
+                }                                      
+            }
+            LOGGER.info(">>> Successfully get the pending leave requests. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, requests));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get the pending leave requests. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get the pending leave requests"));
+        }
+    }
+
+    public ResponseEntity<?> deleteLeave(Integer id, Long userId) {
+        try {
+            LeaveRequest leaveRequest = leaveRequestRepository.getOne(id);
+            User emp = leaveRequest.getUser();
+
+            if(emp.getId().equals(userId)) {
+                LOGGER.warn(">>> Not allowed to delete the own leave requests. (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Not allowed to delete the own leave requests"));
+            }
+
+            User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
+            User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
+            
+            if(leaveRequest.getStatus().equals("Approved")){
+                LeaveType type = leaveRequest.getLeave_type();
+                Float days = leaveRequest.getNumber_of_leave_days();
+
+                LeaveCount filter = leaveCountRepository.findByUserAndType(emp, type);
+                filter.setCount(filter.getCount()-days);
+                leaveCountRepository.save(filter);
+                
+                leaveRequestRepository.deleteById(id);   
+                mailDelete(leaveRequest);
+                mailSupDelete(supervisor1, leaveRequest);
+                mailSupDelete(supervisor2, leaveRequest);
+                LOGGER.error(">>> Unable to delete the pending leave requests. (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Remove the approved request"));
+            }else if(leaveRequest.getStatus().equals("Rejected")){
+                leaveRequestRepository.deleteById(id);
+                mailDelete(leaveRequest);
+                mailSupDelete(supervisor1, leaveRequest);
+                mailSupDelete(supervisor2, leaveRequest);
+                LOGGER.info(">>> Unable to delete the pending leave requests. (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Remove the rejected request"));
+                
+            }else{                
+                LOGGER.warn(">>> Unable to delete the pending leave requests. (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Can't remove the pending leave requests"));
+            }
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to delete the leave requests. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to delete the leave requests"));
+        }
+    }
+
+    private void mailDelete (LeaveRequest leave ) {
+        User employee = leave.getUser();
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(employee.getEmail());
+		msg.setSubject("Remove the leave request.");
+		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+					"Deleted your following "+leave.getStatus()+" leave request. \n\n"+
+					"Date of request: "+leave.getFormatDateTime()+"\n"+
+                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+					"Thanks. \nBest Regards"
+                    );
+                     
+		try {
+            javaMailSender.send(msg);
+			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+		}catch (Exception e){
+			LOGGER.error(">>> (MailSender) ==> "+e);
+		}
+    }
+
+    private void mailSupDelete (User supervisor, LeaveRequest leave ) {
+        User employee = leave.getUser();
+
+        SimpleMailMessage mail= new SimpleMailMessage();
+        mail.setTo(supervisor.getEmail());
+		mail.setSubject("Remove the leave request of "+employee.getFirstName());
+		mail.setText("Hi "+supervisor.getFirstName() +" "+ supervisor.getSecondName()+",\n\n"+
+					"Deleted the following "+leave.getStatus()+" leave request of "+employee.getFirstName()+" "+employee.getSecondName()+". \n\n"+
+					"Date of request: "+leave.getFormatDateTime()+"\n"+
+                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                     "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+					"Thanks. \nBest Regards"
+                    );
+        try {
+            javaMailSender.send(mail);
+			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+		}catch (Exception e){
+			LOGGER.error(">>> (MailSender) ==> "+e);
+		}
+    }
+
+    public ResponseEntity<?> approveRequest(Long check_id, LeaveRequest leaveRequest) {
+        try {             
+            Integer id = leaveRequest.getLeave_id();
+            LeaveRequest request = leaveRequestRepository.getOne(id);
+
+            User emp = request.getUser();
+
+            if(emp.getId().equals(check_id)) {
+                LOGGER.warn(">>> Not allowed to approve the own leave requests. (By user ==> "+check_id+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Not allowed to approve the own leave requests"));
+            }
+
+            request.setStatus("Approved");
+
+            User checked_by = userRepository.getOne(check_id);
+            request.setCheckBy(checked_by);
+
+            LocalDateTime datetime1 = LocalDateTime.now(); 
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");  
+            String checkTime = datetime1.format(format);
+            request.setCheckTime(checkTime);
+
+            leaveRequestRepository.save(request);
+
+            LeaveType type = request.getLeave_type();
+            Float days = request.getNumber_of_leave_days();
+
+            if(leaveCountRepository.existsByUserAndType(emp, type)) { 
+                LeaveCount filter = leaveCountRepository.findByUserAndType(emp, type);
+                filter.setCount(filter.getCount()+days);
+                leaveCountRepository.save(filter);
+            }else{
+                LeaveCount count = new LeaveCount(emp, type, days);
+                leaveCountRepository.save(count);
+            }
+            acceptRequest(request);
+
+            if(request.getDuty()!=null){
+                mailDutyCover(request.getDuty() , request);
+            }
+            
+            LOGGER.info(">>> Successfully approve the leave request. (By user ==> "+check_id+")");
+            return ResponseEntity.ok(new ApiResponse(true, "Approved the leave requests"));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to approve the leave request. (By user ==> "+check_id+")");
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to approve the leave request"));
+        }
+    }
+
+    private void mailDutyCover (User duty, LeaveRequest leave ) {
+
+        User employee = leave.getUser();
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setTo(duty.getEmail());
 		msg.setSubject("Aditional duty to cover.");
-		msg.setText("Hi "+duty.getFirst_name()+" "+duty.getSecond_name()+",\n"+
+		msg.setText("Hi "+duty.getFirstName()+" "+duty.getSecondName()+",\n"+
 					"You are asigned to cover the duty of following employee in these day/s. \n\n"+
-					"Name: "+employee.getFirst_name()+" "+employee.getSecond_name()+"\n"+
-					"Role: "+employee.getRole().getRole_name()+"\n"+
-                    "Department: "+employee.getDepartment().getDepartment_name()+"\n"+
+					"Name: "+employee.getFirstName()+" "+employee.getSecondName()+"\n"+
+					"Role: "+employee.getRoles().stream().findFirst().get().getName()+"\n"+
+                    "Department: "+employee.getDepartment().getName()+"\n"+
                     "Date/s: "+leave.getStart_date()+" to "+leave.getEnd_date()+"\n\n"+
 					"Thanks. \n Best Regards"
 					);
@@ -108,16 +315,43 @@ public class LeaveRequestService {
 			LOGGER.error(">>> (MailSender) ==> "+e);
 		}
     }
-
+    
     private void acceptRequest (LeaveRequest leave ) {
 
-        Employee employee = leave.getEmployee();
+        User employee = leave.getUser();
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setTo(employee.getEmail());
-		msg.setSubject("Aditional duty to cover.");
-		msg.setText("Hi "+employee.getFirst_name()+" "+employee.getSecond_name()+",\n"+
-					"Accept your leave request. \n\n"+
-					"Thanks. \n Best Regards"
+		msg.setSubject("Accept leave request.");
+		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+                    "Accept your following leave request. \n\n"+
+                    "Date of request: "+leave.getFormatDateTime()+"\n"+
+                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+					"Thanks. \nBest Regards"
+					);
+
+		try {
+			javaMailSender.send(msg);
+			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+		}catch (Exception e){
+			LOGGER.error(">>> (MailSender) ==> "+e);
+		}
+    }
+
+    private void mailReject (LeaveRequest leave ) {
+
+        User employee = leave.getUser();
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(employee.getEmail());
+		msg.setSubject("Reject Leave Request.");
+		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+                    "Reject your following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
+                    "Date of request: "+leave.getFormatDateTime()+"\n"+
+                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+					"Sorry for the rejection.\nThanks\nBest Regards"
 					);
 
 		try {
@@ -128,8 +362,65 @@ public class LeaveRequestService {
 		}
     }
     
-    // public List<Contact> getOne(Employee employee) {
-    //     System.out.println("Get contacts of one employee !!!");
-    //     return contactRepository.findByEmployee(employee);
-    // }
+    public ResponseEntity<?> rejectRequest(Integer id, LeaveRequest reason, Long check_id) {
+        try {
+            LeaveRequest request = leaveRequestRepository.getOne(id);
+
+            User emp = request.getUser();
+
+            if(emp.getId().equals(check_id)) {
+                LOGGER.warn(">>> Not allowed to reject the own leave requests. (By user ==> "+check_id+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Not allowed to reject the own leave requests"));
+            }
+
+            request.setReject(reason.getReject());
+            request.setStatus("Rejected");
+
+            User checked_by = userRepository.getOne(check_id);
+            request.setCheckBy(checked_by);
+
+            LocalDateTime datetime1 = LocalDateTime.now(); 
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");  
+            String checkTime = datetime1.format(format);
+            request.setCheckTime(checkTime);
+
+            leaveRequestRepository.save(request);
+
+            mailReject(request);
+
+            LOGGER.info(">>> Successfully reject the leave request. (By user ==> "+check_id+")");
+            return ResponseEntity.ok(new ApiResponse(true, "Reject the leave request"));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to reject the leave request. (By user ==> "+check_id+")");
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to reject the leave request"));
+        }
+    }
+
+    public ResponseEntity<?> getAbsence( Long userId) {
+
+        try {
+            List<LeaveRequest> absence = new ArrayList<LeaveRequest>();
+            List<LeaveRequest> requests = leaveRequestRepository.findAll();
+            LocalDate today = LocalDate.now(); 
+
+            for (LeaveRequest var : requests) {
+                LocalDate start = LocalDate.parse(var.getStart_date());
+                LocalDate end = LocalDate.parse(var.getEnd_date());
+                List<LocalDate> totalDates = new ArrayList<>();
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    start = start.plusDays(1);
+                }
+                if(totalDates.contains(today) && var.getStatus().equals("Approved")){
+                    absence.add(var);
+                }
+            }
+            LOGGER.info(">>> Successfully get absence employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, absence));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get absence employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get absence employees"));
+        }
+            
+    }
 }

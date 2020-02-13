@@ -1,13 +1,13 @@
 package com.example.demo.model;
 
 import java.util.List;
-
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "leave_type")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class LeaveType {
     
 
@@ -18,9 +18,6 @@ public class LeaveType {
 
     @Column(name = "type")
     private String type;
-
-    @Column(name = "count")
-    private Integer count;
 
     @JsonIgnore
     @OneToMany(mappedBy = "leave_type", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -34,10 +31,9 @@ public class LeaveType {
 
     }
 
-    public LeaveType (Integer id, String type, Integer count) {
+    public LeaveType (Integer id, String type) {
         this.leave_type_id = id;
         this.type = type;
-        this.count = count;
     }
 
     public Integer getLeave_type_id() {
@@ -54,14 +50,6 @@ public class LeaveType {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
     }
 
 }    

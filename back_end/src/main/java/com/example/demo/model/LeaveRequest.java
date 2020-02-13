@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "request_leave")
 public class LeaveRequest {
@@ -16,9 +18,10 @@ public class LeaveRequest {
     @JoinColumn(name = "leave_type")
     private LeaveType leave_type;
 
+    @JsonIgnore
     @ManyToOne( fetch = FetchType.EAGER )
-    @JoinColumn(name = "emp_id")
-    private Employee employee;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "start_date")
     private String start_date;
@@ -26,15 +29,18 @@ public class LeaveRequest {
     @Column(name = "end_date")
     private String end_date;
 
-    @Column(name = "half_day")
-    private String half_day;
+    @Column(name = "start_half")
+    private String startHalf;
+
+    @Column(name = "end_half")
+    private String endHalf;
     
     @Column(name = "number_of_leave_days")
     private Float number_of_leave_days;
 
     @ManyToOne( fetch = FetchType.EAGER )
     @JoinColumn(name = "duties_covered_by")
-    private Employee duty;
+    private User duty;
 
     @Column(name = "special_notes")
     private String special_notes;
@@ -42,25 +48,59 @@ public class LeaveRequest {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "reject")
+    private String reject;
+
     @Column(name = "added_on")
     private String formatDateTime;
     
+    @JsonIgnore
+    @ManyToOne( fetch = FetchType.EAGER )
+    @JoinColumn(name = "checked_by")
+    private User checkBy;
+
+    @Column(name = "checked_on")
+    private String checkTime;
+
     public LeaveRequest(){
 
     }
 
-    public LeaveRequest(Integer leave_id, LeaveType leave_type, String start_date, String end_date, String half_day, Float number_of_leave_days, Employee duties_covered_by, String special_notes, String status, String formatDateTime){
+    public LeaveRequest(LeaveType leave_type, String start_date, String end_date, String startHalf, 
+                        String endHalf, Float number_of_leave_days, User duties_covered_by, String special_notes, String status, 
+                        String reject, String formatDateTime, User checkBy, String checkTime){
         
-        this.leave_id = leave_id;
         this.leave_type = leave_type;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.half_day = half_day;
+        this.startHalf = startHalf;
+        this.endHalf = endHalf;
         this.number_of_leave_days = number_of_leave_days;
         this.duty = duties_covered_by;
         this.special_notes = special_notes;
         this.status = status;
+        this.reject = reject;
         this.formatDateTime = formatDateTime;
+        this.checkBy = checkBy;
+        this.checkTime = checkTime;                    
+    }
+
+    public LeaveRequest(LeaveType leave_type, String start_date, String end_date, String startHalf, 
+                        String endHalf, Float number_of_leave_days, String special_notes, String status, 
+                        String reject, String formatDateTime, User checkBy, String checkTime){
+        
+        this.leave_type = leave_type;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.startHalf = startHalf;
+        this.endHalf = endHalf;
+        this.number_of_leave_days = number_of_leave_days;
+        this.special_notes = special_notes;
+        this.status = status;
+        this.reject = reject;
+        this.formatDateTime = formatDateTime;
+        this.checkBy = checkBy;
+        this.checkTime = checkTime;                    
     }
 
     public Integer getLeave_id() {
@@ -111,28 +151,12 @@ public class LeaveRequest {
         this.special_notes = special_notes;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Employee getDuty() {
+    public User getDuty() {
         return duty;
     }
 
-    public void setDuty(Employee duty) {
+    public void setDuty(User duty) {
         this.duty = duty;
-    }
-
-    public String getHalf_day() {
-        return half_day;
-    }
-
-    public void setHalf_day(String half_day) {
-        this.half_day = half_day;
     }
 
     public String getStatus() {
@@ -150,4 +174,53 @@ public class LeaveRequest {
     public void setFormatDateTime(String formatDateTime) {
         this.formatDateTime = formatDateTime;
     }
+
+    public String getReject() {
+        return reject;
+    }
+
+    public void setReject(String reject) {
+        this.reject = reject;
+    }
+
+    public String getStartHalf() {
+        return startHalf;
+    }
+
+    public void setStartHalf(String startHalf) {
+        this.startHalf = startHalf;
+    }
+
+    public String getEndHalf() {
+        return endHalf;
+    }
+
+    public void setEndHalf(String endHalf) {
+        this.endHalf = endHalf;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getCheckBy() {
+        return checkBy;
+    }
+
+    public void setCheckBy(User checkBy) {
+        this.checkBy = checkBy;
+    }
+
+    public String getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(String checkTime) {
+        this.checkTime = checkTime;
+    }
+    
 }

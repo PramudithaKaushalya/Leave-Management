@@ -109,8 +109,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/user/resign", "/user/update/**", "/user/supervisor", "/role/all")
                         .hasAuthority("Admin")
-                    .antMatchers("/user/all", "/user/get/**")
+                    .antMatchers("/user/all", "/user/get/**", "/user/name")
                         .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
+                    .antMatchers("/login", "/forgot", "/leave_history", "/history", "/dashboard", "/add_employee", 
+                                 "/request_leave", "/pending_leaves", "/manage_employee", "/change_password", 
+                                 "/view_profile", "/get_employee", "/leave_calender", "/contact_number", "/attendence", 
+                                 "/one_attendence")  
+                        .permitAll()           
                     .anyRequest()
                         .authenticated();
 

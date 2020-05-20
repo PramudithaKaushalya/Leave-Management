@@ -6,7 +6,6 @@ import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.payload.ApiResponse;
 import com.example.demo.payload.ChangePassword;
-import com.example.demo.payload.Employee;
 import com.example.demo.payload.JwtAuthenticationResponse;
 import com.example.demo.payload.LoginRequest;
 import com.example.demo.payload.SignUpRequest;

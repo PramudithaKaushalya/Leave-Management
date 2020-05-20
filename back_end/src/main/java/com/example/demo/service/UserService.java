@@ -168,6 +168,19 @@ public class UserService {
         }    
     }
 
+    public ResponseEntity<?> getUserName(Long userId) {
+
+        try { 
+            User user = userRepository.getOne(userId);
+
+            LOGGER.info(">>> Successfully get employee name. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, user.getFirstName()+" "+user.getSecondName()));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get employee name. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get employee name"));
+        }    
+    }
+
     public ResponseEntity<?> searchSupervisors( Long userId ) {
 
         try { 

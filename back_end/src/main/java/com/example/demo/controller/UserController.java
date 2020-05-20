@@ -55,6 +55,20 @@ public class UserController {
         }
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<?> getUserName(@RequestHeader("Authorization") String token) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);        
+            return userService.getUserName(userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
     @PostMapping(value = "/resign")
     public ResponseEntity<?> resignUser(@RequestHeader("Authorization") String token, @RequestBody  Employee employee) {
 

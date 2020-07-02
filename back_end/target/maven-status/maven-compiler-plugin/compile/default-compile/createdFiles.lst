@@ -5,6 +5,7 @@ com/example/demo/repository/RoleRepository.class
 com/example/demo/service/LeaveRequestService.class
 com/example/demo/config/SecurityConfig.class
 com/example/demo/model/Calender.class
+com/example/demo/payload/AbsenceUser.class
 com/example/demo/model/User.class
 com/example/demo/payload/LeaveRecord.class
 com/example/demo/controller/DepartmentController.class
@@ -53,6 +54,7 @@ com/example/demo/payload/SignUpRequest.class
 com/example/demo/controller/ContactController.class
 com/example/demo/repository/LeaveCountRepository.class
 com/example/demo/model/Role.class
+com/example/demo/payload/LeaveFilter.class
 com/example/demo/service/ContactService.class
 com/example/demo/exception/AppException.class
 com/example/demo/payload/LeaveProfileDTO.class

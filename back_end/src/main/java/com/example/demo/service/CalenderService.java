@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.demo.model.Calender;
 import com.example.demo.model.User;
 import com.example.demo.payload.ApiResponse;
@@ -46,12 +48,9 @@ public class CalenderService {
 
         try{
             List<Calender> all = calenderRepository.findAll();
-            List<CalenderRecord> records = new ArrayList<CalenderRecord>();
-            
-            for (Calender var : all) {
-                CalenderRecord record = new CalenderRecord(var.getId(), var.getDate(), var.getReason(), var.getCreatedBy().getFirstName()+var.getCreatedBy().getSecondName(), var.getCreatedAt());
-                records.add(record);            
-            }
+
+            List<CalenderRecord> records = all.stream().map(var -> new CalenderRecord(var.getId(), var.getDate(), var.getReason(), var.getCreatedBy().getFirstName()+" "+var.getCreatedBy().getSecondName(), var.getCreatedAt()) ).collect(Collectors.toList());
+
             LOGGER.info(">>> Successfully get all calender records. (By user ==> "+userId+")");
 
             return ResponseEntity.ok(new ApiResponse(true, records));
@@ -77,13 +76,11 @@ public class CalenderService {
 
     public ResponseEntity<?> getDates( Long userId ) {
         try {
-            List<String> dates = new ArrayList<String>();
 
             List<Calender> all = calenderRepository.findAll();
-            
-            for (Calender var : all) {
-                dates.add(var.getDate());            
-            }
+
+            List<String> dates = all.stream().map(var -> var.getDate()).collect(Collectors.toList());
+
             LOGGER.info(">>> Successfully get dates. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, dates));
         } catch(Exception e) {

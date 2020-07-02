@@ -84,7 +84,7 @@ public class User extends DateAudit{
     private String password;
     
 	@Column(name = "image")
-    private Blob image;
+    private String image;
 
     @Column(name = "status")
     private String status;
@@ -134,7 +134,7 @@ public class User extends DateAudit{
     
     public User(String userId, String username, String first_name, String second_name, String initials, String gender, String email, 
                 String residence, String contact, Department department, String designation, String supervisor1, String supervisor2, String join_date, 
-                String confirm_date, String resignDate, String password, String status, Float annual, Float casual, Float medical) {
+                String confirm_date, String resignDate, String password, String status, Float annual, Float casual, Float medical, String image) {
         
         this.userId = userId;
         this.username = username;
@@ -157,6 +157,7 @@ public class User extends DateAudit{
         this.annual = annual;
         this.casual = casual;
         this.medical = medical;
+        this.image = image;
 	}
 
     public String getInitials() {
@@ -229,14 +230,6 @@ public class User extends DateAudit{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Blob getImage() {
-        return image;
-    }
-
-    public void setImage(Blob image) {
-        this.image = image;
     }
 
     public String getStatus() {
@@ -413,6 +406,14 @@ public class User extends DateAudit{
 
     public void setIsLogedIn(Boolean isLogedIn) {
         this.isLogedIn = isLogedIn;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
     
 }

@@ -60,6 +60,8 @@ public class SignUpRequest {
 
     private Float medical;
 
+    private String image;
+
 
     public String getEmail() {
         return email;
@@ -211,5 +213,13 @@ public class SignUpRequest {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

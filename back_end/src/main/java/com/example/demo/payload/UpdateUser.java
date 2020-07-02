@@ -62,6 +62,7 @@ public class UpdateUser {
 
     private Float medical;
 
+    private String image;
 
     public String getEmail() {
         return email;
@@ -213,5 +214,13 @@ public class UpdateUser {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

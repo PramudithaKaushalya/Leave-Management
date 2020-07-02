@@ -24,7 +24,7 @@ public class LeaveRequest {
     private User user;
 
     @Column(name = "start_date")
-    private String start_date;
+    private String startDate;
 
     @Column(name = "end_date")
     private String end_date;
@@ -71,7 +71,7 @@ public class LeaveRequest {
                         String reject, String formatDateTime, User checkBy, String checkTime){
         
         this.leave_type = leave_type;
-        this.start_date = start_date;
+        this.startDate = start_date;
         this.end_date = end_date;
         this.startHalf = startHalf;
         this.endHalf = endHalf;
@@ -90,7 +90,7 @@ public class LeaveRequest {
                         String reject, String formatDateTime, User checkBy, String checkTime){
         
         this.leave_type = leave_type;
-        this.start_date = start_date;
+        this.startDate = start_date;
         this.end_date = end_date;
         this.startHalf = startHalf;
         this.endHalf = endHalf;
@@ -117,14 +117,6 @@ public class LeaveRequest {
 
     public void setLeave_type(LeaveType leave_type) {
         this.leave_type = leave_type;
-    }
-
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
     }
 
     public String getEnd_date() {
@@ -221,6 +213,14 @@ public class LeaveRequest {
 
     public void setCheckTime(String checkTime) {
         this.checkTime = checkTime;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
     
 }

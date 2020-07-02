@@ -71,13 +71,13 @@ public class AuthController {
 			
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(
-							loginRequest.getUsernameOrEmail(),
-							loginRequest.getPassword()
+							loginRequest.getUsernameOrEmail().trim(),
+							loginRequest.getPassword().trim()
 					));
 			
-			User user = userRepository.findByUsername(loginRequest.getUsernameOrEmail());		
-
-			if(user.getStatus()=="Resign"){
+            User user = userRepository.findByUsername(loginRequest.getUsernameOrEmail().trim());
+            
+			if(user.getStatus().equals("Resign")){
 				LOGGER.warn(">>> Inactivate user Login. (By ==> "+loginRequest.getUsernameOrEmail()+")");
 				return ResponseEntity.ok(new ApiResponse(false, "Inactive account"));
 			} else{
@@ -127,12 +127,12 @@ public class AuthController {
                 Long d_id = new Long(signUpRequest.getDepartment());
                 Department department = departmentRepository.getOne(d_id);
 
-                User employee = new User(signUpRequest.getUserId(), signUpRequest.getEmail(), signUpRequest.getFirstName(), 
-                                        signUpRequest.getSecondName(), signUpRequest.getInitials(), signUpRequest.getGender(), 
-                                        signUpRequest.getEmail(), signUpRequest.getResidence(), signUpRequest.getContact(), 
+                User employee = new User(signUpRequest.getUserId().trim(), signUpRequest.getEmail().trim(), signUpRequest.getFirstName().trim(), 
+                                        signUpRequest.getSecondName().trim(), signUpRequest.getInitials().trim(), signUpRequest.getGender(), 
+                                        signUpRequest.getEmail().trim(), signUpRequest.getResidence().trim(), signUpRequest.getContact().trim(), 
                                         department, signUpRequest.getDesignation(), signUpRequest.getSupervisor1(), signUpRequest.getSupervisor2(), signUpRequest.getJoinDate(), 
                                         signUpRequest.getConfirmDate(), "Not resign", password, "Working", signUpRequest.getAnnual(), 
-                                        signUpRequest.getCasual(), signUpRequest.getMedical());
+                                        signUpRequest.getCasual(), signUpRequest.getMedical(), signUpRequest.getImage());
 
                 Role userRole = roleRepository.findById(signUpRequest.getRole())
                         .orElseThrow(() -> new AppException("User Role not set."));
@@ -145,7 +145,7 @@ public class AuthController {
                         .buildAndExpand(result.getEmail()).toUri();
 
                 LOGGER.info(">>> Successfully create the employee. (By user ==> "+userId+")");
-                return ResponseEntity.created(location).body(new ApiResponse(true, "Successfully create the employee(By user ==> "+userId+")"));
+                return ResponseEntity.created(location).body(new ApiResponse(true, "Successfully create the employee."));
             } 
             else {
                 LOGGER.warn(">>> User authentication failed");
@@ -187,10 +187,10 @@ public class AuthController {
             if(StringUtils.hasText(token) && token.startsWith("Bearer ")){
                 String jwt = token.substring(7);
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-                User user = userRepository.findByUsername(request.getUsernameOrEmail());
+                User user = userRepository.findByUsername(request.getUsernameOrEmail().trim());
                 String confirmCode =RandomStringUtils.randomAlphabetic(4);
 
-                if (!userRepository.existsByEmail(request.getUsernameOrEmail())) {
+                if (!userRepository.existsByEmail(request.getUsernameOrEmail().trim())) {
                     return new ResponseEntity(new ApiResponse(false, "Username incorrect!"), HttpStatus.BAD_REQUEST);
                 }
 
@@ -227,11 +227,11 @@ public class AuthController {
                 String jwt = token.substring(7);
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
 
-                User user = userRepository.findByUsername(passwords.getEmail());
+                User user = userRepository.findByUsername(passwords.getEmail().trim());
                 String code = user.getConfirmCode();
         
                 if(passwords.getCurrentPassword().equals(code)){
-                    String password = passwordEncoder.encode(passwords.getNewPassword());
+                    String password = passwordEncoder.encode(passwords.getNewPassword().trim());
                     user.setPassword(password);
                     user.setConfirmCode(null);
                     userRepository.save(user);
@@ -279,7 +279,7 @@ public class AuthController {
                 Long id = tokenProvider.getUserIdFromJWT(jwt);
                 User user = userRepository.getOne(id);
     
-                String password = passwordEncoder.encode(passwords.getNewPassword());
+                String password = passwordEncoder.encode(passwords.getNewPassword().trim());
                 user.setPassword(password);
                 userRepository.save(user);
                 

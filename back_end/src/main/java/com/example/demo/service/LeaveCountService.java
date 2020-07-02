@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.demo.payload.ApiResponse;
 import com.example.demo.payload.LeaveCountDTO;
 import com.example.demo.payload.LeaveProfileDTO;
@@ -28,15 +30,11 @@ public class LeaveCountService {
 
     public ResponseEntity<?> getProfile( Long userId) {
        try { 
-           List<LeaveCount> all = leaveCountRepository.findAll();
+            List<LeaveCount> all = leaveCountRepository.findAll();
         
-            List<LeaveProfileDTO> profiles = new ArrayList<LeaveProfileDTO>();
             List<User> currentEmployees = userRepository.findByStatus("Working");
 
-            for (User user : currentEmployees) {
-                LeaveProfileDTO profile = new LeaveProfileDTO(user.getId(),user.getFirstName()+" "+user.getSecondName(),0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F);
-                profiles.add(profile);
-            }
+            List<LeaveProfileDTO> profiles = currentEmployees.stream().map(user -> new LeaveProfileDTO(user.getId(),user.getFirstName()+" "+user.getSecondName(),0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F)).collect(Collectors.toList());
 
             for (LeaveCount leaveCount : all) {
 

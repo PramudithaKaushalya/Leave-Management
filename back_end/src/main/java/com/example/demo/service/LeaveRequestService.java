@@ -5,12 +5,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.example.demo.model.Department;
 import com.example.demo.model.LeaveCount;
 import com.example.demo.model.LeaveRequest;
 import com.example.demo.model.LeaveType;
 import com.example.demo.model.User;
+import com.example.demo.payload.AbsenceUser;
 import com.example.demo.payload.ApiResponse;
+import com.example.demo.payload.LeaveFilter;
 import com.example.demo.payload.LeaveRecord;
+import com.example.demo.repository.DepartmentRepository;
 import com.example.demo.repository.LeaveCountRepository;
 import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.repository.UserRepository;
@@ -34,6 +40,9 @@ public class LeaveRequestService {
     private UserRepository userRepository;
     
     @Autowired
+    private DepartmentRepository departmentRepository;
+    
+    @Autowired
     private JavaMailSender javaMailSender;
     
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveRequestService.class);
@@ -45,22 +54,22 @@ public class LeaveRequestService {
 
             for (LeaveRequest request : all) {
                 if(request.getStatus().equals("Pending") && request.getDuty()==null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
                     requests.add(record);
                 }else if(!request.getStatus().equals("Pending") && request.getDuty()==null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
                     requests.add(record);
                 }else if(request.getStatus().equals("Pending") && request.getDuty()!=null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
                     requests.add(record);
                 }else{
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                     request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(),
                                                     request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime() , request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
                     requests.add(record);
@@ -83,22 +92,22 @@ public class LeaveRequestService {
 
             for (LeaveRequest request : all) {
                 if(request.getStatus().equals("Pending") && request.getDuty()==null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
                     requests.add(record);
                 }else if(!request.getStatus().equals("Pending") && request.getDuty()==null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
                     requests.add(record);
                 }else if(request.getStatus().equals("Pending") && request.getDuty()!=null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
                     requests.add(record);
                 }else{
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                     request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(),
                                                     request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime() , request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
                     requests.add(record);
@@ -136,12 +145,12 @@ public class LeaveRequestService {
 
             for (LeaveRequest request : pendingLeaves) {
                 if(request.getDuty()==null){
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                         request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
                                                         "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime());
                     requests.add(record);
                 }else{
-                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStart_date(), 
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
                                                     request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(),
                                                     request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime());
                     requests.add(record);
@@ -210,7 +219,7 @@ public class LeaveRequestService {
 					"Date of request: "+leave.getFormatDateTime()+"\n"+
                     "Leave type: "+leave.getLeave_type().getType()+"\n"+
                     "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
 					"Thanks. \nBest Regards"
                     );
                      
@@ -233,7 +242,7 @@ public class LeaveRequestService {
 					"Date of request: "+leave.getFormatDateTime()+"\n"+
                     "Leave type: "+leave.getLeave_type().getType()+"\n"+
                     "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                     "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+                     "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
 					"Thanks. \nBest Regards"
                     );
         try {
@@ -304,7 +313,7 @@ public class LeaveRequestService {
 					"Name: "+employee.getFirstName()+" "+employee.getSecondName()+"\n"+
 					"Role: "+employee.getRoles().stream().findFirst().get().getName()+"\n"+
                     "Department: "+employee.getDepartment().getName()+"\n"+
-                    "Date/s: "+leave.getStart_date()+" to "+leave.getEnd_date()+"\n\n"+
+                    "Date/s: "+leave.getStartDate()+" to "+leave.getEnd_date()+"\n\n"+
 					"Thanks. \n Best Regards"
 					);
 
@@ -327,7 +336,7 @@ public class LeaveRequestService {
                     "Date of request: "+leave.getFormatDateTime()+"\n"+
                     "Leave type: "+leave.getLeave_type().getType()+"\n"+
                     "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
 					"Thanks. \nBest Regards"
 					);
 
@@ -350,7 +359,7 @@ public class LeaveRequestService {
                     "Date of request: "+leave.getFormatDateTime()+"\n"+
                     "Leave type: "+leave.getLeave_type().getType()+"\n"+
                     "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStart_date()+ " to " +leave.getEnd_date()+"\n\n"+
+                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
 					"Sorry for the rejection.\nThanks\nBest Regards"
 					);
 
@@ -373,7 +382,7 @@ public class LeaveRequestService {
                 return ResponseEntity.ok(new ApiResponse(false, "Not allowed to reject the own leave requests"));
             }
 
-            request.setReject(reason.getReject());
+            request.setReject(reason.getReject().trim());
             request.setStatus("Rejected");
 
             User checked_by = userRepository.getOne(check_id);
@@ -399,20 +408,21 @@ public class LeaveRequestService {
     public ResponseEntity<?> getAbsence( Long userId) {
 
         try {
-            List<LeaveRequest> absence = new ArrayList<LeaveRequest>();
-            List<LeaveRequest> requests = leaveRequestRepository.findAll();
+            List<AbsenceUser> absence = new ArrayList<>();
+            List<LeaveRequest> requests = leaveRequestRepository.findByStatus("Approved");
             LocalDate today = LocalDate.now(); 
 
             for (LeaveRequest var : requests) {
-                LocalDate start = LocalDate.parse(var.getStart_date());
+                LocalDate start = LocalDate.parse(var.getStartDate());
                 LocalDate end = LocalDate.parse(var.getEnd_date());
                 List<LocalDate> totalDates = new ArrayList<>();
                 while (!start.isAfter(end)) {
                     totalDates.add(start);
                     start = start.plusDays(1);
                 }
-                if(totalDates.contains(today) && var.getStatus().equals("Approved")){
-                    absence.add(var);
+                if(totalDates.contains(today)){
+                    AbsenceUser user = new AbsenceUser(var.getUser().getFirstName()+" "+var.getUser().getSecondName(), var.getUser().getImage());
+                    absence.add(user);
                 }
             }
             LOGGER.info(">>> Successfully get absence employees. (By user ==> "+userId+")");
@@ -420,6 +430,235 @@ public class LeaveRequestService {
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get absence employees. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get absence employees"));
+        }   
+    }
+
+    public ResponseEntity<?> getRequested( Long userId) {
+
+        try {
+            List<AbsenceUser> absence = new ArrayList<>();
+            List<LeaveRequest> requests = leaveRequestRepository.findByStatus("Pending");
+            LocalDate today = LocalDate.now(); 
+
+            for (LeaveRequest var : requests) {
+                LocalDate start = LocalDate.parse(var.getStartDate());
+                LocalDate end = LocalDate.parse(var.getEnd_date());
+                List<LocalDate> totalDates = new ArrayList<>();
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    start = start.plusDays(1);
+                }
+                if(totalDates.contains(today)){
+                    AbsenceUser user = new AbsenceUser(var.getUser().getFirstName()+" "+var.getUser().getSecondName(), var.getUser().getImage());
+                    absence.add(user);
+                }
+            }
+            LOGGER.info(">>> Successfully get leave requested employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, absence));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get leave requested employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave requested employees"));
+        }    
+    }
+
+    public ResponseEntity<?> getRejected( Long userId) {
+
+        try {
+            List<AbsenceUser> absence = new ArrayList<>();
+            List<LeaveRequest> requests = leaveRequestRepository.findByStatus("Rejected");
+            LocalDate today = LocalDate.now(); 
+
+            for (LeaveRequest var : requests) {
+                LocalDate start = LocalDate.parse(var.getStartDate());
+                LocalDate end = LocalDate.parse(var.getEnd_date());
+                List<LocalDate> totalDates = new ArrayList<>();
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    start = start.plusDays(1);
+                }
+                if(totalDates.contains(today)){
+                    AbsenceUser user = new AbsenceUser(var.getUser().getFirstName()+" "+var.getUser().getSecondName(), var.getUser().getImage());
+                    absence.add(user);
+                }
+            }
+            LOGGER.info(">>> Successfully get leave rejected employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, absence));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get leave rejected employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave rejected employees"));
+        }
+    }
+
+    public ResponseEntity<?> getFilterd( Long userId, LeaveFilter filters) {
+
+        List<LeaveRecord> records = new ArrayList<>();
+        List<LeaveRequest> leaves = new ArrayList<>(); 
+
+        try {
+
+            if(filters.getSelectWhose()==0){
+                if(filters.getSelectDate()==0){
+                    leaves = leaveRequestRepository.findAll();
+                }
+                else if(filters.getSelectDate()==1){
+                    leaves = leaveRequestRepository.findByStartDate(filters.getSelectedDate());
+                }
+                else if(filters.getSelectDate()==2){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    LocalDate end = LocalDate.parse(filters.getSelectedOtherDate());
+                    List<String> totalDates = new ArrayList<>();
+
+                    while (!start.isAfter(end)) {
+                        totalDates.add(start.toString());
+                        start = start.plusDays(1);
+                    }
+
+                    leaves = leaveRequestRepository.findByStartDateIn(totalDates);
+                }
+                else if(filters.getSelectDate()==3){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findAll();
+
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isAfter(start)).collect(Collectors.toList());
+                }
+                else if(filters.getSelectDate()==4){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findAll();
+                    
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isBefore(start)).collect(Collectors.toList());
+                }
+            }
+            else if(filters.getSelectWhose()==1){
+                User user = userRepository.getOne(userId);
+                if(filters.getSelectDate()==0){
+                    leaves = leaveRequestRepository.findByUser(user);
+                }
+                else if(filters.getSelectDate()==1){
+                    leaves = leaveRequestRepository.findByUserAndStartDate(user, filters.getSelectedDate());
+                }
+                else if(filters.getSelectDate()==2){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    LocalDate end = LocalDate.parse(filters.getSelectedOtherDate());
+                    List<String> totalDates = new ArrayList<>();
+
+                    while (!start.isAfter(end)) {
+                        totalDates.add(start.toString());
+                        start = start.plusDays(1);
+                    }
+
+                    leaves = leaveRequestRepository.findByUserAndStartDateIn(user, totalDates);
+                }
+                else if(filters.getSelectDate()==3){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUser(user);
+
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isAfter(start)).collect(Collectors.toList());
+                }
+                else if(filters.getSelectDate()==4){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUser(user);
+                    
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isBefore(start)).collect(Collectors.toList());
+                }
+            }
+            else if(filters.getSelectWhose()==2){
+                Department department = departmentRepository.getOne(filters.getSelectedWhose());
+                List<User> users = userRepository.findByDepartment(department);
+                if(filters.getSelectDate()==0){
+                    leaves = leaveRequestRepository.findByUserIn(users);
+                }
+                else if(filters.getSelectDate()==1){
+                    leaves = leaveRequestRepository.findByUserInAndStartDate(users, filters.getSelectedDate());
+                }
+                else if(filters.getSelectDate()==2){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    LocalDate end = LocalDate.parse(filters.getSelectedOtherDate());
+                    List<String> totalDates = new ArrayList<>();
+
+                    while (!start.isAfter(end)) {
+                        totalDates.add(start.toString());
+                        start = start.plusDays(1);
+                    }
+
+                    leaves = leaveRequestRepository.findByUserInAndStartDateIn(users, totalDates);
+                }
+                else if(filters.getSelectDate()==3){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUserIn(users);
+
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isAfter(start)).collect(Collectors.toList());
+                }
+                else if(filters.getSelectDate()==4){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUserIn(users);
+                    
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isBefore(start)).collect(Collectors.toList());
+                }
+            }
+            else if(filters.getSelectWhose()==3){
+                User user = userRepository.getOne(filters.getSelectedWhose());
+                if(filters.getSelectDate()==0){
+                    leaves = leaveRequestRepository.findByUser(user);
+                }
+                else if(filters.getSelectDate()==1){
+                    leaves = leaveRequestRepository.findByUserAndStartDate(user, filters.getSelectedDate());
+                }
+                else if(filters.getSelectDate()==2){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    LocalDate end = LocalDate.parse(filters.getSelectedOtherDate());
+                    List<String> totalDates = new ArrayList<>();
+
+                    while (!start.isAfter(end)) {
+                        totalDates.add(start.toString());
+                        start = start.plusDays(1);
+                    }
+
+                    leaves = leaveRequestRepository.findByUserAndStartDateIn(user, totalDates);
+                }
+                else if(filters.getSelectDate()==3){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUser(user);
+
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isAfter(start)).collect(Collectors.toList());
+                }
+                else if(filters.getSelectDate()==4){
+                    LocalDate start = LocalDate.parse(filters.getSelectedDate());
+                    leaves = leaveRequestRepository.findByUser(user);
+                    
+                    leaves = leaves.stream().filter(x -> LocalDate.parse(x.getStartDate()).isBefore(start)).collect(Collectors.toList());
+                }
+            }
+
+            for (LeaveRequest request : leaves) {
+                if(request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    records.add(record);
+                }else if(!request.getStatus().equals("Pending") && request.getDuty()==null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        "No one assigned", request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    records.add(record);
+                }else if(request.getStatus().equals("Pending") && request.getDuty()!=null){
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
+                                                        request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), 
+                                                        request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(), request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime(), "Not Checked", "Not Checked" );
+                    records.add(record);
+                }else{
+                    LeaveRecord record = new LeaveRecord( request.getLeave_id(), request.getLeave_type().getType(), request.getUser().getId(), request.getUser().getFirstName()+" "+request.getUser().getSecondName(), request.getUser().getDepartment().getName(), request.getStartDate(), 
+                                                    request.getEnd_date(), request.getStartHalf(), request.getEndHalf(), request.getNumber_of_leave_days(), request.getUser().getSupervisor1(), request.getUser().getSupervisor2(), request.getDuty().getFirstName()+" "+request.getDuty().getSecondName(),
+                                                    request.getSpecial_notes(), request.getStatus(), request.getReject(), request.getFormatDateTime() , request.getCheckBy().getFirstName()+" "+request.getCheckBy().getSecondName(), request.getCheckTime() );
+                    records.add(record);
+                }                                      
+            }
+            
+            LOGGER.info(">>> Successfully get filtered leave records. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, records));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get filtered leave records. (By user ==> "+userId+")");
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get filtered leave records"));
         }
             
     }

@@ -23,12 +23,13 @@ public class Employee {
     private Float annual;
     private Float casual;
     private Float medical;
+    private String image;
 
     public Employee(){}
 
     public Employee(Long id, String userId, String firstName, String secondName, String initials, String gender ,String email, String residence, String contact,
                     String role, String department, String designation, String supervisor1, String supervisor2, String joinDate, String confirmDate, String resignDate,
-                    String status, Float annual, Float casual, Float medical){
+                    String status, Float annual, Float casual, Float medical, String image){
 
         this.userId = userId;                
         this.id = id;
@@ -51,6 +52,7 @@ public class Employee {
         this.annual = annual;
         this.casual = casual;
         this.medical = medical;
+        this.image = image;
     }
 
     public String getEmail() {
@@ -219,6 +221,14 @@ public class Employee {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
     
 }

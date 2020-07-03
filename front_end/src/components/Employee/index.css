@@ -1,0 +1,12 @@
+.avatar-uploader > .ant-upload {
+    width: 128px;
+    height: 128px;
+  }
+
+  .example {
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 300px 50px;
+    margin: 20px 0;
+  } 

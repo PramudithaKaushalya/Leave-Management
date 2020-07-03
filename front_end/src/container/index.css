@@ -1,0 +1,95 @@
+.login-form {
+    max-width: 300px;
+  }
+  .login-form-forgot {
+    float: right;
+  }
+  .login-form-button {
+    width: 100%;
+  }
+  .logo {
+    height: 80px;
+    background: rgb(253, 253, 253);
+    margin: 5px;
+    /* margin-top: 30px; */
+    background-image: url("../vizuamatix.png");
+    background-size: 170px;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex: auto;
+  }
+  .scrollable-container-dash {
+    height: 350px;
+    overflow-y: scroll;
+  }
+  .scrollable-container-leave {
+    height: 520px;
+    overflow-y: scroll;
+  }
+  .scrollable-container-pop {
+    height: 150px;
+    overflow-y: scroll;
+  }
+  .background-pop {
+    padding-top: 0px;
+    height: 100px;
+  }
+  .scrollable-container-update {
+    height: 340px;
+    overflow-y: scroll;
+  }
+  .scrollable-container-fav {
+    height: 550px;
+    overflow-y: scroll;
+  }
+  .background-fav {
+    padding-top: 0px;
+    height: 600px;
+  }
+  .scrollable-container-addEmployee {
+    height: 580px;
+    overflow-y: scroll;
+  }
+  .background-addEmployee {
+    padding-top: 0px;
+    height: 1000px;
+  }
+  .scrollable-container-requestLeave {
+    height: 580px;
+    overflow-y: scroll;
+  }
+  .background-requestLeave {
+    padding-top: 0px;
+    height: 600px;
+  }
+  .scrollable-container-readfav {
+    height: 700px;
+    overflow-y: scroll;
+  }
+  .scrollable-container-pdf {
+    height: 435px;
+    overflow-y: scroll;
+  }
+  .background {
+    padding-top: 0px;
+    height: 290px;
+  }
+  .code-box-demo .demo {
+    overflow: auto;
+  }
+  .code-box-demo .ant-btn {
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  /* .pdf {
+    font-family: sans-serif;
+    text-align: center;
+  } */
+  
+  .example {
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 300px 50px;
+    margin: 20px 0;
+  }

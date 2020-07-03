@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - v8.12.0
+
+cache: npm
+
+install:
+  - npm ci
+
+script:
+  - npm run build
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: build
+  on:
+    branch: master
+
+    

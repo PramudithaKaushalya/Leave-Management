@@ -20,6 +20,8 @@ import axios from '../config/axios';
 import ViewOne from './../components/Employee/ViewOne';
 import Attendence from './../components/Attendence/Attendence';
 import OneAttendence from './../components/Attendence/OneAttendence';
+import CollectLieu from '../components/Leave/CollectLieu';
+import PendingLieu from '../components/Leave/PendingLieu';
 import {Redirect} from 'react-router-dom';
 
 const { Content, Footer, Sider } = Layout;
@@ -145,6 +147,13 @@ class SiderDemo extends React.Component {
                 <Icon type="paper-clip" />
                 <span>Request Leave</span>
             </Menu.Item>
+
+            <Menu.Item key="15">
+                <Link to='/collect_lieu'/>
+                <Icon type="paper-clip" />
+                <span>Collect Lieu</span>
+            </Menu.Item>
+
           { user_role === "Admin" || user_role === "Supervisor"?
             
               <Menu.Item key="4">
@@ -159,6 +168,14 @@ class SiderDemo extends React.Component {
                   <Link to='/pending_leaves'/>
                   <Icon type="question-circle" />
                   <span>Pending Leaves</span>
+              </Menu.Item>
+          :null
+          }
+          { user_role === "Admin" || user_role === "Supervisor"?
+              <Menu.Item key="16">
+                  <Link to='/pending_lieu'/>
+                  <Icon type="question-circle" />
+                  <span>Pending Lieu</span>
               </Menu.Item>
           :null
           }
@@ -224,7 +241,7 @@ class SiderDemo extends React.Component {
         </Sider>
         <Layout style={{ marginLeft: 220 }}>
           
-          <Layout style={{ position: 'fixed', zIndex: 1, width: '89%' }}>
+          <Layout style={{ position: 'fixed', zIndex: 100, width: '89%' }}>
             <Card hoverable='true'> 
               <Header name={user_name} role={user_role} department={user_department} image={user_image} designation={user_des}/>
             </Card>
@@ -250,10 +267,12 @@ class SiderDemo extends React.Component {
                 <Route path='/contact_number' component={ContactsNumber}/>
                 <Route path='/attendence' component={Attendence}/>
                 <Route path='/one_attendence' component={OneAttendence}/>
+                <Route path='/collect_lieu' component={CollectLieu}/>
+                <Route path='/pending_lieu' component={PendingLieu}/>
               </Switch>
           </Content>
           
-          <Footer style={{ textAlign: 'center', height: '0px'}}>VX Leave Management System ©2019 Created by Pramuditha</Footer>
+          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HR Management System ©2019 Created by Pramuditha</Footer>
           </Layout>
         </Layout>
       </Layout>

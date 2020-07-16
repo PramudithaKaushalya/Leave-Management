@@ -330,14 +330,14 @@ class ViewOne extends Component {
               <br/>
                <Card hoverable='true'>
                       
-                    <Row>
+                    <Row >
                       <Col span={20}>  
 
                         <Descriptions title="User Infomation" size="small" bordered column={2}>
                           <Descriptions.Item label="Name">{employee.firstName} {employee.secondName}</Descriptions.Item>
                           <Descriptions.Item label="Email" span={1}>{employee.email}</Descriptions.Item>
                           <Descriptions.Item label="Residence" >{employee.residence}</Descriptions.Item>
-                          <Descriptions.Item label="Contact No" span={1}> 0{employee.contact}</Descriptions.Item>
+                          <Descriptions.Item label="Contact No" span={1}> {employee.contact}</Descriptions.Item>
                           <Descriptions.Item label="Role">{employee.role}</Descriptions.Item>
                           <Descriptions.Item label="Department" span={1}>{employee.department}</Descriptions.Item>
                           <Descriptions.Item label="Status" span={2}>
@@ -350,8 +350,9 @@ class ViewOne extends Component {
                         </Descriptions> 
 
                       </Col>
-                      <Col span={4}>  
-                        <Avatar size={280} src={employee.image} />
+                      <Col  span={4}>  
+                        <br/> <br/> <br/>
+                        <Avatar size={200} src={employee.image} />
                       </Col>
                     </Row>
     

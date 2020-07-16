@@ -136,20 +136,20 @@ class Header extends React.Component {
                 <Col span={1}>
                     <Avatar size={50} icon="user"  src= {this.props.image}/>
                 </Col>
-                <Col span={20}>
+                <Col span={18}>
                     <span style={{fontSize:'17px'}}>{this.props.name}</span><br/>
                     <span style={{fontSize:'13px'}}>{this.props.designation}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{fontSize:'13px', color:'gray'}}>{this.props.department}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{fontSize:'13px', color:'red'}}>{this.props.role}</span> 
                 </Col>
-                <Col span={3}>
+                <Col span={4}>
                     <Tag color="volcano">{moment().format('LL')}</Tag>&nbsp;&nbsp;&nbsp;&nbsp;
                     <Button key="1" type="primary" onClick={this.toggle} shape="circle">
                         <Icon 
                             className="trigger"
                             type= 'menu-fold' 
                         />
-                    </Button>,&nbsp;&nbsp;&nbsp;
+                    </Button>&nbsp;&nbsp;&nbsp;
                     <Button key="2" type="primary" onClick={this.handleLogout} shape="circle">
                         <Icon type="logout" />
                     </Button>

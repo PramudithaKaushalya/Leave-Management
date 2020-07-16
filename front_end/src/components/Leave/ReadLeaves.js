@@ -14,6 +14,7 @@ class ReadLeaves extends Component {
     } 
 
     state = {
+        mounted : false,
         searchText: '',
         data : [],
         visible: false,
@@ -22,7 +23,8 @@ class ReadLeaves extends Component {
     
     reload () {
       this.setState({
-        data : []
+        data : [],
+        mounted : false
       })
     
       axios.get('leave/all', 
@@ -44,6 +46,10 @@ class ReadLeaves extends Component {
         message.error("Something went wrong");
         console.log(e.response.data.error);
       })  
+
+      this.setState({
+        mounted : true
+      })
     }
 
       getColumnSearchProps = dataIndex => ({
@@ -232,7 +238,7 @@ class ReadLeaves extends Component {
 
         return (
             <div>
-            { this.state.data.length !== 0? 
+            { this.state.mounted? 
               <Card title="Leave Requests" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 7 }} size="middle" />
               </Card> 

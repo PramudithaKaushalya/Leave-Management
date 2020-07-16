@@ -64,7 +64,7 @@ class NormalLoginForm extends React.Component {
     return (
       <div className= "container">
         <center>
-          <Card title="VX Leave Management System" bordered={false} style={{ width: '400px', height: '400px', flex: 0.5}}>
+          <Card title="VX HR Management System" bordered={false} style={{ width: '400px', height: '400px', flex: 0.5}}>
             <Form  {...formItemLayout} className="login-form">
               <br/>
               <Form.Item>

@@ -34,7 +34,7 @@ class Dashboard extends Component {
           })
           .catch(e => {
             message.error("Something went wrong");
-            console.log(e.response.data.error);
+            console.log(e);
           })  
 
         axios.get('leave/find/'+this.parseJwt(localStorage.getItem("header")), 
@@ -265,20 +265,25 @@ class Dashboard extends Component {
               <Card hoverable='true'>  
                 <Row gutter={16}>
                   <center> 
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[0].utilized / this.state.summery[0].entitlement * 100} format={percent => `${this.state.summery[0].utilized} / ${this.state.summery[0].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Casual</Tag>
                   </Col>
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[1].utilized / this.state.summery[1].entitlement * 100} format={percent => `${this.state.summery[1].utilized} / ${this.state.summery[1].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Medical</Tag>
                   </Col> 
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[2].utilized / this.state.summery[2].entitlement * 100} format={percent => `${this.state.summery[2].utilized} / ${this.state.summery[2].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Annual</Tag>
+                  </Col>
+                  <Col span={6}>
+                    <Progress type="circle" percent={this.state.summery[3].utilized / this.state.summery[3].entitlement * 100} format={percent => `${this.state.summery[3].utilized} / ${this.state.summery[3].entitlement}`}/>
+                    <br/><br/>
+                    <Tag color="volcano">Lieu</Tag>
                   </Col>
                   </center>
                 </Row>

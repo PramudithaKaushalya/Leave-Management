@@ -38,12 +38,12 @@ class PendingLeaves extends Component {
         this.reload();
     } 
 
-    reload(){
+    async reload(){
       this.setState({
-        data : []
+        mounted : false
       })
 
-      axios.get('leave/pending', 
+      await axios.get('leave/pending', 
       {
           headers: {
               Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -63,7 +63,7 @@ class PendingLeaves extends Component {
         console.log(e.response.data.error);
       }) 
 
-      axios.get('leave_count/profile', 
+      await axios.get('leave_count/profile', 
       {
           headers: {
               Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -83,7 +83,7 @@ class PendingLeaves extends Component {
         console.log(e.response.data.error);
       }) 
 
-      axios.get('user/all', 
+      await axios.get('user/all', 
       {
           headers: {
               Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -102,9 +102,14 @@ class PendingLeaves extends Component {
         message.error("Something went wrong");
         console.log(e.response.data.error);
       })
+
+      this.setState({
+        mounted : true
+      })
     }
 
     state = {
+        mounted : false,
         visible: false,
         searchText: '',
         data : [],
@@ -349,7 +354,7 @@ class PendingLeaves extends Component {
 
         return (
             <div>
-            { this.state.data.length !== 0? 
+            { this.state.mounted? 
               <Card title="Pending Leaves" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 7 }} size="middle" />
               </Card> 

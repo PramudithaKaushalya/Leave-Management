@@ -152,54 +152,18 @@ class RequestLeave extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    confirm({
-      title: 'Sure to submit your leave request?',
-      content: 'If you submit, Send request to administraters and supervisors. Inform duty coverer.',
-      okText: 'Sumbit',
-      okType: 'primary',
-      onOk: () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       
       if (!err && this.state.error==null) {
+        confirm({
+          title: 'Sure to submit your leave request?',
+          content: 'If you submit, Send request to administraters and supervisors, will inform duty coverer.',
+          okText: 'Sumbit',
+          okType: 'primary',
+          onOk: () => {
         
-        if(this.state.duty !== null){ 
-          const leave = {
-          leave_type : { leave_type_id : this.state.type } || undefined,
-          user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
-          start_date : this.state.startValue || undefined,
-          end_date : this.state.endValue || this.state.startValue,
-          startHalf : this.state.start_half,
-          endHalf : this.state.end_half,
-          number_of_leave_days : parseFloat(values.days) || undefined,
-          duty : {id : parseInt(this.state.duty)}, 
-          special_notes : values.note || "No special note.",
-          status : "Pending",
-          reject : "Not reject"
-          }
-
-          axios.post(
-            'leave/request', 
-            leave, 
-            { 
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem("header")
-                }
-            }
-          )
-          .then(res => {
-            if (res.data.success === true) {              
-              message.success(res.data.message); 
-              this.handleCancel();
-            } else {
-                message.error(res.data.message);
-            }
-          })
-          .catch(e => {
-            console.log(e.response.data.error);
-            message.error("Something went wrong"); 
-          })
-        }else{
-            const leave = {
+            if(this.state.duty !== null){ 
+              const leave = {
               leave_type : { leave_type_id : this.state.type } || undefined,
               user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
               start_date : this.state.startValue || undefined,
@@ -207,39 +171,75 @@ class RequestLeave extends React.Component {
               startHalf : this.state.start_half,
               endHalf : this.state.end_half,
               number_of_leave_days : parseFloat(values.days) || undefined,
-              special_notes : values.note || "No special note",
+              duty : {id : parseInt(this.state.duty)}, 
+              special_notes : values.note || "No special note.",
               status : "Pending",
               reject : "Not reject"
-            }
+              }
 
-            axios.post(
-              'leave/request', 
-              leave, 
-              { 
-                  headers: {
-                      Authorization: 'Bearer ' + localStorage.getItem("header")
-                  }
+              axios.post(
+                'leave/request', 
+                leave, 
+                { 
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem("header")
+                    }
+                }
+              )
+              .then(res => {
+                if (res.data.success === true) {              
+                  message.success(res.data.message); 
+                  this.handleCancel();
+                } else {
+                    message.error(res.data.message);
+                }
+              })
+              .catch(e => {
+                console.log(e.response.data.error);
+                message.error("Something went wrong"); 
+              })
+            }else{
+              const leave = {
+                leave_type : { leave_type_id : this.state.type } || undefined,
+                user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
+                start_date : this.state.startValue || undefined,
+                end_date : this.state.endValue || this.state.startValue,
+                startHalf : this.state.start_half,
+                endHalf : this.state.end_half,
+                number_of_leave_days : parseFloat(values.days) || undefined,
+                special_notes : values.note || "No special note",
+                status : "Pending",
+                reject : "Not reject"
               }
-            )
-            .then(res => {
-              if (res.data.success === true) {              
-                message.success(res.data.message); 
-                this.handleCancel();
-              } else {
-                message.error(res.data.message);
-              }
-            })
-            .catch(e => {
-              console.log(e.response.data.error);
-              message.error("Something went wrong"); 
-            })  
-        }
+
+              axios.post(
+                'leave/request', 
+                leave, 
+                { 
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem("header")
+                    }
+                }
+              )
+              .then(res => {
+                if (res.data.success === true) {              
+                  message.success(res.data.message); 
+                  this.handleCancel();
+                } else {
+                  message.error(res.data.message);
+                }
+              })
+              .catch(e => {
+                console.log(e.response.data.error);
+                message.error("Something went wrong"); 
+              })  
+            }
+          }
+        }) 
       }else if(this.state.error !== null){
-        message.error(this.state.error);
+          message.error(this.state.error);
       }
     });
-    }
-  })
   }
 
   handleCancel = () => {
@@ -340,6 +340,8 @@ class RequestLeave extends React.Component {
       this.onChange('error', "* Exceeded your medical limit");
     }else if(this.state.type === 5 && period > (this.state.summery[2].remaining)){
       this.onChange('error', "* Exceeded your annual limit");  
+    }else if(this.state.type === 6 && period > (this.state.summery[3].remaining)){
+      this.onChange('error', "* Exceeded your lieu limit");  
     }else this.onChange('error', null);  
   }
 
@@ -389,9 +391,12 @@ class RequestLeave extends React.Component {
     })
     if(e.target.value === "Evening" && !this.state.half_day && this.state.period!==null){
       this.onChange('period', this.state.period-0.5);
+      this.checkCount(this.state.period-0.5);
     } else if(e.target.value === "Full Day" && this.state.period!==null){
       this.onChange('period', this.state.period+0.5);
+      this.checkCount(this.state.period+0.5);
     }
+    
   }
 
   endHalfChange = (e) => {
@@ -400,8 +405,10 @@ class RequestLeave extends React.Component {
     })
     if(e.target.value === "Morning" && this.state.period!==null){
       this.onChange('period', this.state.period-0.5);
+      this.checkCount(this.state.period-0.5);
     } else if(e.target.value === "Full Day" && this.state.period!==null){
       this.onChange('period', this.state.period+0.5);
+      this.checkCount(this.state.period+0.5);
     }
   }
 

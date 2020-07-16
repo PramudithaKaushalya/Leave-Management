@@ -1,0 +1,13 @@
+back_end/logs
+back_end/target
+target/
+target/*
+
+front_end/node_modules
+node_modules/
+node_modules/*
+
+dist/
+*/dist/
+*/dist/*
+

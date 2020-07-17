@@ -28,6 +28,7 @@ class Dashboard extends Component {
                   summery : res.data.list,
                   sumRes : true
                 })
+                console.log("Summary", res.data.list)
               } else {
                     message.error(res.data.message);
               }

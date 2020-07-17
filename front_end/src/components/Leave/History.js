@@ -384,8 +384,7 @@ class History extends Component {
             <div>
               <Card hoverable='true'>
                 <Row>
-                    <Col span={1}/>
-                    <Col span={5}>
+                    <Col span={7}>
                         Whose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         {getFieldDecorator('whose', {
                           initialValue : 0
@@ -418,7 +417,7 @@ class History extends Component {
                         :null
                         }
                     </Col>
-                    <Col span={8}>
+                    <Col span={11}>
                         
                         <Button  type="primary" icon="search"  onClick={this.handleFilter} style={{ width: '120px' }}> Search </Button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -429,8 +428,7 @@ class History extends Component {
                 </Row> 
                 <br/>
                 <Row gutter={8}>
-                    <Col span={1}/>
-                    <Col span={5}>
+                    <Col span={7}>
                         Start Date: &nbsp;&nbsp;&nbsp;&nbsp;
                         {getFieldDecorator('start', {
                           initialValue : 0
@@ -444,7 +442,7 @@ class History extends Component {
                         </Select>
                         )}
                     </Col>
-                    <Col span={13}>
+                    <Col span={17}>
                         {this.state.selectStartDate === 1?
                         <DatePicker onChange={this.onChangeIs} style={{ width: 210 }}/>
                         :null

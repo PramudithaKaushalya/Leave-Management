@@ -274,25 +274,25 @@ class UpdateEmployee extends React.Component {
         
         <Form.Item label="Employee ID">
           {getFieldDecorator('emp_id', {
-            rules: [{ required: true, message: 'Please input employee id!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
             initialValue: this.state.data.userId
           })(<Input />)}
         </Form.Item>
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
-            rules: [{ required: true, message: 'Please input first name!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
             initialValue: this.state.data.firstName
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Second Name">
           {getFieldDecorator('second_name', {
-            rules: [{ required: true, message: 'Please input second name!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
             initialValue: this.state.data.secondName
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
-            rules: [{ required: true, message: 'Please input initials!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input initials!' }],
             initialValue: this.state.data.initials
           })(<Input />)}
         </Form.Item>
@@ -310,6 +310,7 @@ class UpdateEmployee extends React.Component {
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
             rules: [
+              { transform: (value) => value.trim() },
               {
                 type: 'email',
                 message: 'The input is not valid E-mail!',
@@ -340,7 +341,8 @@ class UpdateEmployee extends React.Component {
        
         <Form.Item label="Contact Number">
           {getFieldDecorator('contact', {
-            rules: [{ 
+            rules: [{ transform: (value) => value.trim() },
+              { 
               required: true, 
               message: 'Please input valid number!',
               len : 10 
@@ -377,14 +379,14 @@ class UpdateEmployee extends React.Component {
 
         <Form.Item label="Designation">
           {getFieldDecorator('designation', {
-            rules: [{ required: true, message: 'Please input designation!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input designation!' }],
             initialValue: this.state.data.designation
           })(<Input />)}
         </Form.Item>
 
         <Form.Item label="Supervisor 01">
           {getFieldDecorator('supervisor1', {
-            rules: [{ required: true, message: 'Please input first supervisor!' }],
+            rules: [{ required: false, message: 'Please input first supervisor!' }],
             initialValue: this.state.data.supervisor1
           })(
             <Select>

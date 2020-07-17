@@ -166,7 +166,7 @@ class RequestLeave extends React.Component {
               const leave = {
               leave_type : { leave_type_id : this.state.type } || undefined,
               user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
-              start_date : this.state.startValue || undefined,
+              startDate : this.state.startValue || undefined,
               end_date : this.state.endValue || this.state.startValue,
               startHalf : this.state.start_half,
               endHalf : this.state.end_half,
@@ -202,7 +202,7 @@ class RequestLeave extends React.Component {
               const leave = {
                 leave_type : { leave_type_id : this.state.type } || undefined,
                 user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
-                start_date : this.state.startValue || undefined,
+                startDate : this.state.startValue || undefined,
                 end_date : this.state.endValue || this.state.startValue,
                 startHalf : this.state.start_half,
                 endHalf : this.state.end_half,
@@ -257,7 +257,8 @@ class RequestLeave extends React.Component {
   };
 
   disabledStartDate = startValue => {
-    return startValue && startValue < moment().endOf('day');
+    // return startValue && startValue < moment().endOf('day');
+    return startValue && startValue < moment().subtract(7,'d');
   };
 
   disabledEndDate = endValue => {

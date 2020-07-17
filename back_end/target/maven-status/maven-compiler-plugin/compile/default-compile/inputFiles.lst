@@ -12,7 +12,6 @@
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/model/User.java
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/payload/ApiResponse.java
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/config/SecurityConfig.java
-/home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/model/UserRole.java
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/security/JwtAuthenticationFilter.java
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/repository/DepartmentRepository.java
 /home/pramuditha/Desktop/VX Leave/back_end/src/main/java/com/example/demo/payload/UpdateUser.java

@@ -1,5 +1,10 @@
 package com.example.demo.controller;
 
+import java.net.URI;
+import java.util.Collections;
+
+import javax.validation.Valid;
+
 import com.example.demo.exception.AppException;
 import com.example.demo.model.Department;
 import com.example.demo.model.Role;
@@ -14,6 +19,10 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +34,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.Collections;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -124,6 +134,8 @@ public class AuthController {
 
                 String password = passwordEncoder.encode("123");
 
+                // String password =RandomStringUtils.randomAlphabetic(4);
+
                 Long d_id = new Long(signUpRequest.getDepartment());
                 Department department = departmentRepository.getOne(d_id);
 
@@ -141,6 +153,8 @@ public class AuthController {
 
                 User result = userRepository.save(employee);
 
+                sendPassword(signUpRequest, password);
+
                 URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
                         .buildAndExpand(result.getEmail()).toUri();
 
@@ -155,6 +169,20 @@ public class AuthController {
             LOGGER.error(">>> Unable to create the employee", e.getMessage());
             return ResponseEntity.ok(new ApiResponse(false, "Unable to create the employee"));
         }
+    }
+
+    public void sendPassword(SignUpRequest user, String password) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(user.getEmail());
+        msg.setSubject("Credentials For VX Leave Management System.");
+        msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                "Credentials for your new Account as follows. You can change your password and username when you logged in to your account.\n\n"+
+                "Username - "+ user.getEmail() + ".\n"+
+                "Password - "+ password + ".\n\n"+
+                "Thanks. \nBest Regards"
+                );
+                
+        javaMailSender.send(msg);
     }
 
     @GetMapping("/logout")
@@ -196,7 +224,7 @@ public class AuthController {
 
                 SimpleMailMessage msg = new SimpleMailMessage();
                 msg.setTo(request.getUsernameOrEmail());
-                msg.setSubject("Forgot credentials of VX Leave.");
+                msg.setSubject("Forgot credentials of VX Leave Management System.");
                 msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
                         "You forgot your credentials and waiting for confirm code.\n"+
                         "Your requested confirm code is "+ confirmCode + ".\n\n"+
@@ -204,6 +232,7 @@ public class AuthController {
                         );
                         
                 javaMailSender.send(msg);
+
                 user.setConfirmCode(confirmCode);
                 userRepository.save(user);
 

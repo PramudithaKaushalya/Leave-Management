@@ -269,22 +269,22 @@ class AddEmployee extends React.Component {
    
         <Form.Item label="Employee ID">
           {getFieldDecorator('emp_id', {
-            rules: [{ required: true, message: 'Please input employee id!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
-            rules: [{ required: true, message: 'Please input first name!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Second Name">
           {getFieldDecorator('second_name', {
-            rules: [{ required: true, message: 'Please input second name!' }],
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
-            rules: [{ message: 'Please input initials!' }],
+            rules: [{ transform: (value) => value.trim() },{ message: 'Please input initials!' }],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Gender">
@@ -298,6 +298,7 @@ class AddEmployee extends React.Component {
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
             rules: [
+              { transform: (value) => value.trim() },
               {
                 type: 'email',
                 message: 'The input is not valid E-mail!',
@@ -326,7 +327,8 @@ class AddEmployee extends React.Component {
        
         <Form.Item label="Contact Number">
           {getFieldDecorator('contact', {
-            rules: [{ 
+            rules: [{ transform: (value) => value.trim() },
+              { 
               required: true, 
               len : 10,
               message: 'Please input valid number!', 
@@ -363,7 +365,7 @@ class AddEmployee extends React.Component {
         </Form.Item>
         <Form.Item label="Supervisor 01">
           {getFieldDecorator('supervisor1', {
-            rules: [{ required: true, message: 'Please input first supervisor!' }],
+            rules: [{ required: false, message: 'Please input first supervisor!' }],
           })(
             <Select placeholder="Please select a supervisor">
                {this.state.supervisors.map(item => (
@@ -374,7 +376,7 @@ class AddEmployee extends React.Component {
         </Form.Item>
         <Form.Item label="Supervisor 02">
           {getFieldDecorator('supervisor2', {
-            rules: [{ required: true, message: 'Please input second supervisor!' }],
+            rules: [{ required: false, message: 'Please input second supervisor!' }],
           })(
             <Select placeholder="Please select a supervisor">
             {this.state.supervisors.map(item => (

@@ -43,6 +43,9 @@ class Header extends React.Component {
     componentDidMount () {
     }
     state = {
+        absentRes: false,
+        requestedRes: false,
+        rejectedRes: false,
         visible: false,
         data: [],
         requested: [],
@@ -51,6 +54,9 @@ class Header extends React.Component {
 
     toggle = () => {
         this.setState({
+            absentRes: false,
+            requestedRes: false,
+            rejectedRes: false,
             data : [],
             visible: true
         })
@@ -65,7 +71,8 @@ class Header extends React.Component {
             if (res.data.success === true) {
 
                 this.setState({
-                    data : res.data.list
+                    data : res.data.list,
+                    absentRes: true
                 })
             } else {
                 message.error(res.data.message);
@@ -86,7 +93,8 @@ class Header extends React.Component {
             if (res.data.success === true) {
 
                 this.setState({
-                    requested : res.data.list
+                    requested : res.data.list,
+                    requestedRes: true
                 })
             } else {
                 message.error(res.data.message);
@@ -105,7 +113,8 @@ class Header extends React.Component {
         .then(res => {
             if (res.data.success === true) {
                 this.setState({
-                    rejected : res.data.list
+                    rejected : res.data.list,
+                    rejectedRes: true
                 })
             } else {
                 message.error(res.data.message);
@@ -166,6 +175,7 @@ class Header extends React.Component {
             >
                 <br/>
                 <Alert message="Approved" type="success" showIcon />
+                { this.state.absentRes ? 
                 <List
                     itemLayout="horizontal"
                     dataSource={this.state.data}
@@ -178,9 +188,10 @@ class Header extends React.Component {
                     </List.Item>
                     )}
                 />
-                
+                : null }
                 <br/><br/>
-                <Alert message="Requested" type="info" showIcon />        
+                <Alert message="Requested" type="info" showIcon /> 
+                { this.state.rejectedRes ?        
                 <List
                     itemLayout="horizontal"
                     dataSource={this.state.requested}
@@ -193,8 +204,11 @@ class Header extends React.Component {
                     </List.Item>
                     )}
                 />
+                : null }
+
                 <br/><br/>
                 <Alert message="Rejected" type="error" showIcon />
+                { this.state.rejectedRes ? 
                 <List
                     itemLayout="horizontal"
                     dataSource={this.state.rejected}
@@ -207,6 +221,7 @@ class Header extends React.Component {
                     </List.Item>
                     )}
                 />
+                : null }
                 
             </Drawer>
             : null

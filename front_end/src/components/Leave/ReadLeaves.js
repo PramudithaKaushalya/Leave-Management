@@ -44,7 +44,7 @@ class ReadLeaves extends Component {
       })
       .catch(e => {
         message.error("Something went wrong");
-        console.log(e.response.data.error);
+        console.log(e);
       })  
 
       this.setState({
@@ -150,7 +150,7 @@ class ReadLeaves extends Component {
               }
           }).catch( err => {
               console.log(err);
-              message.error("Something Went Wrong!");
+              message.error("Something Went Wrong");
           })
         },
         onCancel() {
@@ -179,7 +179,7 @@ class ReadLeaves extends Component {
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
-                ...this.getColumnSearchProps('startDate')
+                // ...this.getColumnSearchProps('startDate')
             },
             {
                 title: 'End Date',
@@ -189,7 +189,7 @@ class ReadLeaves extends Component {
             {
               title: 'Supervisor 01',
               dataIndex: 'supervisor1',
-              ...this.getColumnSearchProps('supervisor1'),
+              // ...this.getColumnSearchProps('supervisor1'),
             },
             {
                 title: 'Date of request',

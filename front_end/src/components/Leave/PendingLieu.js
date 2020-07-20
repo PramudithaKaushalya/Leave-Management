@@ -82,8 +82,13 @@ class PendingLieu extends Component {
 
         const columns = [
             {
-                title: 'Date',
+                title: 'Emoloyee',
                 key: '0',
+                dataIndex: 'employee'
+            },
+            {
+                title: 'Date',
+                key: '1',
                 dataIndex: 'date',
                 render: date => {
                   
@@ -94,7 +99,7 @@ class PendingLieu extends Component {
             },
             {
                 title: 'Period',
-                key: '1',
+                key: '2',
                 dataIndex: 'period',
                 render: tag => {
                     let text;
@@ -110,17 +115,16 @@ class PendingLieu extends Component {
             },    
             {
                 title: 'Project',
-                key: '2',
+                key: '3',
                 dataIndex: 'project'
             }, 
             {
                 title: 'Works done',
-                key: '2',
+                key: '4',
                 dataIndex: 'worksDone'
             },    
             {
-              dataIndex: '',
-              key: 'y',
+              key: '5',
               width: '3%',
               render: (emp) => <Icon type="like" onClick={this.showConfirm.bind(this, emp)}  theme="twoTone" />,
             },

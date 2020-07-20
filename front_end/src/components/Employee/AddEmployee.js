@@ -126,6 +126,7 @@ class AddEmployee extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
+        console.log("|||||||||||||||", values.supervisor1)
         const employee = {
           userId : values.emp_id, 
           firstName: values.first_name || undefined,
@@ -133,13 +134,13 @@ class AddEmployee extends React.Component {
           initials: values.initials || undefined,
           gender: values.gender || undefined,
           email: values.email || undefined,
-          residence: values.residence || undefined,
+          residence: values.residence || "No residence",
           contact: values.contact || undefined,
           role: parseInt(values.role) || undefined,
           department: parseInt(values.department) || undefined,
           designation: values.designation,
-          supervisor1: values.supervisor1 || undefined,
-          supervisor2: values.supervisor2 || undefined,
+          supervisor1: values.supervisor1 || "No one",
+          supervisor2: values.supervisor2 || "No one",
           joinDate: this.state.join_date || undefined,
           confirmDate: this.state.confirm_date || "Not confirm yet",
           annual : values.annual,

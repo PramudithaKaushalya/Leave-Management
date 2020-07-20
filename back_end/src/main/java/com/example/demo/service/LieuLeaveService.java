@@ -46,7 +46,7 @@ public class LieuLeaveService {
     public ResponseEntity<?> getAllLieuLeaves(Long userId) {
         try {
             List<LieuLeave> leaves = lieuLeaveRepository.findByIsApprovedOrderByIdDesc(false);
-            List<LieuLeaveDTO> leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getId(), x.getDate(), x.getPeriod(), x.getProject(), x.getWorksDone()) ).collect(Collectors.toList());
+            List<LieuLeaveDTO> leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getId(), x.getDate(), x.getPeriod(), x.getProject(), x.getWorksDone(), x.getEmployee().getFirstName()+" "+ x.getEmployee().getSecondName())).collect(Collectors.toList());
             LOGGER.info(">>> Successfully get all lieu leaves. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, leaveDTOs));
         } catch(Exception e) {

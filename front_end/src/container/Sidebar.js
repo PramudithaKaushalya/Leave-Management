@@ -22,6 +22,7 @@ import Attendence from './../components/Attendence/Attendence';
 import OneAttendence from './../components/Attendence/OneAttendence';
 import CollectLieu from '../components/Leave/CollectLieu';
 import PendingLieu from '../components/Leave/PendingLieu';
+import CashRequest from '../components/Cash/CashRequest'; 
 import {Redirect} from 'react-router-dom';
 
 const { Content, Footer, Sider } = Layout;
@@ -158,7 +159,7 @@ class SiderDemo extends React.Component {
             
               <Menu.Item key="4">
                   <Link to='/leave_history'/>
-                  <Icon type="folder" />
+                  <Icon type="file-search" />
                   <span>Review Leaves</span>
               </Menu.Item>
             :null
@@ -209,6 +210,27 @@ class SiderDemo extends React.Component {
               </Menu.Item>
             :null */}
             
+            <SubMenu
+              key="sub3"
+              title={
+                <span>
+                  <Icon type="dollar" />
+                  <span>Pretty Cash</span>
+                </span>
+              }
+            >
+              <Menu.Item key="8">
+                <Link to='/cash_request'/>
+                <Icon type="paper-clip" />
+                <span>Request Cash</span>
+              </Menu.Item>
+              <Menu.Item key="9">
+                <Link to='/change_password'/>
+                <Icon type="lock" />
+                <span>Pending Cash</span>
+              </Menu.Item>
+            </SubMenu>
+
             <SubMenu
               key="sub2"
               title={
@@ -269,6 +291,7 @@ class SiderDemo extends React.Component {
                 <Route path='/one_attendence' component={OneAttendence}/>
                 <Route path='/collect_lieu' component={CollectLieu}/>
                 <Route path='/pending_lieu' component={PendingLieu}/>
+                <Route path='/cash_request' component={CashRequest}/>
               </Switch>
           </Content>
           

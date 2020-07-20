@@ -10,6 +10,7 @@ public class LieuLeaveDTO {
     private String project;
     private String worksDone;
     private Boolean isApproved;
+    private String employee;
 
     public LieuLeaveDTO(Date date, Integer period, String project, Boolean isApproved) {
         this.date = date;
@@ -18,12 +19,13 @@ public class LieuLeaveDTO {
         this.isApproved = isApproved;
     }
 
-    public LieuLeaveDTO(Long id, Date date, Integer period, String project, String worksDone) {
+    public LieuLeaveDTO(Long id, Date date, Integer period, String project, String worksDone, String employee) {
         this.id = id;
         this.date = date;
         this.period = period;
         this.project = project;
         this.worksDone = worksDone;
+        this.employee = employee;
     }
 
     public String getProject() {
@@ -72,5 +74,13 @@ public class LieuLeaveDTO {
 
     public void setIsApproved(Boolean isApproved) {
         this.isApproved = isApproved;
+    }
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
     }
 }

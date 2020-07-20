@@ -2,9 +2,7 @@ package com.example.demo.controller;
 
 import java.net.URI;
 import java.util.Collections;
-
 import javax.validation.Valid;
-
 import com.example.demo.exception.AppException;
 import com.example.demo.model.Department;
 import com.example.demo.model.Role;
@@ -19,7 +17,6 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +148,8 @@ public class AuthController {
 
                 employee.setRoles(Collections.singleton(userRole));
 
+                // sendPassword(signUpRequest, password);
+
                 User result = userRepository.save(employee);
 
                 sendPassword(signUpRequest, password);
@@ -167,6 +166,7 @@ public class AuthController {
             }
         }catch(Exception e){
             LOGGER.error(">>> Unable to create the employee", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to create the employee"));
         }
     }
@@ -181,8 +181,13 @@ public class AuthController {
                 "Password - "+ password + ".\n\n"+
                 "Thanks. \nBest Regards"
                 );
-                
-        javaMailSender.send(msg);
+        
+        try {
+            javaMailSender.send(msg);
+        }catch(Exception e){
+            LOGGER.error(">>> Unable to send the email to employee", e.getMessage());
+            e.printStackTrace();
+        }       
     }
 
     @GetMapping("/logout")

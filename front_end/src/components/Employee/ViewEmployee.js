@@ -350,8 +350,7 @@ class ViewEmployee extends Component {
             },
             {
                 title: 'Supervisor 01',
-                dataIndex: 'supervisor1',
-                ...this.getColumnSearchProps('supervisor1'),
+                dataIndex: 'supervisor1'
             },
             {
               title: 'Status',

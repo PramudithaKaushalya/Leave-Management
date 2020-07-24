@@ -96,7 +96,7 @@ class ChangePassword extends React.Component {
 
         return(
             <div>
-                <Card title='Change Password' bordered={false} hoverable='true'> 
+                <Card type="inner" title='Change Login Password' bordered={false} hoverable='true'> 
                  <Form {...formItemLayout} layout="vertical" hideRequiredMark>
             
                     <Form.Item hasFeedback>
@@ -131,6 +131,7 @@ class ChangePassword extends React.Component {
                         id= '2'
                         prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
                         placeholder="New Password"
+                        maxLength='20'
                         />)}
                     </Form.Item>
                     <Form.Item hasFeedback>
@@ -149,6 +150,9 @@ class ChangePassword extends React.Component {
                         onBlur={this.handleConfirmBlur}
                         prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
                         placeholder="Confirm Password"
+                        maxLength='20'
+                        autocomplete="none"
+                        display="none"
                         />)}
                     </Form.Item>
                     <Form.Item {...tailFormItemLayout}>

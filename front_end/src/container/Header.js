@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import {withRouter} from 'react-router-dom';
 import moment from 'moment';
 import axios from '../config/axios';
-import { PageHeader, Icon, Button, Modal, Row, Col, Avatar, Tag, Drawer, List, message, Alert } from 'antd';
+import { Button, Modal, Row, Col, Avatar, Tag, Drawer, List, message, Alert, Card } from 'antd';
 
 const { confirm } = Modal;
 
@@ -40,8 +40,6 @@ class Header extends React.Component {
         });
     }
 
-    componentDidMount () {
-    }
     state = {
         absentRes: false,
         requestedRes: false,
@@ -135,38 +133,40 @@ class Header extends React.Component {
 
     return (
         <div>
-        <PageHeader
+        {/* <PageHeader
             style={{   
-            border: '1px solid rgb(235, 237, 240)',
-            backgroundImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSQhsbd4x-xRzJrNDxCCL0qT7mQa_tk4jS9WvFALCBAbKFSWwqw',
+            border: '2px solid rgb(235, 237, 240)'
             }}
-        >
+        > */}
+        <Card hoverable='true'> 
             <Row>
-                <Col span={1}>
-                    <Avatar size={50} icon="user"  src= {this.props.image}/>
+                <Col span={2}>
+                    {
+                        this.props.image === null ?
+                        <Avatar style={{float:'right'}} size={200} icon="user" src="/public/images/01.png"/>
+                        :
+                        <Avatar size={90} icon="user" src= {this.props.image}/>
+                    }
                 </Col>
-                <Col span={18}>
+                <Col span={15}>
+                    <br/>
                     <span style={{fontSize:'17px'}}>{this.props.name}</span><br/>
                     <span style={{fontSize:'13px'}}>{this.props.designation}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{fontSize:'13px', color:'gray'}}>{this.props.department}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{fontSize:'13px', color:'red'}}>{this.props.role}</span> 
                 </Col>
-                <Col span={4}>
-                    <Tag color="volcano">{moment().format('LL')}</Tag>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button key="1" type="primary" onClick={this.toggle} shape="circle">
-                        <Icon 
-                            className="trigger"
-                            type= 'menu-fold' 
-                        />
-                    </Button>&nbsp;&nbsp;&nbsp;
-                    <Button key="2" type="primary" onClick={this.handleLogout} shape="circle">
-                        <Icon type="logout" />
-                    </Button>
+                <Col span={5}>
+                    <br/>
+                    <Tag color="volcano">{moment().format('LL')}</Tag>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button key="1" type="primary" onClick={this.toggle} icon= 'menu-fold'/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button key="2" type="primary" onClick={this.handleLogout} icon="logout"/>
                 </Col>
             </Row>
-        </PageHeader>
+        </Card>
+        {/* </PageHeader> */}
 
-        { this.state.data.length !== 0 && this.state.requested.length !== 0 && this.state.rejected.length !== 0 ? 
             <Drawer    
             title="Today Attendence"                                                                                                                                                                                                                                                                                                                                     
             width={300}
@@ -182,7 +182,7 @@ class Header extends React.Component {
                     renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
-                        avatar={<Avatar src={item.image} />}
+                        avatar={<Avatar src={item.image}  icon="user"/>}
                         title={item.name}
                         />
                     </List.Item>
@@ -198,7 +198,7 @@ class Header extends React.Component {
                     renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
-                        avatar={<Avatar src={item.image} />}
+                        avatar={<Avatar src={item.image}  icon="user"/>}
                         title={item.name}
                         />
                     </List.Item>
@@ -207,15 +207,17 @@ class Header extends React.Component {
                 : null }
 
                 <br/><br/>
+                { this.props.role === 'Admin' || this.props.role === "Supervisor"? 
                 <Alert message="Rejected" type="error" showIcon />
-                { this.state.rejectedRes ? 
+                : null }
+                { this.state.rejectedRes && this.props.role === 'Admin' ? 
                 <List
                     itemLayout="horizontal"
                     dataSource={this.state.rejected}
                     renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
-                        avatar={<Avatar src={item.image} />}
+                        avatar={<Avatar src={item.image}  icon="user"/>}
                         title={item.name}
                         />
                     </List.Item>
@@ -224,11 +226,12 @@ class Header extends React.Component {
                 : null }
                 
             </Drawer>
-            : null
-            }    
+
         </div>
         );
     }
 }          
 
 export default withRouter(Header);
+
+// shape="circle"

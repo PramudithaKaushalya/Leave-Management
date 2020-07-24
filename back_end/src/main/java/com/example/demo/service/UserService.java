@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import com.example.demo.model.User;
 import com.example.demo.payload.ApiResponse;
 import com.example.demo.payload.Employee;
@@ -42,15 +40,6 @@ public class UserService {
     public ResponseEntity<?> getAll( Long userId) {
         try {
             List<User> users = userRepository.findAll();
-            // List<Employee> employees = new ArrayList<Employee>();
-
-            // for (User user : users) {
-            //     Employee employee = new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
-            //     user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(), user.getDesignation(),
-            //     user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),
-            //     user.getCasual(),user.getMedical(), user.getImage());
-            //     employees.add(employee);
-            // }
 
             List<Employee> employees = users.stream().map(user -> new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
             user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(), user.getDesignation(),
@@ -200,19 +189,7 @@ public class UserService {
 
     public ResponseEntity<?> searchSupervisors( Long userId ) {
 
-        try { 
-            // List<User> users = userRepository.findAll();
-            // List<Supervisor> supervisors = new ArrayList<Supervisor>();
-
-            // for (User user : users) {
-            //     if(user.getRoles().stream().findFirst().get().getName().toString().equals("Supervisor")){
-            //         Supervisor supervisor = new Supervisor(user.getId(),user.getFirstName(),user.getSecondName(),user.getEmail(),
-            //         user.getDepartment().getName());
-            //         supervisors.add(supervisor);
-            //     }
-            // }
-
-            
+        try {             
             Role role = roleRepository.getOne(1L);
             List<User> users = userRepository.findByRoles(role);
 
@@ -223,6 +200,25 @@ public class UserService {
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get supervisors. (By user ==> "+userId+")", e.getMessage());
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get supervisors"));
+        } 
+    }
+
+    public ResponseEntity<?> filterByDepartment(Long depId, Long userId ) {
+
+        try {
+            Department department = departmentRepository.getOne(depId);
+            List<User> users = userRepository.findByDepartment(department);
+
+            List<Employee> employees = users.stream().map(user -> new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
+            user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(), user.getDesignation(),
+            user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),
+            user.getCasual(),user.getMedical())).collect(Collectors.toList());
+
+            LOGGER.info(">>> Successfully get employees of "+department.getName()+". (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, employees));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get employees. (By user ==> "+userId+")", e.getMessage());
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get employees"));
         } 
     }
 

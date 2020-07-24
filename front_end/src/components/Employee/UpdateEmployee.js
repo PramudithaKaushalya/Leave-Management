@@ -153,18 +153,18 @@ class UpdateEmployee extends React.Component {
           userId: values.emp_id,
           firstName: values.first_name,
           secondName: values.second_name,
-          initials: values.initials,
+          initials: values.initials || "No initials", 
           gender: values.gender,
           email: values.email,
-          residence: values.residence,
+          residence: values.residence || "No residence",
           contact: values.contact,
           role: values.role || this.state.role,
           department: values.department || this.state.department,
           designation: values.designation,
-          supervisor1: values.supervisor1,
-          supervisor2: values.supervisor2,
+          supervisor1: values.supervisor1 || "No one",
+          supervisor2: values.supervisor2 || "No one",
           joinDate: this.state.join_date || this.state.data.joinDate,
-          confirmDate: this.state.confirm_date || this.state.data.confirmDate,
+          confirmDate: this.state.confirm_date || this.state.data.confirmDate || "Not confirm yet",
           annual : values.annual,
           casual : values.casual,
           medical : values.medical,
@@ -276,25 +276,25 @@ class UpdateEmployee extends React.Component {
           {getFieldDecorator('emp_id', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
             initialValue: this.state.data.userId
-          })(<Input />)}
+          })(<Input maxLength='5' />)}
         </Form.Item>
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
             initialValue: this.state.data.firstName
-          })(<Input />)}
+          })(<Input maxLength='20' />)}
         </Form.Item>
         <Form.Item label="Second Name">
           {getFieldDecorator('second_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
             initialValue: this.state.data.secondName
-          })(<Input />)}
+          })(<Input maxLength='20'/>)}
         </Form.Item>
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input initials!' }],
             initialValue: this.state.data.initials
-          })(<Input />)}
+          })(<Input maxLength='10'/>)}
         </Form.Item>
         <Form.Item label="Gender">
           {getFieldDecorator('gender', {
@@ -313,7 +313,7 @@ class UpdateEmployee extends React.Component {
               { transform: (value) => value.trim() },
               {
                 type: 'email',
-                message: 'The input is not valid E-mail!',
+                message: 'Please input valid E-mail!',
               },
               {
                 required: true,
@@ -321,7 +321,7 @@ class UpdateEmployee extends React.Component {
               },
             ],
             initialValue: this.state.data.email
-          })(<Input />)}
+          })(<Input maxLength='50'/>)}
         </Form.Item>
         <Form.Item
           label={
@@ -336,7 +336,7 @@ class UpdateEmployee extends React.Component {
           {getFieldDecorator('residence', {
             rules: [{ message: 'Please input your nickname!', whitespace: true }],
             initialValue: this.state.data.residence
-          })(<Input />)}
+          })(<Input maxLength='100' />)}
         </Form.Item>
        
         <Form.Item label="Contact Number">
@@ -379,9 +379,16 @@ class UpdateEmployee extends React.Component {
 
         <Form.Item label="Designation">
           {getFieldDecorator('designation', {
-            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input designation!' }],
+            rules: [
+              { transform: (value) => value.trim().replace(/\s+/g, ' ') },
+              { required: true, message: 'Please input designation!' },
+              {
+                pattern: new RegExp(/[a-zA-Z&( )]$/),
+                message: "Field does not accept numbers"
+              }
+            ],
             initialValue: this.state.data.designation
-          })(<Input />)}
+          })(<Input maxLength='50'/>)}
         </Form.Item>
 
         <Form.Item label="Supervisor 01">
@@ -422,21 +429,21 @@ class UpdateEmployee extends React.Component {
           {getFieldDecorator('annual', {
             rules: [{ required: true, message: 'Please input annual leave count!' }],
             initialValue: this.state.data.annual 
-          })(<InputNumber />)}
+          })(<InputNumber max={14}/>)}
         </Form.Item>
 
         <Form.Item label="Casual Count">
           {getFieldDecorator('casual', {
             rules: [{ required: true, message: 'Please input casual leave count!' }],
             initialValue: this.state.data.casual
-          })(<InputNumber />)}
+          })(<InputNumber max={7}/>)}
         </Form.Item>
 
         <Form.Item label="Medical Count">
           {getFieldDecorator('medical', {
             rules: [{ required: true, message: 'Please input medical leave count!' }],
             initialValue: this.state.data.medical
-          })(<InputNumber />)}
+          })(<InputNumber max={7}/>)}
         </Form.Item>
 
         <Form.Item label="Employee Image">

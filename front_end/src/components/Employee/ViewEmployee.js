@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from '../../config/axios';
 import 'antd/dist/antd.css';
-import {Table, Button, Icon, Input, Drawer, Card, Tag, Modal, message, Form, Alert, Row, Col, Spin } from 'antd';
+import {Table, Button, Icon, Input, Drawer, Card, Tag, Modal, message, Form, Alert, Row, Col, Spin, Select } from 'antd';
 import Highlighter from 'react-highlight-words';
 import UpdateEmployee from '../Employee/UpdateEmployee';
 import AddEmployee from '../Employee/AddEmployee';
 import './index.css';
 
+const { Option } = Select;
 const ResignForm = Form.create({ name: 'viewEmployee' })(
 
   class extends React.Component {
@@ -77,36 +78,65 @@ function convertArrayOfObjectsToCSV(args) {
 class ViewEmployee extends Component {
     
     componentWillMount(){
-       this.reload();
+      this.reload();
+
+      axios.get('department/all', 
+      {
+          headers: {
+              Authorization: 'Bearer ' + localStorage.getItem("header")
+          }
+      })
+      .then(res => {
+          if (res.data.success === true) {
+            var departments = [{ id: 0, name: "All" }].concat(res.data.list)
+            
+            this.setState({
+                departments : departments
+            })
+          } else {
+              message.error(res.data.message);
+          }
+      }) 
+      .catch(e => {
+        message.error("Something went wrong");
+        console.log(e);
+      })
+      
     } 
 
-    reload() {
+    async reload() {
       this.setState({
-        data : []
+        data : [],
+        dataReceived: false
       })
 
-    axios.get('user/all', 
-    {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem("header")
-        }
-    })
-    .then(res => {
-        if (res.data.success === true) {  
-          this.setState({
-              data : res.data.list
-          })
-        } else {
-          message.error(res.data.message);
-        }
-    })
-    .catch(e => {
-      message.error("Something went wrong");
-      console.log(e.response.data.error);
-    })  
+      await axios.get('user/all', 
+      {
+          headers: {
+              Authorization: 'Bearer ' + localStorage.getItem("header")
+          }
+      })
+      .then(res => {
+          if (res.data.success === true) {  
+            this.setState({
+                data : res.data.list
+            })
+          } else {
+            message.error(res.data.message);
+          }
+      })
+      .catch(e => {
+        message.error("Something went wrong");
+        console.log(e);
+      }) 
+      
+      this.setState({
+        dataReceived: true
+      })
     }
 
     state = {
+        dataReceived: false,
         searchText: '',
         data : [],
         visibleUpdate: false,
@@ -116,9 +146,52 @@ class ViewEmployee extends Component {
         emp : [],
         visible: false,
         visibleResign : false,
-        empId: null 
+        empId: null,
+        departments: [] 
     };
     
+    onDepartmentSelect = (item) => {
+
+      if(item === '0') {
+        console.log("||||||||||||", item);
+        this.reload();
+      } else {
+
+        console.log(">>>>>>>>>>>", item);
+        this.setState({
+          data : [],
+          dataReceived: false
+        })
+
+        axios.get(`user/filter_by_department/${item}`, 
+        {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem("header")
+            }
+        })
+        .then(res => {
+            if (res.data.success === true) {  
+              this.setState({
+                  data : res.data.list,
+                  dataReceived: true
+              })
+            } else {
+              message.error(res.data.message);
+              this.setState({
+                dataReceived: true
+              })
+            }
+        })
+        .catch(e => {
+          message.error("Something went wrong");
+          console.log(e);
+          this.setState({
+            dataReceived: true
+          })
+        })  
+      }
+    }
+
     info = (emp) => {
       this.setState({
         visible: true,
@@ -293,24 +366,28 @@ class ViewEmployee extends Component {
     };
 
     download = (args) => {
-      var data, filename, link;
+      if(this.state.data.length === 0) {
+        message.error("No data to download");
+      } else {
+        var data, filename, link;
 
-      var csv = convertArrayOfObjectsToCSV({
-          data: this.state.data
-      });
-      if (csv == null) return;
+        var csv = convertArrayOfObjectsToCSV({
+            data: this.state.data
+        });
+        if (csv == null) return;
 
-      filename = args.filename || 'employees.csv';
+        filename = args.filename || 'employees.csv';
 
-      if (!csv.match(/^data:text\/csv/i)) {
-          csv = 'data:text/csv;charset=utf-8,' + csv;
+        if (!csv.match(/^data:text\/csv/i)) {
+            csv = 'data:text/csv;charset=utf-8,' + csv;
+        }
+        data = encodeURI(csv);
+
+        link = document.createElement('a');
+        link.setAttribute('href', data);
+        link.setAttribute('download', filename);
+        link.click();
       }
-      data = encodeURI(csv);
-
-      link = document.createElement('a');
-      link.setAttribute('href', data);
-      link.setAttribute('download', filename);
-      link.click();
     }
 
     render() {
@@ -342,8 +419,7 @@ class ViewEmployee extends Component {
             },
             {
               title: 'Department',
-              dataIndex: 'department',
-              ...this.getColumnSearchProps('department'),
+              dataIndex: 'department'
               // render: role => (
               //  role.department_name
               // )
@@ -364,7 +440,7 @@ class ViewEmployee extends Component {
                   color = 'green';
                 }
                 return (
-                  <Tag color={color} key={tag}>
+                  <Tag style={{width:"62px"}} color={color} key={tag}>
                     {tag}
                   </Tag>
                 );
@@ -393,23 +469,36 @@ class ViewEmployee extends Component {
 
         return (
             <div>
-            { this.state.data.length !== 0 ? 
               <Card hoverable='true'>
 
                 <Row>
-                  <Col span={22}>
+                  <Col span={3}>
+                    <Button type="primary" onClick={this.showAddDrawer} icon="user-add" > Add employee</Button>
+                  </Col>
+                  <Col span={20}>
+
+                  {this.state.departments.length !== 0 ?
+                    <Select style={{float:"right", width: 200}} placeholder="Select a department" onChange={this.onDepartmentSelect} defaultValue={this.state.departments[0].name}>
+                      {this.state.departments.map(item => (
+                            <Option key={item.id}>{item.name}</Option>
+                      ))}
+                    </Select>
+                  : null}
                   </Col>
                   <Col span={1}>
-                    <Button  style={{float:'right'}} type="primary" icon="download"  shape="circle" onClick={this.download.bind(this,{ filename: "Employees.csv" })}/>
-                  </Col>
-                  <Col span={1}>
-                    <Button style={{float:'right'}} type="primary" onClick={this.showAddDrawer} shape="circle" icon="user-add" />
+                    <Button style={{float:"right"}} type="primary" icon="download" onClick={this.download.bind(this,{ filename: "Employees.csv" })}/>
                   </Col>
                 </Row>
-
+                
                 <br/><br/>
+              { this.state.dataReceived ? 
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
 
+              : 
+                <div className="example">
+                  <Spin size="large" />
+                </div>
+              } 
                 <Drawer
                 title="Update Existing Employee"
                 width={570}
@@ -427,12 +516,7 @@ class ViewEmployee extends Component {
                 >
                     <AddEmployee close={this.onAddClose}/>
                 </Drawer>
-              </Card> 
-              : 
-              <div className="example">
-                <Spin size="large" />
-              </div>
-              }  
+              </Card>  
                 {emp.length!==0? <Modal
                   title="Full Employee Detail"
                   visible={this.state.visible}

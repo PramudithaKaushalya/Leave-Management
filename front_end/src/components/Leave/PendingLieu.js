@@ -53,7 +53,6 @@ class PendingLieu extends Component {
       confirm({
         title: 'Are you sure to approve this lieu leave?',
         okText: 'Approve',
-        okType: 'success',
         onOk: () => {
           axios.get('lieu_leave/approve/'+leave.id, 
           {
@@ -134,7 +133,7 @@ class PendingLieu extends Component {
         return (
             <div>
             { this.state.mounted ? 
-              <Card title="Leave Requests" hoverable='true'>
+              <Card type="inner" title="Pending Lieu Leaves" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.leave}  pagination={{ pageSize: 7 }} size="middle" />
               </Card> 
             : 

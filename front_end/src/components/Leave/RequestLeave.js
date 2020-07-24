@@ -450,17 +450,20 @@ class RequestLeave extends React.Component {
       {
         title: 'Entitlement',
         key: '1',
-        dataIndex: 'entitlement'
+        dataIndex: 'entitlement',
+        align: 'center'
       },    
       {
         title: 'Utilized',
         key: '2',
-        dataIndex: 'utilized'
+        dataIndex: 'utilized',
+        align: 'center'
       },
       {
         title: 'Remaining',
         key: '3',
-        dataIndex: 'remaining'
+        dataIndex: 'remaining',
+        align: 'center'
       }
     ];
 
@@ -468,7 +471,7 @@ class RequestLeave extends React.Component {
         <div>
           <Row gutter={16}>
             <Col span={15} > 
-              <Card title='Leave Request Form' bordered={false} hoverable='true'>  
+              <Card type="inner" title='Leave Request Form' bordered={false} hoverable='true'>  
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 
                 <Form.Item label="Leave Type">
@@ -509,8 +512,8 @@ class RequestLeave extends React.Component {
                   />
                   )}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Radio.Group onChange={this.startHalfChange} value={this.state.start_half}>
-                    <Radio value="Full Day" disabled={this.state.start_full_disable}>Full Day</Radio>
-                    <Radio value="Morning" disabled={this.state.start_morning_disable}>Morning</Radio>
+                    {this.state.start_full_disable ? null : <Radio value="Full Day" >Full Day</Radio>}
+                    {this.state.start_morning_disable ? null :<Radio value="Morning" >Morning</Radio>}
                     <Radio value="Evening">Evening</Radio>
                   </Radio.Group>
                 </Form.Item>
@@ -562,7 +565,7 @@ class RequestLeave extends React.Component {
                     rules: [{
                         message: 'Please input your note',
                       }],
-                  })(<TextArea rows={4} style={{ width: '400px' }}/>)}
+                  })(<TextArea maxLength='200' rows={4} style={{ width: '400px' }}/>)}
                 </Form.Item>
 
                 <Form.Item {...tailFormItemLayout}>

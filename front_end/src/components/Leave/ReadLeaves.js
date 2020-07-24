@@ -215,7 +215,7 @@ class ReadLeaves extends Component {
                           color = 'red';
                         }
                         return (
-                          <Tag color={color} key={tag}>
+                          <Tag style={{width:"70px"}} color={color} key={tag}>
                             {tag}
                           </Tag>
                         );
@@ -239,8 +239,8 @@ class ReadLeaves extends Component {
         return (
             <div>
             { this.state.mounted? 
-              <Card title="Leave Requests" hoverable='true'>
-                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 7 }} size="middle" />
+              <Card type="inner" title="Leave Requests" hoverable='true'>
+                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
               </Card> 
             : 
             <div className="example">

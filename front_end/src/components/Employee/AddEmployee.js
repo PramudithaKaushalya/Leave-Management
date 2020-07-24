@@ -125,13 +125,11 @@ class AddEmployee extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
-        console.log("|||||||||||||||", values.supervisor1)
         const employee = {
           userId : values.emp_id, 
           firstName: values.first_name || undefined,
           secondName: values.second_name || undefined,
-          initials: values.initials || undefined,
+          initials: values.initials || "No initials",
           gender: values.gender || undefined,
           email: values.email || undefined,
           residence: values.residence || "No residence",
@@ -148,7 +146,6 @@ class AddEmployee extends React.Component {
           medical : values.medical,
           image : this.state.imageUrl
         }
-        console.log('Values of object: ', this.state.imageUrl);
 
         axios.post(
           'api/auth/signup', 
@@ -271,22 +268,22 @@ class AddEmployee extends React.Component {
         <Form.Item label="Employee ID">
           {getFieldDecorator('emp_id', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
-          })(<Input />)}
+          })(<Input maxLength='5'/>)}
         </Form.Item>
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
-          })(<Input />)}
+          })(<Input maxLength='20'/>)}
         </Form.Item>
         <Form.Item label="Second Name">
           {getFieldDecorator('second_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
-          })(<Input />)}
+          })(<Input maxLength='20'/>)}
         </Form.Item>
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
-            rules: [{ transform: (value) => value.trim() },{ message: 'Please input initials!' }],
-          })(<Input />)}
+            rules: [{ message: 'Please input initials!' }],
+          })(<Input maxLength='10'/>)}
         </Form.Item>
         <Form.Item label="Gender">
           {getFieldDecorator('gender')(
@@ -302,14 +299,14 @@ class AddEmployee extends React.Component {
               { transform: (value) => value.trim() },
               {
                 type: 'email',
-                message: 'The input is not valid E-mail!',
+                message: 'Please input valid E-mail!',
               },
               {
                 required: true,
                 message: 'Please input your E-mail!',
               },
             ],
-          })(<Input />)}
+          })(<Input maxLength='50'/>)}
         </Form.Item>
         <Form.Item
           label={
@@ -322,8 +319,8 @@ class AddEmployee extends React.Component {
           }
         >
           {getFieldDecorator('residence', {
-            rules: [{ message: 'Please input your nickname!', whitespace: true }],
-          })(<Input />)}
+            rules: [{ message: 'Please input your residence!', whitespace: true }],
+          })(<Input maxLength='100'/>)}
         </Form.Item>
        
         <Form.Item label="Contact Number">
@@ -361,8 +358,17 @@ class AddEmployee extends React.Component {
         </Form.Item>  
         <Form.Item label="Designation">
           {getFieldDecorator('designation', {
-            rules: [{ required: true, message: 'Please input designation!' }],
-          })(<Input />)}
+            rules: [
+              { transform: (value) => value.trim().replace(/\s+/g, ' ') },
+              { required: true, 
+                message: 'Please input designation!' 
+              },
+              {
+                pattern: new RegExp(/[a-zA-Z&( )]$/),
+                message: "Field does not accept numbers"
+              }
+            ],
+          })(<Input type='char'  maxLength='50'/>)}
         </Form.Item>
         <Form.Item label="Supervisor 01">
           {getFieldDecorator('supervisor1', {
@@ -399,17 +405,17 @@ class AddEmployee extends React.Component {
         <Form.Item label="Annual Count">
           {getFieldDecorator('annual', {
             rules: [{ required: true, message: 'Please input annual leave count!' }],
-          })(<InputNumber  />)}
+          })(<InputNumber max={14}/>)}
         </Form.Item>
         <Form.Item label="Casual Count">
           {getFieldDecorator('casual', {
             rules: [{ required: true, message: 'Please input casual leave count!' }],
-          })(<InputNumber  />)}
+          })(<InputNumber  max={7}/>)}
         </Form.Item>
         <Form.Item label="Medical Count">
           {getFieldDecorator('medical', {
             rules: [{ required: true, message: 'Please input medical leave count!' }],
-          })(<InputNumber  />)}
+          })(<InputNumber max={7} />)}
         </Form.Item>
 
         <Form.Item label="Employee Image">

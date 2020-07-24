@@ -365,7 +365,7 @@ class History extends Component {
                         color = 'red';
                         }
                         return (
-                          <Tag color={color} key={tag}>
+                          <Tag style={{width:"70px"}} color={color} key={tag}>
                             {tag}
                           </Tag>
                         );

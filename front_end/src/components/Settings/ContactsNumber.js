@@ -199,7 +199,7 @@ class ContactsNumber extends React.Component {
         return (
             <div>
                 <div>
-                    <Card title='Add Emergency Contacts' bordered={false} hoverable='true'>
+                    <Card type="inner" title='Add Emergency Contacts' bordered={false} hoverable='true'>
                         <Form layout="inline" hideRequiredMark>
 
                             <Form.Item >
@@ -214,6 +214,7 @@ class ContactsNumber extends React.Component {
                                     id='1'
                                     prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
                                     placeholder="&nbsp;&nbsp;&nbsp;&nbsp;Name"
+                                    maxLength='50'
                                 />)}
                             </Form.Item>
 
@@ -249,6 +250,7 @@ class ContactsNumber extends React.Component {
                                     onBlur={this.handleConfirmBlur}
                                     prefix={<Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />}
                                     placeholder="&nbsp;&nbsp;&nbsp;&nbsp;Relation"
+                                    maxLength='20'
                                 />)}
                             </Form.Item>
 

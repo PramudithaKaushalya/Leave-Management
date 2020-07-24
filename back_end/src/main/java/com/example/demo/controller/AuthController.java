@@ -148,17 +148,20 @@ public class AuthController {
 
                 employee.setRoles(Collections.singleton(userRole));
 
-                // sendPassword(signUpRequest, password);
+                Boolean success = sendPassword(signUpRequest, password);
 
-                User result = userRepository.save(employee);
-
-                sendPassword(signUpRequest, password);
-
-                URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
-                        .buildAndExpand(result.getEmail()).toUri();
-
-                LOGGER.info(">>> Successfully create the employee. (By user ==> "+userId+")");
-                return ResponseEntity.created(location).body(new ApiResponse(true, "Successfully create the employee."));
+                if(success) {
+                    User result = userRepository.save(employee);
+    
+                    URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
+                            .buildAndExpand(result.getEmail()).toUri();
+    
+                    LOGGER.info(">>> Successfully create the employee. (By user ==> "+userId+")");
+                    return ResponseEntity.created(location).body(new ApiResponse(true, "Successfully create the employee."));
+                } else {
+                    LOGGER.warn(">>> Unable to send the email to employee. (By ==> "+userId+")");
+                    return ResponseEntity.ok(new ApiResponse(false, "Invalid email. Please check"));
+                }
             } 
             else {
                 LOGGER.warn(">>> User authentication failed");
@@ -171,7 +174,7 @@ public class AuthController {
         }
     }
 
-    public void sendPassword(SignUpRequest user, String password) {
+    public Boolean sendPassword(SignUpRequest user, String password) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(user.getEmail());
         msg.setSubject("Credentials For VX Leave Management System.");
@@ -184,9 +187,10 @@ public class AuthController {
         
         try {
             javaMailSender.send(msg);
+            return true;
         }catch(Exception e){
-            LOGGER.error(">>> Unable to send the email to employee", e.getMessage());
             e.printStackTrace();
+            return false;
         }       
     }
 

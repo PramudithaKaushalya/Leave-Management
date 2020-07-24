@@ -197,7 +197,7 @@ class LeaveCalender extends React.Component {
     return (
       <div>
       { this.state.allRes && this.state.dateRes? 
-        <Card>
+        <Card type="inner" title='Add Leave Days' bordered={false} hoverable='true'>
           <Calendar onSelect={this.onSelect} dateCellRender={this.dateCellRender} />
         </Card>
       : 

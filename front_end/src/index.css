@@ -1,18 +1,24 @@
-html{
+.html{
     min-height: 100%;
-  }
-/*   
-  body {
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: url(/img/background1.jpg) no-repeat;
-    background-size: 100%;
-    background-position: bottom;
-    min-height: 100%;
-    background-color: #5eb2ff;
-  } */
+}
+.bg-img{
+  background-image: url("./error.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  flex: auto;
+  height: 100%;
+  padding-top: 12%;
+  margin: 100 auto;
+}
+.error-img{
+  background-image: url("./404.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  flex: auto;
+  padding-top: 20%;
+}
+
 
   
 

@@ -113,4 +113,18 @@ public class UserController {
             return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
         }
     }
+
+    @GetMapping("/filter_by_department/{id}")
+    public ResponseEntity<?> filterByDepartment(@RequestHeader("Authorization") String token, @PathVariable("id") Long id) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);        
+            return userService.filterByDepartment(id, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
 }

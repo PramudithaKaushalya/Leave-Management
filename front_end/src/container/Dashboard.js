@@ -189,17 +189,20 @@ class Dashboard extends Component {
           {
             title: 'Entitlement',
             key: '1',
-            dataIndex: 'entitlement'
+            dataIndex: 'entitlement',
+            align: 'center'
           },    
           {
             title: 'Utilized',
             key: '2',
-            dataIndex: 'utilized'
+            dataIndex: 'utilized',
+            align: 'center'
           },
           {
             title: 'Remaining',
             key: '3',
-            dataIndex: 'remaining'
+            dataIndex: 'remaining',
+            align: 'center'
           }
         ]; 
 
@@ -227,7 +230,8 @@ class Dashboard extends Component {
             },
             {
                 title: 'Number of days',
-                dataIndex: 'number_of_leave_days'
+                dataIndex: 'number_of_leave_days',
+                align: 'center'
             },
             {
                 title: 'Status',
@@ -244,7 +248,7 @@ class Dashboard extends Component {
                       color = 'red';
                     }
                     return (
-                      <Tag color={color} key={tag}>
+                      <Tag style={{width:"62px"}} color={color} key={tag}>
                         {tag}
                       </Tag>
                     );
@@ -299,7 +303,7 @@ class Dashboard extends Component {
                 <Col span={14}>  
                   <Card hoverable='true'>
                     {employee.length !== 0 ?
-                    <Descriptions title="User Infomation" size="small" bordered column={2} >
+                    <Descriptions title="Employee Infomation" size="small" bordered column={2} >
                       <Descriptions.Item label="Name">{employee.firstName} {employee.secondName}</Descriptions.Item>
                       <Descriptions.Item label="Email" span={1}>{employee.email}</Descriptions.Item>
                       <Descriptions.Item label="Residence" >{employee.residence}</Descriptions.Item>
@@ -416,17 +420,20 @@ class Dashboard extends Component {
                   </Row>
                   <br/>
                   <Row>
-                    <Col span={8}>
+                    <Col span={24}>
                     Duty Cover By:
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'145px'}}>{leave.duty}</Tag>
+                    <Tag color="volcano" style={{width:'460px'}}>{leave.duty}</Tag>
                     </Col>
-                    <Col span={16}>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col span={24}>
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'305px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'460px'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>

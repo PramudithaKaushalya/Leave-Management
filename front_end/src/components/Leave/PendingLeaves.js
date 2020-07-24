@@ -5,6 +5,8 @@ import {Table, Button, Icon, Input, Card, Modal, Form, Tag, message, Row, Col, S
 import Highlighter from 'react-highlight-words';
 import './index.css';
 
+
+const { TextArea } = Input;
 const CollectionCreateForm = Form.create({ name: 'pendingLeaves' })(
 
   class extends React.Component {
@@ -23,7 +25,7 @@ const CollectionCreateForm = Form.create({ name: 'pendingLeaves' })(
             <Form.Item label="Reason">
               {getFieldDecorator('reason', {
                 rules: [{ required: true, message: 'Please input the reason for reject!' }],
-              })(<Input type="textarea"/>)}
+              })(<TextArea rows={4} maxLength = {300} style={{ width: '100%', height: '100px' }}/>)}
             </Form.Item>
           </Form>
         </Modal>
@@ -321,7 +323,8 @@ class PendingLeaves extends Component {
             },
             {
                 title: 'Number of days',
-                dataIndex: 'number_of_leave_days'
+                dataIndex: 'number_of_leave_days',
+                align: 'center'
             },
             {
                 title: 'Date of request',
@@ -355,7 +358,7 @@ class PendingLeaves extends Component {
         return (
             <div>
             { this.state.mounted? 
-              <Card title="Pending Leaves" hoverable='true'>
+              <Card type="inner" title="Pending Leaves" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 7 }} size="middle" />
               </Card> 
              : 

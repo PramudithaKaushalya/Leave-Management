@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Layout, Menu, Icon, Form, Card, message, Spin } from 'antd';
+import { Layout, Menu, Icon, Form, message, Spin } from 'antd';
 import Dashboard from './Dashboard';
 import LeavesHistory from '../components/Leave/ReadLeaves';
 import AddEmployee from '../components/Employee/AddEmployee';
@@ -22,7 +22,7 @@ import Attendence from './../components/Attendence/Attendence';
 import OneAttendence from './../components/Attendence/OneAttendence';
 import CollectLieu from '../components/Leave/CollectLieu';
 import PendingLieu from '../components/Leave/PendingLieu';
-import {Redirect} from 'react-router-dom';
+import Error from './../components/Error';
 
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -180,7 +180,8 @@ class SiderDemo extends React.Component {
           :null
           }
             <Menu.Item key="14">
-                <a href='http://leaves.vizuamatix.com:6077/Docs/LeavePolicy.pdf' target='_blank' rel="noopener noreferrer">
+                {/* <a href='http://leaves.vizuamatix.com:6077/Docs/LeavePolicy.pdf' target='_blank' rel="noopener noreferrer"> */}
+                <a href='http://192.168.10.119:5000/pdf/leave_policy' target='_blank' rel="noopener noreferrer" >
                 <Icon type="file-protect" />
                 <span>Leave Policy</span></a>
             </Menu.Item>
@@ -241,13 +242,11 @@ class SiderDemo extends React.Component {
         </Sider>
         <Layout style={{ marginLeft: 220 }}>
           
-          <Layout style={{ position: 'fixed', zIndex: 100, width: '89%' }}>
-            <Card hoverable='true'> 
+          <Layout style={{ position: 'fixed', zIndex: 100, width: '90%' }}>
               <Header name={user_name} role={user_role} department={user_department} image={user_image} designation={user_des}/>
-            </Card>
           </Layout>
 
-          <Layout style={{marginTop:'125px'}} >
+          <Layout style={{marginTop:'120px'}} >
             
           <Spin size="large" spinning={this.state.spin}/>
           <Content style={{ margin: '20px', paddingTop: '20PX' }}>
@@ -269,6 +268,12 @@ class SiderDemo extends React.Component {
                 <Route path='/one_attendence' component={OneAttendence}/>
                 <Route path='/collect_lieu' component={CollectLieu}/>
                 <Route path='/pending_lieu' component={PendingLieu}/>
+                <Route path='/error404' component={Error}/>
+                <Route path='*' render={() => 
+                  (
+                    <Redirect to="/error404"/>
+                  )
+                }/>
               </Switch>
           </Content>
           

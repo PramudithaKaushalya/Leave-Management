@@ -60,54 +60,52 @@ class CollectLieu extends React.Component {
 
     handleSubmit = e => {
       
-    e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-        
-            if (!err) {
-                confirm({
-                title: 'Sure to submit lieu collecting request?',
-                content: 'If you submit, Send request to administraters and supervisors.',
-                okText: 'Sumbit',
-                okType: 'primary',
-                    onOk: () => {
-                            
-                        const leave = {
-                            date : values.date,
-                            period : values.period,
-                            project : values.project,
-                            worksDone : values.worksDone
-                        }
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+      
+          if (!err) {
+              confirm({
+              title: 'Sure to submit lieu collecting request?',
+              content: 'If you submit, Send request to administraters and supervisors.',
+              okText: 'Sumbit',
+              okType: 'primary',
+                  onOk: () => {
+                          
+                      const leave = {
+                          date : values.date,
+                          period : values.period,
+                          project : values.project,
+                          worksDone : values.worksDone
+                      }
 
-                        console.log("Lieu leave request --------------> ", leave);
+                      console.log("Lieu leave request --------------> ", leave);
 
-                        axios.post(
-                            'lieu_leave/save', 
-                            leave, 
-                            { 
-                                headers: {
-                                    Authorization: 'Bearer ' + localStorage.getItem("header")
-                                }
-                            }
-                        )
-                        .then(res => {
-                            if (res.data.success) {              
-                                message.success(res.data.message); 
-                                this.getLieuLeaves();
-                                this.handleCancel();
-                            } else {
-                                message.error(res.data.message);
-                            }
-                        })
-                        .catch(e => {
-                            console.log(e.response.data.error);
-                            message.error("Something went wrong"); 
-                        })
-                    }
-                })
-            }else if(this.state.error !== null){
-                message.error(this.state.error);
-            }
-        })
+                      axios.post(
+                          'lieu_leave/save', 
+                          leave, 
+                          { 
+                              headers: {
+                                  Authorization: 'Bearer ' + localStorage.getItem("header")
+                              }
+                          }
+                      )
+                      .then(res => {
+                          if (res.data.success) {              
+                              message.success(res.data.message); 
+                              this.getLieuLeaves();
+                              this.handleCancel();
+                          } else {
+                              message.error(res.data.message);
+                          }
+                      })
+                      .catch(e => {
+                          console.log(e.response.data.error);
+                          message.error("Something went wrong"); 
+                      })
+                  }
+              })
+          }
+      })
     }
 
   handleCancel = () => {
@@ -202,7 +200,8 @@ class CollectLieu extends React.Component {
         <div>
           <Row gutter={16}>
             <Col span={13} > 
-              <Card title='Collect the lieu leaves' bordered={false} hoverable='true'>  
+              <Card type="inner" title='Collect Lieu Leaves' bordered={false} hoverable='true'>  
+                <p>You have to collect lieu leaves day by day.</p>
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 
                 <Form.Item label="Date">
@@ -212,7 +211,7 @@ class CollectLieu extends React.Component {
                   <DatePicker
                     format="YYYY-MM-DD"
                     placeholder="Pickup a Date"
-                    style={{ width: '400px' }}
+                    style={{ width: '100%' }}
                   />
                   )}
                 </Form.Item>
@@ -235,7 +234,7 @@ class CollectLieu extends React.Component {
                       required: true, 
                       message: 'Please input the project!' 
                     }],
-                  })(<Input style={{width: '400px'}} />)}
+                  })(<Input maxLength = {30}/>)}
                 </Form.Item>
                
                 <Form.Item label="Works done">
@@ -244,7 +243,7 @@ class CollectLieu extends React.Component {
                         required: true, 
                         message: 'Please input the works you done',
                       }],
-                  })(<TextArea rows={4} maxLength = {1000} style={{ width: '400px', height: '170px' }}/>)}
+                  })(<TextArea rows={4} maxLength = {300} style={{ width: '100%', height: '170px' }}/>)}
                 </Form.Item>
 
                 <Form.Item {...tailFormItemLayout}>

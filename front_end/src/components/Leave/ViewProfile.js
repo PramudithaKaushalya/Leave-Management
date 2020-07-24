@@ -115,47 +115,56 @@ class ViewProfile extends Component {
           {
             title: 'Casual',
             key: '1',
-            dataIndex: 'casual'
+            dataIndex: 'casual',
+            align: 'center'
           },    
           {
             title: 'Medical',
             key: '2',
-            dataIndex: 'medical'
+            dataIndex: 'medical',
+            align: 'center'
           },
           {
             title: 'Maternity',
             key: '3',
-            dataIndex: 'maternity'
+            dataIndex: 'maternity',
+            align: 'center'
           },
           {
             title: 'Paternity',
             key: '4',
-            dataIndex: 'paternity'
+            dataIndex: 'paternity',
+            align: 'center'
           },
           {
             title: 'Annual',
             key: '5',
-            dataIndex: 'annual'
+            dataIndex: 'annual',
+            align: 'center'
           },
           {
             title: 'Lieu',
             key: '6',
-            dataIndex: 'lieu'
+            dataIndex: 'lieu',
+            align: 'center'
           },
           {
             title: 'Special',
             key: '7',
-            dataIndex: 'special'
+            dataIndex: 'special',
+            align: 'center'
           },
           {
             title: 'Cover Up',
             key: '8',
-            dataIndex: 'coverup'
+            dataIndex: 'coverup',
+            align: 'center'
           },
           {
             title: 'No Pay',
             key: '9',
-            dataIndex: 'nopay'
+            dataIndex: 'nopay',
+            align: 'center'
           },
           {
             dataIndex: '',
@@ -168,7 +177,7 @@ class ViewProfile extends Component {
 
           <div>
           { this.state.data !== 0? 
-            <Card hoverable='true'>
+            <Card type="inner" title="View Summary" hoverable='true'>
               <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
             </Card>
             : 

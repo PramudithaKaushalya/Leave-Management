@@ -9,7 +9,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "users",  uniqueConstraints = {
+@Table(name = "hrms_users",  uniqueConstraints = {
     @UniqueConstraint(columnNames = {
         "email"
     }),
@@ -42,11 +42,26 @@ public class User extends DateAudit{
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "marriage_status")
+    private String marriageStatus;
+
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "dob")
+    private String dob;
+
+    @Column(name = "religion")
+    private String religion;
+
     @Column(name = "email")
     private String email;
 
     @Column(name = "residence")
     private String residence;
+
+    @Column(name = "permanent")
+    private String permanent;
 
     @Column(name = "contact")
     private String contact;
@@ -100,8 +115,8 @@ public class User extends DateAudit{
     @Column(name = "confirm_code")
     private String confirmCode;
 
-    @Column(name = "isLogedIn")
-    private Boolean isLogedIn=false;
+    @Column(name = "is_first_login")
+    private Boolean isFirstLogin;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -132,16 +147,50 @@ public class User extends DateAudit{
     private List<LieuLeave> requestBy;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "approvedBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "checkedBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LieuLeave> approvedBy;
 
     public User() {
 
     }
+
+    public User(Long id ,String userId, String username, String first_name, String second_name, String initials, String gender, String email,
+                String residence, String contact, Department department, String designation, String supervisor1, String supervisor2, String join_date,
+                String confirm_date, String resignDate, String password, String status, Float annual, Float casual, Float medical, String image, String permanent, String dob, String marriageStatus, String religion, String nic) {
+        this.id = id;
+        this.userId = userId;
+        this.username = username;
+        this.firstName = first_name;
+        this.secondName = second_name;
+        this.initials = initials;
+        this.gender = gender;
+        this.email = email;
+        this.residence = residence;
+        this.contact = contact;
+        this.department = department;
+        this.designation = designation;
+        this.supervisor1 = supervisor1;
+        this.supervisor2 = supervisor2;
+        this.joinDate = join_date;
+        this.confirmDate = confirm_date;
+        this.resignDate = resignDate;
+        this.password = password;
+        this.status = status;
+        this.annual = annual;
+        this.casual = casual;
+        this.medical = medical;
+        this.image = image;
+        this.permanent = permanent;
+        this.dob = dob;
+        this.marriageStatus = marriageStatus;
+        this.religion = religion;
+        this.nic = nic;
+        this.isFirstLogin = true;
+    }
     
     public User(String userId, String username, String first_name, String second_name, String initials, String gender, String email, 
                 String residence, String contact, Department department, String designation, String supervisor1, String supervisor2, String join_date, 
-                String confirm_date, String resignDate, String password, String status, Float annual, Float casual, Float medical, String image) {
+                String confirm_date, String resignDate, String password, String status, Float annual, Float casual, Float medical, String image, String permanent, String dob, String marriageStatus, String religion, String nic) {
         
         this.userId = userId;
         this.username = username;
@@ -165,6 +214,12 @@ public class User extends DateAudit{
         this.casual = casual;
         this.medical = medical;
         this.image = image;
+        this.permanent = permanent;
+        this.dob = dob;
+        this.marriageStatus = marriageStatus;
+        this.religion = religion;
+        this.nic = nic;
+        this.isFirstLogin = true;
 	}
 
     public String getInitials() {
@@ -407,12 +462,12 @@ public class User extends DateAudit{
         this.designation = designation;
     }
 
-    public Boolean getIsLogedIn() {
-        return isLogedIn;
+    public Boolean getIsFirstLogin() {
+        return isFirstLogin;
     }
 
-    public void setIsLogedIn(Boolean isLogedIn) {
-        this.isLogedIn = isLogedIn;
+    public void setIsFirstLogin(Boolean isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
     }
 
     public String getImage() {
@@ -422,5 +477,60 @@ public class User extends DateAudit{
     public void setImage(String image) {
         this.image = image;
     }
-    
+
+    public String getMarriageStatus() {
+        return marriageStatus;
+    }
+
+    public void setMarriageStatus(String marriageStatus) {
+        this.marriageStatus = marriageStatus;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(String nic) {
+        this.nic = nic;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
+    }
+
+    public String getPermanent() {
+        return permanent;
+    }
+
+    public void setPermanent(String permanent) {
+        this.permanent = permanent;
+    }
+
+    public List<LieuLeave> getRequestBy() {
+        return requestBy;
+    }
+
+    public void setRequestBy(List<LieuLeave> requestBy) {
+        this.requestBy = requestBy;
+    }
+
+    public List<LieuLeave> getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(List<LieuLeave> approvedBy) {
+        this.approvedBy = approvedBy;
+    }
 }

@@ -3,7 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "calender")
+@Table(name = "hrms_calender")
 public class Calender {
 
     @Id

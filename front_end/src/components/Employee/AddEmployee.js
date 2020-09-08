@@ -116,9 +116,12 @@ class AddEmployee extends React.Component {
     departments: [],
     roles: [],
     confirmDirty: false,
-    join_date: undefined,
-    confirm_date: undefined,
+    join_date: null,
+    confirm_date: null,
     loading: false,
+    dateOfBirth: null,
+    selectedRole: null,
+    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"]
   };
 
   handleSubmit = e => {
@@ -131,8 +134,13 @@ class AddEmployee extends React.Component {
           secondName: values.second_name || undefined,
           initials: values.initials || "No initials",
           gender: values.gender || undefined,
+          dateOfBirth: this.state.dateOfBirth,
+          religion: values.religion,
+          marriageStatus: values.marriage_status || "None",
+          nic: values.nic,
           email: values.email || undefined,
-          residence: values.residence || "No residence",
+          residence: values.residence || "No residential address",
+          permanent: values.permanent || "No permanent address",
           contact: values.contact || undefined,
           role: parseInt(values.role) || undefined,
           department: parseInt(values.department) || undefined,
@@ -141,9 +149,9 @@ class AddEmployee extends React.Component {
           supervisor2: values.supervisor2 || "No one",
           joinDate: this.state.join_date || undefined,
           confirmDate: this.state.confirm_date || "Not confirm yet",
-          annual : values.annual,
-          casual : values.casual,
-          medical : values.medical,
+          annual : values.annual || 0.0,
+          casual : values.casual || 0.0,
+          medical : values.medical || 0.0,
           image : this.state.imageUrl
         }
 
@@ -192,6 +200,16 @@ class AddEmployee extends React.Component {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
+  };
+
+  onChangeDOB = (date, dateString) => {
+    console.log(dateString);
+    this.setState({ dateOfBirth : dateString });
+  };
+
+  handleRoleChange = (item) => {
+    console.log(item);
+    this.setState({ selectedRole : item });
   };
 
   onChangeJoin = (date, dateString) => {
@@ -258,32 +276,31 @@ class AddEmployee extends React.Component {
       </div>
     );
 
-    const { imageUrl } = this.state;
+    const { imageUrl, selectedRole } = this.state;
 
     return (
         <div>
         <Card bordered={false} style={{ height: '1000px'}}>  
-        <Form {...formItemLayout}>        
-   
+        <Form {...formItemLayout}>  
         <Form.Item label="Employee ID">
           {getFieldDecorator('emp_id', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
-          })(<Input maxLength='5'/>)}
+          })(<Input maxLength={5}/>)}
         </Form.Item>
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
-          })(<Input maxLength='20'/>)}
+          })(<Input maxLength={20}/>)}
         </Form.Item>
-        <Form.Item label="Second Name">
+        <Form.Item label="Last Name">
           {getFieldDecorator('second_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
-          })(<Input maxLength='20'/>)}
+          })(<Input maxLength={20}/>)}
         </Form.Item>
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
-            rules: [{ message: 'Please input initials!' }],
-          })(<Input maxLength='10'/>)}
+            rules: [{ transform: (value) => value.trim() }],
+          })(<Input maxLength={10}/>)}
         </Form.Item>
         <Form.Item label="Gender">
           {getFieldDecorator('gender')(
@@ -292,7 +309,38 @@ class AddEmployee extends React.Component {
           <Radio value="Female">Female</Radio>
           </Radio.Group>
         )}
-        </Form.Item>       
+        </Form.Item>   
+        <Form.Item label="Date of Birth">
+        {getFieldDecorator('dob', {
+            rules: [{ required: true, message: 'Please input date of birth!' }],
+          })(
+          <DatePicker onChange={this.onChangeDOB} format="YYYY-MM-DD" />
+          )}
+        </Form.Item> 
+        <Form.Item label="Religion">
+          {getFieldDecorator('religion', {
+            rules: [{ required: true, message: 'Please input religion!' }],
+          })(
+            <Select placeholder="Please select a religion">
+                {this.state.religion.map(item => (
+                  <Option key={item}>{item}</Option>
+                ))}
+            </Select>
+          )}
+        </Form.Item>    
+        <Form.Item label="Marriage Status">
+          {getFieldDecorator('marriage_status')(
+          <Radio.Group name="radiogroup">
+          <Radio value="Single">Single</Radio>
+          <Radio value="Married">Married</Radio>
+          </Radio.Group>
+        )}
+        </Form.Item> 
+        <Form.Item label="NIC">
+          {getFieldDecorator('nic', {
+            rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input NIC number!' }],
+          })(<Input maxLength={20}/>)}
+        </Form.Item>
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
             rules: [
@@ -306,12 +354,12 @@ class AddEmployee extends React.Component {
                 message: 'Please input your E-mail!',
               },
             ],
-          })(<Input maxLength='50'/>)}
+          })(<Input maxLength={50}/>)}
         </Form.Item>
         <Form.Item
           label={
             <span>
-              Residence Address&nbsp;
+              Residential Address&nbsp;
               <Tooltip title="No, Street, City.">
                 <Icon type="question-circle-o" />
               </Tooltip>
@@ -319,10 +367,23 @@ class AddEmployee extends React.Component {
           }
         >
           {getFieldDecorator('residence', {
-            rules: [{ message: 'Please input your residence!', whitespace: true }],
-          })(<Input maxLength='100'/>)}
+            rules: [{ message: 'Please input residential address!', whitespace: true }],
+          })(<Input maxLength={65}/>)}
         </Form.Item>
-       
+        <Form.Item
+          label={
+            <span>
+              Permanent Address&nbsp;
+              <Tooltip title="No, Street, City.">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span>
+          }
+        >
+          {getFieldDecorator('permanent', {
+            rules: [{ message: 'Please input permanent address!', whitespace: true }],
+          })(<Input maxLength={65}/>)}
+        </Form.Item>
         <Form.Item label="Contact Number">
           {getFieldDecorator('contact', {
             rules: [{ transform: (value) => value.trim() },
@@ -338,8 +399,8 @@ class AddEmployee extends React.Component {
           {getFieldDecorator('role', {
             rules: [{ required: true, message: 'Please input employee role!' }],
           })(
-            <Select placeholder="Please select a role">
-               {this.state.roles.map(item => (
+            <Select placeholder="Please select a role" onChange={this.handleRoleChange}>
+                {this.state.roles.map(item => (
                   <Option key={item.id}>{item.name}</Option>
                 ))}
             </Select>
@@ -368,14 +429,14 @@ class AddEmployee extends React.Component {
                 message: "Field does not accept numbers"
               }
             ],
-          })(<Input type='char'  maxLength='50'/>)}
+          })(<Input type='char'  maxLength={50}/>)}
         </Form.Item>
         <Form.Item label="Supervisor 01">
           {getFieldDecorator('supervisor1', {
             rules: [{ required: false, message: 'Please input first supervisor!' }],
           })(
             <Select placeholder="Please select a supervisor">
-               {this.state.supervisors.map(item => (
+                {this.state.supervisors.map(item => (
                   <Option key={item.firstName}>{item.firstName} {item.secondName}</Option>
                 ))}
             </Select>  
@@ -399,25 +460,47 @@ class AddEmployee extends React.Component {
           <DatePicker onChange={this.onChangeJoin} format="YYYY-MM-DD" />
           )}
         </Form.Item>
-        <Form.Item label="Confirm date">
+        { selectedRole === "3" || selectedRole === "4" || selectedRole === "5" ?
+        <Form.Item label="End date">
+        {getFieldDecorator('confirm', {
+            rules: [{ required: true, message: 'Please input employee end date!' }],
+          })(
           <DatePicker onChange={this.onChangeConfirm} format="YYYY-MM-DD" />
+          )}
+        </Form.Item>
+        : 
+        <Form.Item label="Confirm date">
+        {getFieldDecorator('confirm', {
+            rules: [{ required: true, message: 'Please input employee confirm date!' }],
+          })(
+          <DatePicker onChange={this.onChangeConfirm} format="YYYY-MM-DD" />
+          )}
         </Form.Item> 
+        }
+        
+        { selectedRole === "3" || selectedRole === "4" || selectedRole === "5" ?
+        null
+        : 
         <Form.Item label="Annual Count">
           {getFieldDecorator('annual', {
             rules: [{ required: true, message: 'Please input annual leave count!' }],
-          })(<InputNumber max={14}/>)}
+          })(<InputNumber min={0} max={14}/>)}
         </Form.Item>
+        }
         <Form.Item label="Casual Count">
           {getFieldDecorator('casual', {
             rules: [{ required: true, message: 'Please input casual leave count!' }],
-          })(<InputNumber  max={7}/>)}
+          })(<InputNumber min={0} max={7}/>)}
         </Form.Item>
+        { selectedRole === "3" || selectedRole === "4" || selectedRole === "5" ?
+        null
+        : 
         <Form.Item label="Medical Count">
           {getFieldDecorator('medical', {
             rules: [{ required: true, message: 'Please input medical leave count!' }],
-          })(<InputNumber max={7} />)}
+          })(<InputNumber min={0} max={7} />)}
         </Form.Item>
-
+        }
         <Form.Item label="Employee Image">
           {getFieldDecorator('image')(
             <Upload

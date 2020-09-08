@@ -31,7 +31,7 @@ public class LieuLeaveService {
             Date date = new Date();
             User user = userRepository.getOne(userId);
             lieuLeave.setEmployee(user);
-            lieuLeave.setIsApproved(false);
+            lieuLeave.setStatus(0);
             lieuLeave.setRequestAt(date);
             lieuLeaveRepository.save(lieuLeave);
             LOGGER.info(">>> Successfully add the lieu leave. (By user ==> "+userId+")");
@@ -45,12 +45,22 @@ public class LieuLeaveService {
 
     public ResponseEntity<?> getAllLieuLeaves(Long userId) {
         try {
-            List<LieuLeave> leaves = lieuLeaveRepository.findByIsApprovedOrderByIdDesc(false);
-            List<LieuLeaveDTO> leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getId(), x.getDate(), x.getPeriod(), x.getProject(), x.getWorksDone(), x.getEmployee().getFirstName()+" "+ x.getEmployee().getSecondName())).collect(Collectors.toList());
+            User user = userRepository.getOne(userId);
+            List<LieuLeave> leaves = lieuLeaveRepository.findByStatusOrderByIdDesc(0);
+            List<LieuLeaveDTO> leaveDTOs = new ArrayList<>();
+
+            if(user.getRoles().stream().findFirst().get().getName().toString().equals("Admin")) {
+                leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getId(), x.getDate(), x.getPeriod(), x.getProject(), x.getWorksDone(), x.getEmployee().getFirstName()+" "+ x.getEmployee().getSecondName(), x.getRequestAt())).collect(Collectors.toList());
+            } else if(user.getRoles().stream().findFirst().get().getName().toString().equals("Supervisor")) {
+                String supervisorName = user.getFirstName();
+                leaveDTOs = leaves.stream().filter(x -> x.getEmployee().getSupervisor1().equals(supervisorName) || x.getEmployee().getSupervisor2().equals(supervisorName)).map( x -> new LieuLeaveDTO(x.getId(), x.getDate(), x.getPeriod(), x.getProject(), x.getWorksDone(), x.getEmployee().getFirstName()+" "+ x.getEmployee().getSecondName(), x.getRequestAt())).collect(Collectors.toList());
+            }
+
             LOGGER.info(">>> Successfully get all lieu leaves. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, leaveDTOs));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all lieu leaves. (By user ==> "+userId+")");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all lieu leaves"));
         }
     }
@@ -61,7 +71,7 @@ public class LieuLeaveService {
 
             if(lieuLeaveRepository.existsByEmployee(user)) {
                 List<LieuLeave> leaves = lieuLeaveRepository.findByEmployeeOrderByIdDesc(user);
-                List<LieuLeaveDTO> leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getDate(), x.getPeriod(), x.getProject(), x.getIsApproved()) ).collect(Collectors.toList());
+                List<LieuLeaveDTO> leaveDTOs = leaves.stream().map( x -> new LieuLeaveDTO(x.getDate(), x.getPeriod(), x.getProject(), x.getStatus()) ).collect(Collectors.toList());
             
                 LOGGER.info(">>> Successfully get all lieu leaves. (By user ==> "+userId+")");
                 return ResponseEntity.ok(new ApiResponse(true, leaveDTOs));
@@ -71,6 +81,7 @@ public class LieuLeaveService {
             }
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all lieu leaves. (By user ==> "+userId+")");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all lieu leaves"));
         }
     }
@@ -78,17 +89,42 @@ public class LieuLeaveService {
     public ResponseEntity<?> approveLieuLeaves(Long leaveId, Long userId) {
         try {
             Date date = new Date();
-
             LieuLeave leave = lieuLeaveRepository.getOne(leaveId);
-            leave.setApprovedBy(userRepository.getOne(userId));
-            leave.setIsApproved(true);
-            leave.setApprovedAt(date);
+            User emp = leave.getEmployee();
+
+            if(emp.getId().equals(userId)) {
+                LOGGER.warn(">>> Not allowed to approve the own requests. (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Not allowed to approve the own requests"));
+            }
+
+            leave.setCheckedBy(userRepository.getOne(userId));
+            leave.setStatus(1);
+            leave.setCheckedAt(date);
             lieuLeaveRepository.save(leave);
             LOGGER.info(">>> Successfully approved the lieu leave. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully approved the lieu leave"));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to approved the lieu leave. (By user ==> "+userId+")");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to approved the lieu leave"));
+        }
+    }
+
+    public ResponseEntity<?> rejectLieuLeaves(Long leaveId, Long userId) {
+        try {
+            Date date = new Date();
+
+            LieuLeave leave = lieuLeaveRepository.getOne(leaveId);
+            leave.setCheckedBy(userRepository.getOne(userId));
+            leave.setStatus(2);
+            leave.setCheckedAt(date);
+            lieuLeaveRepository.save(leave);
+            LOGGER.info(">>> Successfully reject the lieu leave. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, "Successfully reject the lieu leave"));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to reject the lieu leave. (By user ==> "+userId+")");
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to reject the lieu leave"));
         }
     }
 }

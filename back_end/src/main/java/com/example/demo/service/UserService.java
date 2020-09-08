@@ -39,17 +39,18 @@ public class UserService {
 
     public ResponseEntity<?> getAll( Long userId) {
         try {
-            List<User> users = userRepository.findAll();
+            List<User> users = userRepository.findAllByOrderByUserId();
 
             List<Employee> employees = users.stream().map(user -> new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
             user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(), user.getDesignation(),
             user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),
-            user.getCasual(),user.getMedical())).collect(Collectors.toList());
+            user.getCasual(),user.getMedical(), user.getPermanent(), user.getDob(), user.getMarriageStatus(), user.getReligion(), user.getNic())).collect(Collectors.toList());
 
             LOGGER.info(">>> Successfully get all employees. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, employees));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all employees. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all employees"));
         } 
     }
@@ -64,6 +65,7 @@ public class UserService {
             return ResponseEntity.ok(new ApiResponse(true, "Successfully resign the employee"));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to resign the employee. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to resign the employee"));
         } 
     }
@@ -102,7 +104,7 @@ public class UserService {
         try {
             User employeeToUpdate = userRepository.getOne(id);
             employeeToUpdate.setUserId(employee.getUserId().trim());
-            employeeToUpdate.setUsername(employee.getEmail().trim());
+            employeeToUpdate.setUsername(employee.getUserId().trim());
             employeeToUpdate.setFirstName(employee.getFirstName().trim());
             employeeToUpdate.setSecondName(employee.getSecondName().trim());
             employeeToUpdate.setInitials(employee.getInitials().trim());
@@ -110,6 +112,11 @@ public class UserService {
             employeeToUpdate.setEmail(employee.getEmail().trim());
             employeeToUpdate.setResidence(employee.getResidence().trim());
             employeeToUpdate.setContact(employee.getContact().trim());
+            employeeToUpdate.setPermanent(employee.getPermanent().trim());
+            employeeToUpdate.setDob(employee.getDateOfBirth());
+            employeeToUpdate.setMarriageStatus(employee.getMarriageStatus());
+            employeeToUpdate.setReligion(employee.getReligion());
+            employeeToUpdate.setNic(employee.getNic());
 
             String role_name = employee.getRole();
             Long roleId = 0L;
@@ -160,16 +167,17 @@ public class UserService {
 
         try { 
             User user = userRepository.getOne(id);
-
+            System.out.println("\n\n\n||||||||||||||||||||||||||||||||||"+user.getFirstName()+"\n\n\n");
             Employee employee = new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
                 user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(),user.getDesignation(),
                 user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),
-                user.getCasual(),user.getMedical(), user.getImage());
+                user.getCasual(),user.getMedical(), user.getImage(), user.getPermanent(), user.getDob(), user.getMarriageStatus(), user.getReligion(), user.getNic());
                 
             LOGGER.info(">>> Successfully get employee "+user.getId()+". (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, employee));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get one employee. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get employee"));
         }    
     }
@@ -183,6 +191,7 @@ public class UserService {
             return ResponseEntity.ok(new ApiResponse(true, user.getFirstName()+" "+user.getSecondName()));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get employee name. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get employee name"));
         }    
     }
@@ -199,6 +208,7 @@ public class UserService {
             return ResponseEntity.ok(new ApiResponse(true, supervisors));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get supervisors. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get supervisors"));
         } 
     }
@@ -212,12 +222,13 @@ public class UserService {
             List<Employee> employees = users.stream().map(user -> new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
             user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(), user.getDesignation(),
             user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),
-            user.getCasual(),user.getMedical())).collect(Collectors.toList());
+            user.getCasual(),user.getMedical(), user.getPermanent(), user.getDob(), user.getMarriageStatus(), user.getReligion(), user.getNic())).collect(Collectors.toList());
 
             LOGGER.info(">>> Successfully get employees of "+department.getName()+". (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, employees));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get employees. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get employees"));
         } 
     }

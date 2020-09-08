@@ -22,6 +22,7 @@ public class RoleService {
             return ResponseEntity.ok(new ApiResponse(true, roleRepository.findAll()));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get roles. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get roles"));
         } 
     }

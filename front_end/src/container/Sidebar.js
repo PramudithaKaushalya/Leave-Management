@@ -22,6 +22,7 @@ import Attendence from './../components/Attendence/Attendence';
 import OneAttendence from './../components/Attendence/OneAttendence';
 import CollectLieu from '../components/Leave/CollectLieu';
 import PendingLieu from '../components/Leave/PendingLieu';
+import OwnPending from '../components/Leave/OwnPending';
 import Error from './../components/Error';
 
 const { Content, Footer, Sider } = Layout;
@@ -105,12 +106,12 @@ class SiderDemo extends React.Component {
       <Layout style={{ minHeight: '100vh' }}>
         <Sider 
           style={{
-            // overflow: 'auto',
+            overflow: 'auto',
             height: '100vh',
             position: 'fixed',
             // left: 0,
           }}
-          width = "220px"
+          width = "235px"
           // collapsible
           // collapsed={this.state.collapsed}
           // onCollapse={this.onCollapse}
@@ -153,7 +154,12 @@ class SiderDemo extends React.Component {
                 <Icon type="paper-clip" />
                 <span>Collect Lieu</span>
             </Menu.Item>
-
+            
+            <Menu.Item key="17">
+                  <Link to='/own_pending'/>
+                  <Icon type="question-circle" />
+                  <span>Own Pending Leaves</span>
+            </Menu.Item>
           { user_role === "Admin" || user_role === "Supervisor"?
             
               <Menu.Item key="4">
@@ -240,7 +246,7 @@ class SiderDemo extends React.Component {
             </SubMenu>
           </Menu>
         </Sider>
-        <Layout style={{ marginLeft: 220 }}>
+        <Layout style={{ marginLeft: 235 }}>
           
           <Layout style={{ position: 'fixed', zIndex: 100, width: '90%' }}>
               <Header name={user_name} role={user_role} department={user_department} image={user_image} designation={user_des}/>
@@ -268,6 +274,7 @@ class SiderDemo extends React.Component {
                 <Route path='/one_attendence' component={OneAttendence}/>
                 <Route path='/collect_lieu' component={CollectLieu}/>
                 <Route path='/pending_lieu' component={PendingLieu}/>
+                <Route path='/own_pending' component={OwnPending}/>
                 <Route path='/error404' component={Error}/>
                 <Route path='*' render={() => 
                   (

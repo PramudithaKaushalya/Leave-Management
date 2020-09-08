@@ -53,7 +53,7 @@ public class ContactController {
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<?> DeleteById(@RequestHeader("Authorization") String token, @PathVariable("id") Integer contact) {
+    public ResponseEntity<?> deleteById(@RequestHeader("Authorization") String token, @PathVariable("id") Integer contact) {
         if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
 
             String jwt = token.substring(7);

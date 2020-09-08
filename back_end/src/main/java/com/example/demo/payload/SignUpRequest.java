@@ -1,63 +1,31 @@
 package com.example.demo.payload;
 
-import javax.validation.constraints.*;
-
 public class SignUpRequest {
 
     private String userId;
-
-    @NotBlank
-    @Size(min = 4, max = 40)
     private String firstName;
-
-    @Size(min = 4, max = 40)
     private String secondName;
-
-    @Size(min = 1, max = 10)
     private String initials;
-
     private String gender;
-
-    @NotBlank
-    @Size(max = 40)
-    @Email
+    private String dateOfBirth;
+    private String marriageStatus;
+    private String nic;
+    private String religion;
     private String email;
-
-    @Size(min = 1, max = 100)
     private String residence;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
+    private String permanent;
     private String contact;
-
     private Long role;
-
     private Integer department;
-
     private String designation;
-
-    @Size(min = 1, max = 20)
     private String supervisor1;
-
-    @Size(min = 1, max = 20)
     private String supervisor2;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
     private String joinDate;
-
-    @Size(min = 1, max = 10)
     private String confirmDate;
-
-    @Size(min = 1, max = 10)
     private String status;
-
     private Float annual;
-
     private Float casual;
-
     private Float medical;
-
     private String image;
 
 
@@ -219,5 +187,45 @@ public class SignUpRequest {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMarriageStatus() {
+        return marriageStatus;
+    }
+
+    public void setMarriageStatus(String marriageStatus) {
+        this.marriageStatus = marriageStatus;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(String nic) {
+        this.nic = nic;
+    }
+
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
+    }
+
+    public String getPermanent() {
+        return permanent;
+    }
+
+    public void setPermanent(String permanent) {
+        this.permanent = permanent;
     }
 }

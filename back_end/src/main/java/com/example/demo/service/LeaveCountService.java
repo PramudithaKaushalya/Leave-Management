@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +35,11 @@ public class LeaveCountService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LeaveCountService.class);
 
     public ResponseEntity<?> getProfile( Long userId) {
-       try { 
-            List<LeaveCount> all = leaveCountRepository.findAll();
+       try {
+            LocalDateTime nowTime = LocalDateTime.now();
+            List<LeaveCount> all = leaveCountRepository.findByYear(nowTime.getYear());
         
-            List<User> currentEmployees = userRepository.findByStatus("Working");
+            List<User> currentEmployees = userRepository.findByStatusOrderByFirstName("Working");
 
             List<LeaveProfileDTO> profiles = currentEmployees.stream().map(user -> new LeaveProfileDTO(user.getId(),user.getFirstName()+" "+user.getSecondName(),0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F,0.0F)).collect(Collectors.toList());
 
@@ -60,24 +62,21 @@ public class LeaveCountService {
                                 profile.setMedical(count);
                                 break;
                             case 3:
-                                profile.setMaternity(count); 
-                                break;
-                            case 4:
-                                profile.setPaternity(count);
-                                break;
-                            case 5: 
                                 profile.setAnnual(count);
                                 break;
-                            case 6:
+                            case 4:
                                 profile.setLieu(count);
                                 break;
-                            case 7:
+                            case 5:
                                 profile.setSpecial(count);
                                 break;
-                            case 8:
-                                profile.setCoverup(count);
+                            case 6:
+                                profile.setMaternity(count);
                                 break;
-                            case 9:
+                            case 7:
+                                profile.setPaternity(count);
+                                break;
+                            case 8:
                                 profile.setNopay(count);
                                 break;
                             default:
@@ -92,6 +91,7 @@ public class LeaveCountService {
             return ResponseEntity.ok(new ApiResponse(true, profiles));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all leave count profiles. (By user ==> "+userId+")", e.getMessage());
+           e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all leave count profiles"));
         }
     }
@@ -99,13 +99,14 @@ public class LeaveCountService {
     public ResponseEntity<?> getOneProfile(Long id, Long userId) {
 
         try {
+            LocalDateTime nowTime = LocalDateTime.now();
             User emp = userRepository.getOne(id);
             LeaveProfileDTO oneProfile = new LeaveProfileDTO();
 
             LeaveType casual = new LeaveType();
             casual.setLeave_type_id(1);
-            if(leaveCountRepository.existsByUserAndType(emp, casual)){
-                LeaveCount casual_count_object = leaveCountRepository.findByUserAndType(emp, casual);
+            if(leaveCountRepository.existsByUserAndTypeAndYear(emp, casual, nowTime.getYear())){
+                LeaveCount casual_count_object = leaveCountRepository.findByUserAndTypeAndYear(emp, casual, nowTime.getYear());
                 Float casual_count = casual_count_object.getCount();
                 oneProfile.setCasual(casual_count);
             }else{
@@ -114,8 +115,8 @@ public class LeaveCountService {
 
             LeaveType medical = new LeaveType();
             medical.setLeave_type_id(2);
-            if(leaveCountRepository.existsByUserAndType(emp, medical)){
-                LeaveCount medical_count_object = leaveCountRepository.findByUserAndType(emp, medical);
+            if(leaveCountRepository.existsByUserAndTypeAndYear(emp, medical, nowTime.getYear())){
+                LeaveCount medical_count_object = leaveCountRepository.findByUserAndTypeAndYear(emp, medical, nowTime.getYear());
                 Float medical_count = medical_count_object.getCount();
                 oneProfile.setMedical(medical_count);
             }else{
@@ -123,9 +124,9 @@ public class LeaveCountService {
             }
 
             LeaveType maternity = new LeaveType();
-            maternity.setLeave_type_id(3);
-            if(leaveCountRepository.existsByUserAndType(emp, maternity)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(emp, maternity);
+            maternity.setLeave_type_id(6);
+            if(leaveCountRepository.existsByUserAndTypeAndYear(emp, maternity, nowTime.getYear())){
+                LeaveCount count_object = leaveCountRepository.findByUserAndTypeAndYear(emp, maternity, nowTime.getYear());
                 Float count = count_object.getCount();
                 oneProfile.setMaternity(count);;
             }else{
@@ -133,9 +134,9 @@ public class LeaveCountService {
             }
 
             LeaveType paternity = new LeaveType();
-            paternity.setLeave_type_id(4);
-            if(leaveCountRepository.existsByUserAndType(emp, paternity)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(emp, paternity);
+            paternity.setLeave_type_id(7);
+            if(leaveCountRepository.existsByUserAndTypeAndYear(emp, paternity, nowTime.getYear())){
+                LeaveCount count_object = leaveCountRepository.findByUserAndTypeAndYear(emp, paternity, nowTime.getYear());
                 Float count = count_object.getCount();
                 oneProfile.setPaternity(count);
             }else{
@@ -143,9 +144,9 @@ public class LeaveCountService {
             }
 
             LeaveType annual = new LeaveType();
-            annual.setLeave_type_id(5);
-            if(leaveCountRepository.existsByUserAndType(emp, annual)){
-                LeaveCount annual_count_object = leaveCountRepository.findByUserAndType(emp, annual);
+            annual.setLeave_type_id(3);
+            if(leaveCountRepository.existsByUserAndTypeAndYear(emp, annual, nowTime.getYear())){
+                LeaveCount annual_count_object = leaveCountRepository.findByUserAndTypeAndYear(emp, annual, nowTime.getYear());
                 Float annual_count = annual_count_object.getCount();
                 oneProfile.setAnnual(annual_count);
             }else{
@@ -156,6 +157,7 @@ public class LeaveCountService {
             return ResponseEntity.ok(new ApiResponse(true, oneProfile));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get leave count profile of user "+id+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave count profile"));
         }
     }
@@ -163,71 +165,24 @@ public class LeaveCountService {
     public ResponseEntity<?> summery(Long id, Long userId){
 
         try {
+            LocalDateTime nowTime = LocalDateTime.now();
             User employee = userRepository.getOne(id);
             List<LeaveCountDTO> summeryAll = new ArrayList<LeaveCountDTO>();
-            
-            LeaveCountDTO summeryCasual = new LeaveCountDTO();
-            summeryCasual.setType("Casual");
-            summeryCasual.setEntitlement(employee.getCasual());
-            LeaveType casual = new LeaveType();
-            casual.setLeave_type_id(1);
-            if(leaveCountRepository.existsByUserAndType(employee, casual)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, casual);
-                Float count = count_object.getCount();
-                summeryCasual.setUtilized(count);
-            }else{
-                summeryCasual.setUtilized(0.0F);
-            }
-            summeryCasual.setRemaining(summeryCasual.getEntitlement()-summeryCasual.getUtilized());
-            summeryAll.add(summeryCasual);
-            
-            LeaveCountDTO summeryMedical = new LeaveCountDTO();
-            summeryMedical.setType("Medical");
-            summeryMedical.setEntitlement(employee.getMedical());
-            LeaveType medical = new LeaveType();
-            medical.setLeave_type_id(2);
-            if(leaveCountRepository.existsByUserAndType(employee, medical)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, medical);
-                Float count = count_object.getCount();
-                summeryMedical.setUtilized(count);
-            }else{
-                summeryMedical.setUtilized(0.0F);
-            }
-            summeryMedical.setRemaining(summeryMedical.getEntitlement()-summeryMedical.getUtilized());
-            summeryAll.add(summeryMedical);
 
-            LeaveCountDTO summeryAnnual = new LeaveCountDTO();
-            summeryAnnual.setType("Annual");
-            summeryAnnual.setEntitlement(employee.getAnnual());
-            LeaveType annual = new LeaveType();
-            annual.setLeave_type_id(5);
-            if(leaveCountRepository.existsByUserAndType(employee, annual)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, annual);
-                Float count = count_object.getCount();
-                summeryAnnual.setUtilized(count);;
-            }else{
-                summeryAnnual.setUtilized(0.0F);;
-            }
-            summeryAnnual.setRemaining(summeryAnnual.getEntitlement()-summeryAnnual.getUtilized());
-            summeryAll.add(summeryAnnual);
+            LeaveCountDTO casual = getCountsOfLeaveTypes("Casual", employee.getCasual(), 1, employee);
+            summeryAll.add(casual);
 
-            LeaveCountDTO summeryLieu = new LeaveCountDTO();
-            summeryLieu.setType("Lieu");
-            summeryLieu.setEntitlement(getLieuCount(employee));
-            LeaveType lieu = new LeaveType();
-            lieu.setLeave_type_id(6);
-            if(leaveCountRepository.existsByUserAndType(employee, lieu)){
-                LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, lieu);
-                Float count = count_object.getCount();
-                summeryLieu.setUtilized(count);;
-            }else{
-                summeryLieu.setUtilized(0.0F);;
-            }
-            summeryLieu.setRemaining(summeryLieu.getEntitlement()-summeryLieu.getUtilized());
-            summeryAll.add(summeryLieu);
+            LeaveCountDTO medical = getCountsOfLeaveTypes("Medical", employee.getMedical(), 2, employee);
+            summeryAll.add(medical);
 
-            if(leaveCountRepository.existsByUser(employee)){
-                List<LeaveCount> otherTypes = leaveCountRepository.findByUser(employee);
+            LeaveCountDTO annual = getCountsOfLeaveTypes("Annual", employee.getAnnual(), 3, employee);
+            summeryAll.add(annual);
+
+            LeaveCountDTO lieu = getCountsOfLeaveTypes("Lieu", getLieuCount(employee), 4, employee);
+            summeryAll.add(lieu);
+
+            if(leaveCountRepository.existsByUserAndYear(employee, nowTime.getYear())){
+                List<LeaveCount> otherTypes = leaveCountRepository.findByUserAndYear(employee, nowTime.getYear());
 
                 for (LeaveCount leaveCount : otherTypes) {
                     LeaveCountDTO summeryType = new LeaveCountDTO();
@@ -238,23 +193,19 @@ public class LeaveCountService {
                     summeryType.setRemaining(0.0F);
 
                     switch (type) {
-                        case 3:
+                        case 6:
                             summeryType.setType("Maternity");
                             summeryAll.add(summeryType);
                             break;
-                        case 4:
+                        case 7:
                             summeryType.setType("Paternity");
                             summeryAll.add(summeryType);
                             break;
-                        case 7:
+                        case 5:
                             summeryType.setType("Special");
                             summeryAll.add(summeryType);
                             break;
                         case 8:
-                            summeryType.setType("Cover Up");
-                            summeryAll.add(summeryType);
-                            break;
-                        case 9:
                             summeryType.setType("No Pay");
                             summeryAll.add(summeryType);
                             break;
@@ -269,12 +220,37 @@ public class LeaveCountService {
             return ResponseEntity.ok(new ApiResponse(true, summeryAll));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get leave summery of user "+id+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave summery"));
         }
     }
 
+    public LeaveCountDTO getCountsOfLeaveTypes(String leaveTypeName, Float entitlement, Integer leaveTypeId, User employee) {
+
+        LocalDateTime nowTime = LocalDateTime.now();
+        LeaveCountDTO summery = new LeaveCountDTO();
+        summery.setType(leaveTypeName);
+        summery.setEntitlement(entitlement);
+
+        LeaveType leaveType = new LeaveType();
+        leaveType.setLeave_type_id(leaveTypeId);
+
+        if(leaveCountRepository.existsByUserAndTypeAndYear(employee, leaveType, nowTime.getYear())){
+            LeaveCount count_object = leaveCountRepository.findByUserAndTypeAndYear(employee, leaveType, nowTime.getYear());
+            Float count = count_object.getCount();
+            summery.setUtilized(count);
+        }else{
+            summery.setUtilized(0.0F);
+        }
+
+
+        summery.setRemaining(summery.getEntitlement()-summery.getUtilized());
+
+        return summery;
+    }
+
     public Float getLieuCount(User employee){
-        List<LieuLeave> lieuLeaves = lieuLeaveRepository.findByEmployeeAndIsApproved(employee, true);
+        List<LieuLeave> lieuLeaves = lieuLeaveRepository.findByEmployeeAndStatus(employee, 1);
 
         Float count = 0.0F;
         for (LieuLeave leave : lieuLeaves) {
@@ -287,5 +263,57 @@ public class LeaveCountService {
         }
 
         return count;
+    }
+
+    public ResponseEntity<?> summeryToLeaveRequestPage(Long id, Long userId){
+
+        try {
+            User employee = userRepository.getOne(id);
+            List<LeaveCountDTO> summeryAll = new ArrayList<LeaveCountDTO>();
+
+            LeaveCountDTO casual = getRemainingCountsOfLeaveTypes("Casual", employee.getCasual(), 1, employee);
+            summeryAll.add(casual);
+
+            LeaveCountDTO medical = getRemainingCountsOfLeaveTypes("Medical", employee.getMedical(), 2, employee);
+            summeryAll.add(medical);
+
+            LeaveCountDTO annual = getRemainingCountsOfLeaveTypes("Annual", employee.getAnnual(), 3, employee);
+            summeryAll.add(annual);
+
+            LeaveCountDTO lieu = getRemainingCountsOfLeaveTypes("Lieu", getLieuCount(employee), 4, employee);
+            summeryAll.add(lieu);
+
+            LOGGER.info(">>> Successfully get leave summery to request page of user "+id+". (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, summeryAll));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get leave summery to leave request page. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave summery"));
+        }
+    }
+
+    public LeaveCountDTO getRemainingCountsOfLeaveTypes(String leaveTypeName, Float entitlement, Integer leaveTypeId, User employee) {
+
+        LocalDateTime nowTime = LocalDateTime.now();
+        LeaveCountDTO summery = new LeaveCountDTO();
+        summery.setType(leaveTypeName);
+        summery.setEntitlement(entitlement);
+
+        LeaveType leaveType = new LeaveType();
+        leaveType.setLeave_type_id(leaveTypeId);
+
+        if(leaveCountRepository.existsByUserAndTypeAndYear(employee, leaveType, nowTime.getYear())){
+            LeaveCount count_object = leaveCountRepository.findByUserAndTypeAndYear(employee, leaveType, nowTime.getYear());
+            Float accepted = count_object.getCount();
+            Float pending = count_object.getPending();
+            summery.setUtilized(accepted);
+            summery.setPending(pending);
+        }else{
+            summery.setUtilized(0.0F);
+            summery.setPending(0.0F);
+        }
+        summery.setRemaining(summery.getEntitlement()-(summery.getUtilized()+summery.getPending()));
+
+        return summery;
     }
 }    

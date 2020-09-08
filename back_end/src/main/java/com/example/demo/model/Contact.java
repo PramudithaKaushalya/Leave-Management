@@ -3,7 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "contact")
+@Table(name = "hrms_contact")
 public class Contact {
 
     @Id
@@ -26,6 +26,13 @@ public class Contact {
 
     public Contact() {
 
+    }
+
+    public Contact(User user, String name, String relation, String contact) {
+        this.contact = contact;
+        this.relation = relation;
+        this.name = name;
+        this.user = user;
     }
 
     public Contact(Integer id, String name, String contact, String relation, User user) {

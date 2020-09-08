@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from '../config/axios';
 import 'antd/dist/antd.css';
-import { Form, Card, Descriptions, Table, Modal, Tag, Row, Col, Icon, Input, Button, Badge, Progress, message, Alert, Spin } from 'antd';
+import { Form, Card, Descriptions, Table, Modal, Tag, Row, Col, Icon, Input, Button, Progress, message, Alert, Spin } from 'antd';
 import Highlighter from 'react-highlight-words';
 import './index.css';
 
@@ -248,7 +248,7 @@ class Dashboard extends Component {
                       color = 'red';
                     }
                     return (
-                      <Tag style={{width:"62px"}} color={color} key={tag}>
+                      <Tag style={{width:"70px"}} color={color} key={tag}>
                         {tag}
                       </Tag>
                     );
@@ -295,28 +295,33 @@ class Dashboard extends Component {
               </Card>
               <br/>
               <Row gutter={16}>
-                <Col span={10} > 
+                <Col span={9} > 
                   <Card hoverable='true'>
+                    <h3>Leave Summery</h3>
                     <Table rowKey={record => record.type} columns={summeryCol} dataSource={summery} size="small" pagination={false}/>
                   </Card>
                 </Col>
-                <Col span={14}>  
+                <Col span={15}>  
                   <Card hoverable='true'>
+                    <h3>Employee Infomation</h3>
                     {employee.length !== 0 ?
-                    <Descriptions title="Employee Infomation" size="small" bordered column={2} >
-                      <Descriptions.Item label="Name">{employee.firstName} {employee.secondName}</Descriptions.Item>
-                      <Descriptions.Item label="Email" span={1}>{employee.email}</Descriptions.Item>
-                      <Descriptions.Item label="Residence" >{employee.residence}</Descriptions.Item>
+                    <Descriptions size="small" bordered column={2} >
+                      <Descriptions.Item label="Emp Number">{employee.userId}</Descriptions.Item>
+                      <Descriptions.Item label="NIC" span={1}>{employee.nic}</Descriptions.Item>
+                      <Descriptions.Item label="Email" >{employee.email}</Descriptions.Item>
                       <Descriptions.Item label="Contact No" span={1}> {employee.contact}</Descriptions.Item>
-                      <Descriptions.Item label="Role">{employee.role}</Descriptions.Item>
-                      <Descriptions.Item label="Department" span={1}>{employee.department}</Descriptions.Item>
-                      <Descriptions.Item label="Status" span={2}>
-                        <Badge status="processing" text={employee.status} />
-                      </Descriptions.Item>
+                      <Descriptions.Item label="Date of Birth">{employee.dob}</Descriptions.Item>
+                      <Descriptions.Item label="Religion" span={1}>{employee.religion}</Descriptions.Item>
+                      <Descriptions.Item label="Residential Address" span={2}>{employee.residence}</Descriptions.Item>
+                      <Descriptions.Item label="Permanent Address" span={2}>{employee.permanent}</Descriptions.Item>
                       <Descriptions.Item label="Supervisor 01">{employee.supervisor1}</Descriptions.Item>
                       <Descriptions.Item label="Supervisor 02" span={1}>{employee.supervisor2}</Descriptions.Item>
                       <Descriptions.Item label="Join Date">{employee.joinDate}</Descriptions.Item>
+                      { employee.role === "Intern" ?
+                      <Descriptions.Item label="End Date">{employee.confirmDate}</Descriptions.Item>
+                      : 
                       <Descriptions.Item label="Confirm Date">{employee.confirmDate}</Descriptions.Item>
+                      }
                     </Descriptions> : null}
                   </Card>
                 </Col>
@@ -343,10 +348,10 @@ class Dashboard extends Component {
                 >
                   { 
                     leave.status === "Approved"?
-                      <Alert message="Approved request" type="success" style={{width:'460px'}}/>
+                      <Alert message="Your request was approved" type="success" style={{width:'460px'}}/>
                     : leave.status === "Pending"?
-                      <Alert message="Pending request" type="info" style={{width:'460px'}}/>
-                    : <Alert message="Rejected request" type="error" style={{width:'460px'}}/>
+                      <Alert message="Your request is still Pending" type="info" style={{width:'460px'}}/>
+                    : <Alert message="Your request was rejected" type="error" style={{width:'460px'}}/>
                   }
                   <br/>
                   <br/>
@@ -369,6 +374,7 @@ class Dashboard extends Component {
                     </Col>
                   </Row>
                   <br/>
+                  { leave.number_of_leave_days !== 0.5 ?
                   <Row>
                     <Col span={6}>
                     Start Date: 
@@ -379,7 +385,7 @@ class Dashboard extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    Start Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}> 
@@ -395,7 +401,7 @@ class Dashboard extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    End Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}>
@@ -403,6 +409,26 @@ class Dashboard extends Component {
                     </Tag>
                     </Col>
                   </Row>
+                  : 
+                  <Row>
+                    <Col span={12}>
+                    Leave Date: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                      <Tag color="volcano" style={{width:'225px'}}>
+                        {leave.startDate} 
+                      </Tag>
+                    </Col>
+                    <Col span={12}>
+                    Leave Half: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                    <Tag color="volcano" style={{width:'225px'}}> 
+                      {leave.startHalf}
+                    </Tag>
+                    </Col>
+                  </Row> 
+                  }
                   <br/>
                   <Row>
                     <Col span={12}>
@@ -433,13 +459,13 @@ class Dashboard extends Component {
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'460px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>
                   { 
                     leave.status === "Rejected"?                  
-                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px'}}>{leave.reject}</Tag></p>
+                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.reject}</Tag></p>
                     : null
                   }
                 </Modal>: null}

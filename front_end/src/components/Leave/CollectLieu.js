@@ -25,12 +25,16 @@ const { confirm } = Modal;
 class CollectLieu extends React.Component {
 
     state = {
-        lieuLeaves : []
+        lieuLeaves : [],
+        saveDates : [],
+        holidays : []
     };
   
   componentWillMount() {
 
     this.getLieuLeaves();
+    this.getHolidays();
+    this.getHolidayEvents();
   }
 
   getLieuLeaves() {
@@ -58,63 +62,117 @@ class CollectLieu extends React.Component {
 
   }
 
-    handleSubmit = e => {
-      
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-      
-          if (!err) {
-              confirm({
-              title: 'Sure to submit lieu collecting request?',
-              content: 'If you submit, Send request to administraters and supervisors.',
-              okText: 'Sumbit',
-              okType: 'primary',
-                  onOk: () => {
-                          
-                      const leave = {
-                          date : values.date,
-                          period : values.period,
-                          project : values.project,
-                          worksDone : values.worksDone
-                      }
+  getHolidayEvents() {
+    axios.get('calender/all', 
+    {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem("header")
+        }
+    })
+    .then(res => {
+      if (res.data.success === true) {  
+        this.setState({
+          saveDates : res.data.list
+        });
+      } else {
+        message.error(res.data.message);
+      }
+    })
+    .catch(e => {
+      message.error("Something went wrong");
+      console.log(e.response.data.error);
+    })
+  }
 
-                      console.log("Lieu leave request --------------> ", leave);
+  getHolidays() {
+    axios.get('calender/dates', 
+    {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem("header")
+        }
+    })
+    .then(res => {
+      if (res.data.success === true) {  
+        this.setState({
+          holidays : res.data.list
+        });
+      } else {
+        message.error(res.data.message);
+      }
+    })
+    .catch(e => {
+      message.error("Something went wrong");
+      console.log(e.response.data.error);
+    })
+  }
 
-                      axios.post(
-                          'lieu_leave/save', 
-                          leave, 
-                          { 
-                              headers: {
-                                  Authorization: 'Bearer ' + localStorage.getItem("header")
-                              }
-                          }
-                      )
-                      .then(res => {
-                          if (res.data.success) {              
-                              message.success(res.data.message); 
-                              this.getLieuLeaves();
-                              this.handleCancel();
-                          } else {
-                              message.error(res.data.message);
-                          }
-                      })
-                      .catch(e => {
-                          console.log(e.response.data.error);
-                          message.error("Something went wrong"); 
-                      })
-                  }
-              })
-          }
-      })
+  handleSubmit = e => {
+    
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+    
+        if (!err) {
+            confirm({
+            title: 'Sure to submit lieu collecting request?',
+            content: 'If you submit, your request will be sent to administraters and supervisors.',
+            okText: 'Submit',
+            okType: 'primary',
+              onOk: () => {
+                if(!this.state.holidays.includes(moment(values.date).format("YYYY-MM-DD")) && values.date._d.getDay() !== 0 && values.date._d.getDay() !== 6){
+                  message.error("Not a holiday or weekend"); 
+                } else {
+                  this.saveRequest(values);  
+                }
+              }
+            })
+        }
+    })
+  }
+
+  saveRequest = (values) => {
+    const leave = {
+      date : values.date,
+      period : values.period,
+      project : values.project,
+      worksDone : values.worksDone
     }
+
+    axios.post(
+        'lieu_leave/save', 
+        leave, 
+        { 
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem("header")
+            }
+        }
+    )
+    .then(res => {
+        if (res.data.success) {              
+            message.success(res.data.message); 
+            this.getLieuLeaves();
+            this.handleCancel();
+        } else {
+            message.error(res.data.message);
+        }
+    })
+    .catch(e => {
+        console.log(e.response.data.error);
+        message.error("Something went wrong"); 
+    })
+  };
 
   handleCancel = () => {
     this.props.form.resetFields();
   };
 
+  disabledStartDate = startValue => {
+    // return startValue && startValue < moment().endOf('day');
+    return startValue && startValue < moment().subtract(7,'d');
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { lieuLeaves } = this.state;
+    const { lieuLeaves, saveDates } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -148,7 +206,7 @@ class CollectLieu extends React.Component {
         render: date => {
           
           return (
-            moment(date, "YYYY-MM-DD HH:mm Z").format('lll')
+            moment(date).format('YYYY-MM-DD')
           );
       }
       },
@@ -176,16 +234,19 @@ class CollectLieu extends React.Component {
       {
         title: 'Status',
         key: '3',
-        dataIndex: 'isApproved',
+        dataIndex: 'status',
         render: tag => {
             let color;
             let text;
-            if (tag) {
-                color = 'green';
-                text = 'Approved';
-            }else {
+            if (tag === 0) {
                 color = 'geekblue';
                 text = 'Pending';
+            } else if (tag === 1) {
+              color = 'green';
+              text = 'Approved';
+            } else {
+              color = 'red';
+              text = 'Rejected';
             }
             return (
                 <Tag color={color} key={tag}>
@@ -196,12 +257,26 @@ class CollectLieu extends React.Component {
       }
     ];
 
+    const columnsForHolidays = [
+      {
+        title: 'Date',
+        key: '0',
+        dataIndex: 'date'
+      },
+      {
+        title: 'Event',
+        key: '1',
+        dataIndex: 'reason',
+      },    
+    ];
+
     return (
         <div>
           <Row gutter={16}>
-            <Col span={13} > 
+            <Col span={12} > 
               <Card type="inner" title='Collect Lieu Leaves' bordered={false} hoverable='true'>  
-                <p>You have to collect lieu leaves day by day.</p>
+                <p>You can collect lieu leaves only for holidays or weekends. You have to collect lieu leaves one by one per day.</p>
+                <br/>
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 
                 <Form.Item label="Date">
@@ -209,6 +284,7 @@ class CollectLieu extends React.Component {
                     rules: [{ required: true, message: 'Please input Date!' }],
                   })(
                   <DatePicker
+                    disabledDate={this.disabledStartDate}
                     format="YYYY-MM-DD"
                     placeholder="Pickup a Date"
                     style={{ width: '100%' }}
@@ -245,7 +321,7 @@ class CollectLieu extends React.Component {
                       }],
                   })(<TextArea rows={4} maxLength = {300} style={{ width: '100%', height: '170px' }}/>)}
                 </Form.Item>
-
+                <br/>
                 <Form.Item {...tailFormItemLayout}>
                   <Button type="primary" htmlType="submit" style={{width:'100px'}}>
                   <Icon type="check-circle" /> 
@@ -260,10 +336,22 @@ class CollectLieu extends React.Component {
               </Form>
               </Card>
             </Col>
-            <Col span={11}>
-              <Card hoverable='true'>
-              <Table rowKey={record => record.date} columns={columns} dataSource={lieuLeaves} size="small" pagination={false}/>
-              </Card>
+            <Col span={12}>
+              <Row>
+                <Col span={24}>
+                  <Card hoverable='true'>
+                  <h4>Requested Lieu Leaves</h4>
+                  <Table rowKey={record => record.date} columns={columns} dataSource={lieuLeaves} size="small" pagination={{pageSize: 5}}/>
+                  </Card>
+                  <br/>
+                </Col>
+                <Col span={24}>
+                  <Card hoverable='true'>
+                  <h4>Holidays</h4>
+                  <Table rowKey={record => record.date} columns={columnsForHolidays} dataSource={saveDates} size="small" pagination={{pageSize: 3}}/>
+                  </Card>
+                </Col>
+              </Row>
             </Col>
           </Row>
         

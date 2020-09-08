@@ -24,6 +24,7 @@ public class LeaveTypeService {
             return ResponseEntity.ok(new ApiResponse(true, leaveTypeRepository.findAll()));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all leave types. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all leave types"));
         }  
     }
@@ -33,6 +34,7 @@ public class LeaveTypeService {
             List<LeaveType> leaves = new ArrayList<LeaveType>();
             
             leaves.add(leaveTypeRepository.getOne(1));
+            leaves.add(leaveTypeRepository.getOne(6));
             leaves.add(leaveTypeRepository.getOne(7));
             leaves.add(leaveTypeRepository.getOne(9));
 
@@ -40,6 +42,7 @@ public class LeaveTypeService {
             return ResponseEntity.ok(new ApiResponse(true, leaves));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get some leave types. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get leave types"));
         } 
     }

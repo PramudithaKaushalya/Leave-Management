@@ -70,8 +70,20 @@ public class LeaveRequestController {
         if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             String jwt = token.substring(7);
             Long userId = tokenProvider.getUserIdFromJWT(jwt);
-            String pending = "Pending";
-            return leaveRequestService.getPending(pending, userId);
+            return leaveRequestService.getPending(userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
+    @GetMapping("/own_pending")
+    public ResponseEntity<?> getOwnPending(@RequestHeader("Authorization") String token) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return leaveRequestService.getOwnPendingLeaveRequests(userId);
         }
         else {
             LOGGER.warn(">>> User authentication failed");
@@ -80,7 +92,7 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<?> DeleteById(@RequestHeader("Authorization") String token, @PathVariable("id") LeaveRequest request) {
+    public ResponseEntity<?> deleteById(@RequestHeader("Authorization") String token, @PathVariable("id") LeaveRequest request) {
         if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             String jwt = token.substring(7);
             Long userId = tokenProvider.getUserIdFromJWT(jwt);
@@ -93,8 +105,22 @@ public class LeaveRequestController {
         }
     }
 
+    @GetMapping("/delete_own/{id}")
+    public ResponseEntity<?> deleteOwnPendingLeavesById(@RequestHeader("Authorization") String token, @PathVariable("id") LeaveRequest request) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            Integer id = request.getLeave_id();
+            return leaveRequestService.deleteOwnPendingLeave(id, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
     @GetMapping("/approve/{id}")
-    public ResponseEntity<?> ApproveById(@RequestHeader("Authorization") String token, @PathVariable("id") LeaveRequest request) {
+    public ResponseEntity<?> approveById(@RequestHeader("Authorization") String token, @PathVariable("id") LeaveRequest request) {
         if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             String jwt = token.substring(7);
             Long userId = tokenProvider.getUserIdFromJWT(jwt);
@@ -164,6 +190,19 @@ public class LeaveRequestController {
             String jwt = token.substring(7);
             Long userId = tokenProvider.getUserIdFromJWT(jwt);
             return leaveRequestService.getFilterd(userId, filters);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
+    @GetMapping("/pending_count")
+    public ResponseEntity<?> getPendingCountToNavBar(@RequestHeader("Authorization") String token) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return leaveRequestService.getPendingLeavesCountToNavBar(userId);
         }
         else {
             LOGGER.warn(">>> User authentication failed");

@@ -44,28 +44,25 @@ function beforeUpload(file) {
 class UpdateEmployee extends React.Component {
 
   componentDidUpdate() {
-    console.log("------------------------------> ",this.props.update.id, " *** ", this.state.data.id)
 
     if(this.state.data.id !== this.props.update.id) {
+      console.log("------------------------------> ",this.props.update.id, " *** ", this.state.data.id)
       this.setState({
         data : this.props.update,
-        imageUrl : this.props.update.image
+        imageUrl : this.props.update.image,
+        role : this.props.update.role,
+        department : this.props.update.department,
       })
     }
   }
 
-  componentWillMount(){
-  
-    console.log("+++++++++++++++++++++++++++++++",this.props.empId)
-    this.setState({
-      // data : this.props.update,
-      role : this.props.update.role,
-      department : this.props.update.department,
-      supervisors : [],
-      departments : [],
-      roles : [],
-      // imageUrl : this.props.update.image
-    })
+  componentDidMount() {
+    this.getSupervisors();
+    this.getDepartments();
+    this.getRoles();
+  }
+
+  getSupervisors(){
 
     axios.get('user/supervisor', 
     {
@@ -78,6 +75,7 @@ class UpdateEmployee extends React.Component {
           this.setState({
               supervisors : res.data.list
           })
+          // return res.data.list;
         } else {
           message.error(res.data.message);
         }
@@ -86,7 +84,9 @@ class UpdateEmployee extends React.Component {
       message.error("Something went wrong");
       console.log(e.response.data.error);
     })
-    
+  }  
+ 
+  getDepartments() {
     axios.get('department/all', 
     {
         headers: {
@@ -98,6 +98,7 @@ class UpdateEmployee extends React.Component {
           this.setState({
               departments : res.data.list
           })
+          // return res.data.list
         } else {
             message.error(res.data.message);
         }
@@ -106,7 +107,9 @@ class UpdateEmployee extends React.Component {
       message.error("Something went wrong");
       console.log(e.response.data.error);
     })
-
+  }
+  
+  getRoles() {
     axios.get('role/all', 
     {
         headers: {
@@ -118,6 +121,7 @@ class UpdateEmployee extends React.Component {
           this.setState({
               roles : res.data.list
           })
+          // return res.data.list
         } else {
           message.error(res.data.message);
         }
@@ -126,7 +130,6 @@ class UpdateEmployee extends React.Component {
       message.error("Something went wrong");
       console.log(e.response.data.error);
     }) 
-    
   }
 
   state = {
@@ -140,9 +143,9 @@ class UpdateEmployee extends React.Component {
     confirm_date: undefined,
     role: undefined,
     department: undefined,
-    joinFromRes: "2019-01-01",
-    confirmFromRes: "2019-12-31",
-    imageUrl: null
+    imageUrl: null,
+    dateOfBirth: null,
+    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"]
   };
 
   handleSubmit = e => {
@@ -165,10 +168,15 @@ class UpdateEmployee extends React.Component {
           supervisor2: values.supervisor2 || "No one",
           joinDate: this.state.join_date || this.state.data.joinDate,
           confirmDate: this.state.confirm_date || this.state.data.confirmDate || "Not confirm yet",
-          annual : values.annual,
-          casual : values.casual,
-          medical : values.medical,
-          image : this.state.imageUrl 
+          annual : values.annual || 0.0,
+          casual : values.casual || 0.0,
+          medical : values.medical || 0.0,
+          image : this.state.imageUrl,
+          permanent: values.permanent || "No permanent address",
+          dateOfBirth: this.state.dateOfBirth,
+          marriageStatus: values.marriage_status || "None",
+          religion: values.religion,
+          nic: values.nic,
         }
 
         axios.post('user/update/'+this.state.data.id, employee, 
@@ -198,15 +206,24 @@ class UpdateEmployee extends React.Component {
 
   handleCancel = () => {
     this.props.close();
-    // this.props.form.resetFields();
-  //   this.setState({
-  //     data : []
-  // })
+    this.props.form.resetFields();
+    this.setState({
+      data : [],
+      role : null,
+      department : null,
+  })
   }
 
+  handleRoleChange = (item) => {
+    console.log(item);
+    this.setState({ role : item });
+  };
+
+  onChangeDOB = (date, dateString) => {
+    this.setState({ dateOfBirth : dateString });
+  };
+
   onChangeJoin = (date, dateString) => {
-    console.log("Date String: ",dateString);
-    console.log("Date: ", date);
     this.setState({ join_date : dateString });
   };
 
@@ -265,7 +282,7 @@ class UpdateEmployee extends React.Component {
       </div>
     );
 
-    const { imageUrl } = this.state;
+    const { imageUrl, role } = this.state;
 
     return (
         <div key={this.props.empId}>
@@ -276,29 +293,32 @@ class UpdateEmployee extends React.Component {
           {getFieldDecorator('emp_id', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input employee id!' }],
             initialValue: this.state.data.userId
-          })(<Input maxLength='5' />)}
+          })(<Input maxLength={5} />)}
         </Form.Item>
+
         <Form.Item label="First Name">
           {getFieldDecorator('first_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input first name!' }],
             initialValue: this.state.data.firstName
-          })(<Input maxLength='20' />)}
+          })(<Input maxLength={20} />)}
         </Form.Item>
-        <Form.Item label="Second Name">
+
+        <Form.Item label="Last Name">
           {getFieldDecorator('second_name', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input second name!' }],
             initialValue: this.state.data.secondName
-          })(<Input maxLength='20'/>)}
+          })(<Input maxLength={20}/>)}
         </Form.Item>
+
         <Form.Item label="Initials">
           {getFieldDecorator('initials', {
             rules: [{ transform: (value) => value.trim() },{ required: true, message: 'Please input initials!' }],
             initialValue: this.state.data.initials
-          })(<Input maxLength='10'/>)}
+          })(<Input maxLength={10}/>)}
         </Form.Item>
+
         <Form.Item label="Gender">
           {getFieldDecorator('gender', {
-            rules: [{ required: true, message: 'Please input initials!' }],
             initialValue: this.state.data.gender
           })(
           <Radio.Group name="radiogroup">
@@ -306,7 +326,48 @@ class UpdateEmployee extends React.Component {
           <Radio value="Female">Female</Radio>
           </Radio.Group>
         )}
-        </Form.Item>       
+        </Form.Item>  
+
+        <Form.Item label="Date of Birth">
+        {getFieldDecorator('dob', {
+            rules: [{ required: true, message: 'Please input date of birth!' }],
+            initialValue: moment(update.dob, "YYYY-MM-DD")
+          })(
+          <DatePicker onChange={this.onChangeDOB} format="YYYY-MM-DD" />
+          )}
+        </Form.Item> 
+
+        <Form.Item label="Religion">
+          {getFieldDecorator('religion', {
+            rules: [{ required: true, message: 'Please input religion!' }],
+            initialValue: this.state.data.religion
+          })(
+            <Select>
+            {this.state.religion.map(item => (
+              <Option key={item}>{item}</Option>
+            ))}
+            </Select>
+            )}
+        </Form.Item> 
+
+        <Form.Item label="Mariage Status">
+          {getFieldDecorator('marriage_status', {
+            initialValue: this.state.data.marriageStatus
+          })(
+          <Radio.Group name="radiogroup">
+          <Radio value="Single">Single</Radio>
+          <Radio value="Married">Married</Radio>
+          </Radio.Group>
+        )}
+        </Form.Item> 
+
+        <Form.Item label="NIC">
+          {getFieldDecorator('nic', {
+            rules: [{ required: true, message: 'Please input NIC number!' }, { transform: (value) => value.trim() }],
+            initialValue: this.state.data.nic
+          })(<Input maxLength={20} />)}
+        </Form.Item>
+
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
             rules: [
@@ -321,12 +382,13 @@ class UpdateEmployee extends React.Component {
               },
             ],
             initialValue: this.state.data.email
-          })(<Input maxLength='50'/>)}
+          })(<Input maxLength={50}/>)}
         </Form.Item>
+
         <Form.Item
           label={
             <span>
-              Residence Address&nbsp;
+              Residential Address&nbsp;
               <Tooltip title="No/ Street/ City.">
                 <Icon type="question-circle-o" />
               </Tooltip>
@@ -334,11 +396,27 @@ class UpdateEmployee extends React.Component {
           }
         >
           {getFieldDecorator('residence', {
-            rules: [{ message: 'Please input your nickname!', whitespace: true }],
+            rules: [{ message: 'Please input residential address!', whitespace: true }],
             initialValue: this.state.data.residence
-          })(<Input maxLength='100' />)}
+          })(<Input maxLength={100} />)}
         </Form.Item>
-       
+
+        <Form.Item
+          label={
+            <span>
+              Permanent Address&nbsp;
+              <Tooltip title="No/ Street/ City.">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span>
+          }
+        >
+          {getFieldDecorator('permanent', {
+            rules: [{ message: 'Please input permanent address!', whitespace: true }],
+            initialValue: this.state.data.permanent
+          })(<Input maxLength={100} />)}
+        </Form.Item>
+
         <Form.Item label="Contact Number">
           {getFieldDecorator('contact', {
             rules: [{ transform: (value) => value.trim() },
@@ -354,9 +432,9 @@ class UpdateEmployee extends React.Component {
         <Form.Item label="Role">
           {getFieldDecorator('role', {
             rules: [{ required: true, message: 'Please input role!' }],
-            initialValue: this.state.role
+            initialValue: this.state.data.role
           })(
-            <Select>
+            <Select onChange={this.handleRoleChange}>
               {this.state.roles.map(item => (
                   <Option key={item.name}> {item.name}</Option>
               ))}
@@ -367,7 +445,7 @@ class UpdateEmployee extends React.Component {
         <Form.Item label="Department">
         {getFieldDecorator('department', {
             rules: [{ required: true, message: 'Please input your department!' }],
-            initialValue: this.state.department
+            initialValue: this.state.data.department
           })(
           <Select>
             {this.state.departments.map(item => (
@@ -388,7 +466,7 @@ class UpdateEmployee extends React.Component {
               }
             ],
             initialValue: this.state.data.designation
-          })(<Input maxLength='50'/>)}
+          })(<Input maxLength={50}/>)}
         </Form.Item>
 
         <Form.Item label="Supervisor 01">
@@ -421,31 +499,42 @@ class UpdateEmployee extends React.Component {
           <DatePicker onChange={this.onChangeJoin} format="YYYY-MM-DD" defaultValue={moment(update.joinDate, "YYYY-MM-DD")}/>
         </Form.Item>
 
+        { role === "Probation" || role === "Intern" || role === "Contract" ?
+        <Form.Item label="End date">
+          <DatePicker onChange={this.onChangeConfirm} format="YYYY-MM-DD" defaultValue={moment(update.confirmDate, "YYYY-MM-DD")}/>
+        </Form.Item> 
+        :
         <Form.Item label="Confirm date">
           <DatePicker onChange={this.onChangeConfirm} format="YYYY-MM-DD" defaultValue={moment(update.confirmDate, "YYYY-MM-DD")}/>
         </Form.Item> 
-        
+        }
+        { role === "Probation" || role === "Intern" || role === "Contract" ?
+        null
+        : 
         <Form.Item label="Annual Count">
           {getFieldDecorator('annual', {
             rules: [{ required: true, message: 'Please input annual leave count!' }],
             initialValue: this.state.data.annual 
-          })(<InputNumber max={14}/>)}
+          })(<InputNumber min={0} max={14}/>)}
         </Form.Item>
-
+        }
         <Form.Item label="Casual Count">
           {getFieldDecorator('casual', {
             rules: [{ required: true, message: 'Please input casual leave count!' }],
             initialValue: this.state.data.casual
-          })(<InputNumber max={7}/>)}
+          })(<InputNumber min={0} max={7}/>)}
         </Form.Item>
 
+        { role === "Probation" || role === "Intern" || role === "Contract" ?
+        null
+        : 
         <Form.Item label="Medical Count">
           {getFieldDecorator('medical', {
             rules: [{ required: true, message: 'Please input medical leave count!' }],
             initialValue: this.state.data.medical
-          })(<InputNumber max={7}/>)}
+          })(<InputNumber min={0} max={7}/>)}
         </Form.Item>
-
+        }
         <Form.Item label="Employee Image">
           {getFieldDecorator('image')(
             <Upload
@@ -462,13 +551,15 @@ class UpdateEmployee extends React.Component {
           )}
         </Form.Item>
 
-        <br/><br/>  
+        <br/> 
+        <span style={{color:'red', paddingLeft:'40px'}}>Please check every fields before update</span>
+        <br/> <br/> 
         <Row>
         <Col span={17}>  
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit" style={{width:'100px', float:'right'}}>
           <Icon type="check-circle" /> 
-            Submit
+            Update
           </Button>
         </Form.Item>
         </Col> 

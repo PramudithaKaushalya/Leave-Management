@@ -5,64 +5,30 @@ import javax.validation.constraints.*;
 public class UpdateUser {
 
     private String userId;
-
-    @NotBlank
-    @Size(min = 4, max = 40)
     private String firstName;
-
-    @Size(min = 4, max = 40)
     private String secondName;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
     private String initials;
-
     private String gender;
-
-    @NotBlank
-    @Size(max = 40)
-    @Email
     private String email;
-
-    @Size(min = 1, max = 100)
     private String residence;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
     private String contact;
-
     private String role;
-
     private String department;
-
-    private String designation; 
-    
-    @NotBlank
-    @Size(min = 1, max = 20)
+    private String designation;
     private String supervisor1;
-
-    @NotBlank
-    @Size(min = 1, max = 20)
     private String supervisor2;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
     private String joinDate;
-
-    @Size(min = 1, max = 10)
     private String confirmDate;
-
-    @NotBlank
-    @Size(min = 1, max = 10)
     private String status;
-
     private Float annual;
-
     private Float casual;
-
     private Float medical;
-
     private String image;
+    private String permanent;
+    private String dateOfBirth;
+    private String marriageStatus;
+    private String nic;
+    private String religion;
 
     public String getEmail() {
         return email;
@@ -222,5 +188,45 @@ public class UpdateUser {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getPermanent() {
+        return permanent;
+    }
+
+    public void setPermanent(String permanent) {
+        this.permanent = permanent;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMarriageStatus() {
+        return marriageStatus;
+    }
+
+    public void setMarriageStatus(String marriageStatus) {
+        this.marriageStatus = marriageStatus;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(String nic) {
+        this.nic = nic;
+    }
+
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
     }
 }

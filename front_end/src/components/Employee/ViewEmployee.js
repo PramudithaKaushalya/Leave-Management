@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from '../../config/axios';
 import 'antd/dist/antd.css';
-import {Table, Button, Icon, Input, Drawer, Card, Tag, Modal, message, Form, Alert, Row, Col, Spin, Select } from 'antd';
+import {Table, Button, Icon, Input, Drawer, Card, Tag, Modal, message, Form, Alert, Row, Col, Spin, Select, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
 import UpdateEmployee from '../Employee/UpdateEmployee';
 import AddEmployee from '../Employee/AddEmployee';
@@ -12,7 +12,7 @@ const ResignForm = Form.create({ name: 'viewEmployee' })(
 
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form } = this.props;
+      const { visible, onCancel, onCreate, form, onChangeResignDate } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal
@@ -29,13 +29,9 @@ const ResignForm = Form.create({ name: 'viewEmployee' })(
                   { 
                     required: true, 
                     message: 'Please input the resign date!' 
-                  },
-                  {
-                    message: 'Input valid date as example!',
-                    len : 10
                   }
                 ],
-              })(<Input type="textarea" placeholder="ex: 2020-01-01"/>)}
+              })(<DatePicker onChange={onChangeResignDate} format="YYYY-MM-DD" />)}
             </Form.Item>
           </Form>
         </Modal>
@@ -147,17 +143,15 @@ class ViewEmployee extends Component {
         visible: false,
         visibleResign : false,
         empId: null,
-        departments: [] 
+        departments: [],
+        resignDate: null 
     };
     
     onDepartmentSelect = (item) => {
 
       if(item === '0') {
-        console.log("||||||||||||", item);
         this.reload();
       } else {
-
-        console.log(">>>>>>>>>>>", item);
         this.setState({
           data : [],
           dataReceived: false
@@ -280,7 +274,9 @@ class ViewEmployee extends Component {
       };
 
       showUpdateDrawer = (emp) => {
-        
+        this.setState({
+          updateEmployee : [],
+        })
   
         axios.get('user/get/'+ emp.id, 
         {
@@ -308,6 +304,7 @@ class ViewEmployee extends Component {
     onUpdateClose = () => {
       console.log("Update close");
         this.setState({
+          updateEmployee : [],
           visibleUpdate: false,
         });
         this.reload();
@@ -324,15 +321,18 @@ class ViewEmployee extends Component {
       this.formRef = formRef;
     };
 
+    onChangeResignDate = (date, dateString) => {
+      this.setState({ resignDate : dateString });
+    };
+
     handleResign = () => {
       const { form } = this.formRef.props;
       form.validateFields((err, values) => {
-        console.log(values)
         if (!err) {
           axios.post('user/resign', 
                 {
                   id: this.state.emp_id,
-                  resignDate:values.date
+                  resignDate:this.state.resignDate
                 },
                 {
                     headers: {
@@ -545,7 +545,7 @@ class ViewEmployee extends Component {
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'220px'}}>{emp.firstName} {emp.secondName}</Tag>
+                    <Tag color="volcano" style={{width:'220px', whiteSpace:'normal'}}>{emp.firstName} {emp.secondName}</Tag>
                     </Col>
                     <Col span={6}>
                       Role: <Tag color="volcano" style={{width:'100px'}}>{emp.role}</Tag>
@@ -572,7 +572,31 @@ class ViewEmployee extends Component {
                   <br/>
                   <Row>
                     <Col span={16}>
-                      Address: <Tag color="volcano" style={{width:'455px'}}>{emp.residence}</Tag>
+                      Residential Address: <Tag color="volcano" style={{width:'455px', whiteSpace:'normal'}}>{emp.residence}</Tag>
+                    </Col>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col span={16}>
+                      Permanent Address: <Tag color="volcano" style={{width:'455px', whiteSpace:'normal'}}>{emp.permanent}</Tag>
+                    </Col>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col span={12}>
+                      DOB: <Tag color="volcano" style={{width:'220px'}}>{emp.dob}</Tag>
+                    </Col>
+                    <Col span={12}>
+                      Religion: <Tag color="volcano" style={{width:'220px'}}>{emp.religion}</Tag>
+                    </Col>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col span={12}>
+                      NIC: <Tag color="volcano" style={{width:'220px'}}>{emp.nic}</Tag>
+                    </Col>
+                    <Col span={12}>
+                      Marriage Status: <Tag color="volcano" style={{width:'220px'}}>{emp.marriageStatus}</Tag>
                     </Col>
                   </Row>
                   <br/>
@@ -592,12 +616,21 @@ class ViewEmployee extends Component {
                       &nbsp;&nbsp;&nbsp;
                       <Tag color="volcano" style={{width:'140px'}}>{emp.joinDate}</Tag>
                     </Col>
+                    { emp.role === "Intern" ?
                     <Col span={8}>
                       Confirm Date:
                       &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; 
                       <Tag color="volcano" style={{width:'140px'}}>{emp.confirmDate}</Tag>
                     </Col> 
+                    : 
+                    <Col span={8}>
+                      End Date:
+                      &nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp; 
+                      <Tag color="volcano" style={{width:'140px'}}>{emp.confirmDate}</Tag>
+                    </Col> 
+                    }
                     <Col span={8}>
                       Resign Date:
                       &nbsp;&nbsp;&nbsp;
@@ -635,6 +668,7 @@ class ViewEmployee extends Component {
                   visible={this.state.visibleResign}
                   onCancel={this.handleCancel}
                   onCreate={this.handleResign}
+                  onChangeResignDate={this.onChangeResignDate}
                 />
 
             </div>

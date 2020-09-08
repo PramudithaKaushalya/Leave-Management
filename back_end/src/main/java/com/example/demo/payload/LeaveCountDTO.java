@@ -6,6 +6,7 @@ public class LeaveCountDTO {
     private Float entitlement;
     private Float utilized;
     private Float remaining;
+    private Float pending;
 
     public LeaveCountDTO(){}
 
@@ -48,5 +49,11 @@ public class LeaveCountDTO {
         this.remaining = remaining;
     }
 
-    
+    public Float getPending() {
+        return pending;
+    }
+
+    public void setPending(Float pending) {
+        this.pending = pending;
+    }
 }

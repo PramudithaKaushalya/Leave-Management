@@ -63,4 +63,18 @@ public class LeaveCountController {
             return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
         }
     }
+
+    @GetMapping("/remaining/{id}")
+    public ResponseEntity<?> getSummeryToRequestPage(@RequestHeader("Authorization") String token, @PathVariable("id") Long id) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return leaveCountService.summeryToLeaveRequestPage(id, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
 }

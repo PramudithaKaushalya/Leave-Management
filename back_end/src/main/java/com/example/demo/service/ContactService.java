@@ -23,6 +23,7 @@ public class ContactService {
             return ResponseEntity.ok(new ApiResponse(true, contactRepository.findByUser(user)));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get contact records of "+user.getId()+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get contact records"));
         }
     }
@@ -34,6 +35,7 @@ public class ContactService {
             return ResponseEntity.ok(new ApiResponse(true, "Successfully add contact"));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to add contact records of "+contact.getUser().getId()+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to add contact"));
         }
     }
@@ -45,6 +47,7 @@ public class ContactService {
             return ResponseEntity.ok(new ApiResponse(true, "Successfully delete contact"));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to delete contact records of "+contact+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to delete contact"));
         }
     }

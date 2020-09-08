@@ -3,7 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "leave_count")
+@Table(name = "hrms_leave_count")
 public class LeaveCount {
 
     @Id
@@ -22,14 +22,22 @@ public class LeaveCount {
     @Column(name = "count")
     private Float count;
 
+    @Column(name = "pending")
+    private Float pending;
+
+    @Column(name = "year")
+    private Integer year;
+
     public LeaveCount () {
 
     }
 
-    public LeaveCount (User user, LeaveType leaveType, Float count) {
+    public LeaveCount (User user, LeaveType leaveType, Float count, Float pending, Integer year) {
         this.user = user;
         this.type = leaveType;
         this.count = count;
+        this.pending = pending;
+        this.year = year;
     }
 
     public Integer getId() {
@@ -63,4 +71,20 @@ public class LeaveCount {
     public void setUser(User user) {
         this.user = user;
     }
-}    
+
+    public Float getPending() {
+        return pending;
+    }
+
+    public void setPending(Float pending) {
+        this.pending = pending;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+}

@@ -5,7 +5,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "request_leave")
+@Table(name = "hrms_request_leave")
 public class LeaveRequest {
     
 
@@ -48,7 +48,7 @@ public class LeaveRequest {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "reject")
+    @Column(name = "reject", length = 1000)
     private String reject;
 
     @Column(name = "added_on")
@@ -62,14 +62,12 @@ public class LeaveRequest {
     @Column(name = "checked_on")
     private String checkTime;
 
-    public LeaveRequest(){
+    public LeaveRequest() {}
 
-    }
-
-    public LeaveRequest(LeaveType leave_type, String start_date, String end_date, String startHalf, 
+    public LeaveRequest(User user, LeaveType leave_type, String start_date, String end_date, String startHalf,
                         String endHalf, Float number_of_leave_days, User duties_covered_by, String special_notes, String status, 
                         String reject, String formatDateTime, User checkBy, String checkTime){
-        
+        this.user = user;
         this.leave_type = leave_type;
         this.startDate = start_date;
         this.end_date = end_date;

@@ -29,7 +29,7 @@
 --   CONSTRAINT `fk_user_roles_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `user_roles` (
+CREATE TABLE `hrms_user_roles` (
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   PRIMARY KEY (`user_id`,`role_id`),

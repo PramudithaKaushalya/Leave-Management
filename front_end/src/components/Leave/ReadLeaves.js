@@ -21,13 +21,13 @@ class ReadLeaves extends Component {
         leave : [] 
     };
     
-    reload () {
+    async reload () {
       this.setState({
         data : [],
         mounted : false
       })
     
-      axios.get('leave/all', 
+      await axios.get('leave/all', 
       {
           headers: {
               Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -169,6 +169,11 @@ class ReadLeaves extends Component {
               ...this.getColumnSearchProps('user')
             },  
             {
+                title: 'Date of request',
+                dataIndex: 'requestDateTime',
+                ...this.getColumnSearchProps('requestDateTime'),
+            },
+            {
               title: 'Leave Type',
               dataIndex: 'type',
               // render: type => (
@@ -190,11 +195,6 @@ class ReadLeaves extends Component {
               title: 'Supervisor 01',
               dataIndex: 'supervisor1',
               // ...this.getColumnSearchProps('supervisor1'),
-            },
-            {
-                title: 'Date of request',
-                dataIndex: 'requestDateTime',
-                ...this.getColumnSearchProps('requestDateTime'),
             },
             {
               title: 'Checked By',
@@ -239,7 +239,7 @@ class ReadLeaves extends Component {
         return (
             <div>
             { this.state.mounted? 
-              <Card type="inner" title="Leave Requests" hoverable='true'>
+              <Card type="inner" title="All Leave Requests" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
               </Card> 
             : 
@@ -256,10 +256,10 @@ class ReadLeaves extends Component {
                 >
                   { 
                     leave.status === "Approved"?
-                      <Alert message="Approved request" type="success" style={{width:'460px'}}/>
+                      <Alert message="Request was approved" type="success" style={{width:'460px'}}/>
                     : leave.status === "Pending"?
-                      <Alert message="Pending request" type="info" style={{width:'460px'}}/>
-                    : <Alert message="Rejected request" type="error" style={{width:'460px'}}/>
+                      <Alert message="Request is still Pending" type="info" style={{width:'460px'}}/>
+                    : <Alert message="Request was rejected" type="error" style={{width:'460px'}}/>
                   }
                   <br/>
                   <Row>
@@ -296,6 +296,7 @@ class ReadLeaves extends Component {
                     </Col>
                   </Row>
                   <br/>
+                  { leave.number_of_leave_days !== 0.5 ?
                   <Row>
                     <Col span={6}>
                     Start Date: 
@@ -306,7 +307,7 @@ class ReadLeaves extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    Start Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}> 
@@ -322,7 +323,7 @@ class ReadLeaves extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    End Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}>
@@ -330,6 +331,26 @@ class ReadLeaves extends Component {
                     </Tag>
                     </Col>
                   </Row>
+                  : 
+                  <Row>
+                    <Col span={12}>
+                    Leave Date: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                      <Tag color="volcano" style={{width:'225px'}}>
+                        {leave.startDate} 
+                      </Tag>
+                    </Col>
+                    <Col span={12}>
+                    Leave Half: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                    <Tag color="volcano" style={{width:'225px'}}> 
+                      {leave.startHalf}
+                    </Tag>
+                    </Col>
+                  </Row> 
+                  }
                   <br/>
                   <Row>
                     <Col span={12}>
@@ -368,13 +389,13 @@ class ReadLeaves extends Component {
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'460px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>
                   { 
                     leave.status === "Rejected"?                  
-                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px'}}>{leave.reject}</Tag></p>
+                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.reject}</Tag></p>
                     : null
                   }
                 </Modal>: null}

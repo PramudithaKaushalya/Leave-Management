@@ -333,24 +333,24 @@ class PendingLeaves extends Component {
             {
               title: 'Supervisor 01',
               dataIndex: 'supervisor1',
-              ...this.getColumnSearchProps('supervisor1'),
+              // ...this.getColumnSearchProps('supervisor1'),
             },
             {
               title: 'Supervisor 02',
               dataIndex: 'supervisor2',
-              ...this.getColumnSearchProps('supervisor2'),
+              // ...this.getColumnSearchProps('supervisor2'),
             },
             {
                 dataIndex: '',
                 key: 'b',
                 width: '1%',
-                render: (emp) => <Icon type="like" onClick={this.show.bind(this, emp)} theme="twoTone" />,
+                render: (emp) => <Icon type="like" onClick={this.show.bind(this, emp)} theme="twoTone" twoToneColor="#81CF7F"/>,
             },
             {
               dataIndex: '',
               key: 'c',
               width: '1%',
-              render: (emp) => <Icon type="dislike" onClick={this.showModal.bind(this, emp)} theme="twoTone" />,
+              render: (emp) => <Icon type="dislike" onClick={this.showModal.bind(this, emp)} theme="twoTone" twoToneColor="red"/>,
           },
 
           ];
@@ -359,7 +359,7 @@ class PendingLeaves extends Component {
             <div>
             { this.state.mounted? 
               <Card type="inner" title="Pending Leaves" hoverable='true'>
-                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 7 }} size="middle" />
+                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
               </Card> 
              : 
              <div className="example">
@@ -374,13 +374,14 @@ class PendingLeaves extends Component {
                   onCreate={this.handleReject}
                 />
 
-                { (leave.length!==0) ? <Modal
-                title="Accept the leave request."
-                visible={visibleAccept}
-                onOk={this.handleOk}
-                confirmLoading={confirmLoading}
-                onCancel={this.handleCancel}
-                okText="Approve"
+                { (leave.length!==0) ? 
+                <Modal
+                  title="Accept the leave request."
+                  visible={visibleAccept}
+                  onOk={this.handleOk}
+                  confirmLoading={confirmLoading}
+                  onCancel={this.handleCancel}
+                  okText="Approve"
                 >
                   <div>
                   <Row>
@@ -417,6 +418,7 @@ class PendingLeaves extends Component {
                     </Col>
                   </Row>
                   <br/>
+                  { leave.number_of_leave_days !== 0.5 ?
                   <Row>
                     <Col span={6}>
                     Start Date: 
@@ -427,7 +429,7 @@ class PendingLeaves extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    Start Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}> 
@@ -443,7 +445,7 @@ class PendingLeaves extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    End Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}>
@@ -451,6 +453,26 @@ class PendingLeaves extends Component {
                     </Tag>
                     </Col>
                   </Row>
+                  : 
+                  <Row>
+                    <Col span={12}>
+                    Leave Date: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                      <Tag color="volcano" style={{width:'225px'}}>
+                        {leave.startDate} 
+                      </Tag>
+                    </Col>
+                    <Col span={12}>
+                    Leave Half: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                    <Tag color="volcano" style={{width:'225px'}}> 
+                      {leave.startHalf}
+                    </Tag>
+                    </Col>
+                  </Row> 
+                  }
                   <br/>
                   <Row>
                     <Col span={12}>
@@ -474,7 +496,7 @@ class PendingLeaves extends Component {
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'460px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>

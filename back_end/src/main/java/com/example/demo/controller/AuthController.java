@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.net.URI;
 import java.util.Collections;
+import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import com.example.demo.exception.AppException;
 import com.example.demo.model.Department;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -88,26 +90,27 @@ public class AuthController {
 				LOGGER.warn(">>> Inactivate user Login. (By ==> "+loginRequest.getUsernameOrEmail()+")");
 				return ResponseEntity.ok(new ApiResponse(false, "Inactive account"));
 			} else{
-				// if(user.getIsLogedIn()){         
-				// 	LOGGER.warn(">>> Already user Logedin. (By ==> "+loginRequest.getUsernameOrEmail()+")");
-				// 	return ResponseEntity.ok(new ApiResponse(false, "User already logedIn"));
-				// }
-				// else {
+				 if(user.getIsFirstLogin()){
+				 	LOGGER.warn(">>> First login of user. (By ==> "+loginRequest.getUsernameOrEmail()+")");
+				 	return ResponseEntity.ok(new ApiResponse(true, "firstLogin"));
+				 }
+				 else {
 
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					String jwt = tokenProvider.generateToken(authentication);
 					
-					user.setIsLogedIn(true);
+//					user.setIsFirstLogin(true);
 
 					userRepository.save(user);
 
 					LOGGER.info(">>> Successfully user Login. (By ==> "+user.getId()+") ");
 					return ResponseEntity.ok(new JwtAuthenticationResponse(true, jwt));
-				// }
+				 }
 			}
 		} catch ( Exception e ) {
             LOGGER.error(">>> Unable to login. (By ==> "+loginRequest.getUsernameOrEmail()+")", e.getMessage());
-            return ResponseEntity.ok(new ApiResponse(false, "Unable to login"));
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
         }
     }
 
@@ -118,30 +121,31 @@ public class AuthController {
 
                 String jwt = token.substring(7);
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-
-                if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-                    LOGGER.warn(">>> Email Address already in use. (By ==> "+userId+")");
-                    return ResponseEntity.ok(new ApiResponse(false, "Email Address already in use"));
-                }
+//
+//                if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+//                    LOGGER.warn(">>> Email Address already in use. (By ==> "+userId+")");
+//                    return ResponseEntity.ok(new ApiResponse(false, "Email Address already in use"));
+//                }
 
                 if (userRepository.existsByUserId(signUpRequest.getUserId())) {
                     LOGGER.warn(">>> User id already in use. (By ==> "+userId+")");
                     return ResponseEntity.ok(new ApiResponse(false, "User id already in use"));
                 }
 
-                String password = passwordEncoder.encode("123");
-
                 // String password =RandomStringUtils.randomAlphabetic(4);
+                String password = "VizuaMatix@123";
+                String encodedPassword = passwordEncoder.encode(password);
 
                 Long d_id = new Long(signUpRequest.getDepartment());
                 Department department = departmentRepository.getOne(d_id);
 
-                User employee = new User(signUpRequest.getUserId().trim(), signUpRequest.getEmail().trim(), signUpRequest.getFirstName().trim(), 
+                User employee = new User(signUpRequest.getUserId().trim(), signUpRequest.getUserId().trim(), signUpRequest.getFirstName().trim(),
                                         signUpRequest.getSecondName().trim(), signUpRequest.getInitials().trim(), signUpRequest.getGender(), 
                                         signUpRequest.getEmail().trim(), signUpRequest.getResidence().trim(), signUpRequest.getContact().trim(), 
                                         department, signUpRequest.getDesignation(), signUpRequest.getSupervisor1(), signUpRequest.getSupervisor2(), signUpRequest.getJoinDate(), 
-                                        signUpRequest.getConfirmDate(), "Not resign", password, "Working", signUpRequest.getAnnual(), 
-                                        signUpRequest.getCasual(), signUpRequest.getMedical(), signUpRequest.getImage());
+                                        signUpRequest.getConfirmDate(), "Not resign", encodedPassword, "Working", signUpRequest.getAnnual(),
+                                        signUpRequest.getCasual(), signUpRequest.getMedical(), signUpRequest.getImage(), signUpRequest.getPermanent(), signUpRequest.getDateOfBirth(),
+                                        signUpRequest.getMarriageStatus(), signUpRequest.getReligion(), signUpRequest.getNic());
 
                 Role userRole = roleRepository.findById(signUpRequest.getRole())
                         .orElseThrow(() -> new AppException("User Role not set."));
@@ -174,18 +178,25 @@ public class AuthController {
         }
     }
 
+
+    @Value("${login.url}")
+    private String hostAndPort;
+
     public Boolean sendPassword(SignUpRequest user, String password) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(user.getEmail());
-        msg.setSubject("Credentials For VX Leave Management System.");
+        msg.setSubject("Credentials For VX HR Management System.");
         msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                "Credentials for your new Account as follows. You can change your password and username when you logged in to your account.\n\n"+
+                "Credentials for your new Account in VX HR Management System as follows. You can change your password when you logged in to your account.\n\n"+
                 "Username - "+ user.getEmail() + ".\n"+
-                "Password - "+ password + ".\n\n"+
+                "Password - "+ password + ".\n"+
+                "URL - "+ hostAndPort + "\n\n"+
                 "Thanks. \nBest Regards"
                 );
         
         try {
+            InternetAddress internetAddress = new InternetAddress(user.getEmail());
+            internetAddress.validate();
             javaMailSender.send(msg);
             return true;
         }catch(Exception e){
@@ -202,7 +213,6 @@ public class AuthController {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
 
                 User user = userRepository.getOne(userId);
-                user.setIsLogedIn(false);
                 userRepository.save(user);
                 LOGGER.info(">>> Successfully logout. (By ==> "+user.getId()+")");
                 return ResponseEntity.ok(new ApiResponse(true, "Successfully logout"));			
@@ -213,6 +223,7 @@ public class AuthController {
             }
 		}catch (Exception e){
 			LOGGER.error(">>> Unable to logout.", e.getMessage());
+			e.printStackTrace();
 			return ResponseEntity.ok(new ApiResponse(false, "Unable to logout"));			
 		}
     }
@@ -253,6 +264,7 @@ public class AuthController {
             }    
 		}catch (Exception e){
             LOGGER.error(">>> Unable to change the forgot password.", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to change the password"));
 		}
     }
@@ -286,6 +298,7 @@ public class AuthController {
             }
         }catch (Exception e){
             LOGGER.error(">>> Unable to change the forgot password.", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to change the password"));			
         }
     }
@@ -303,36 +316,70 @@ public class AuthController {
             }
         } catch(Exception e){
             LOGGER.error(">>> Unable to get summery of user");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get summery of user"));
         }
     }
 
     @PostMapping("/change_password")
-    public ResponseEntity<?> getOldPassword(@RequestHeader("Authorization") String token, @RequestBody ChangePassword passwords) {
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token, @RequestBody ChangePassword passwords) {
 
         try{
 
             if(StringUtils.hasText(token) && token.startsWith("Bearer ")){
+
                 String jwt = token.substring(7);
                 Long id = tokenProvider.getUserIdFromJWT(jwt);
                 User user = userRepository.getOne(id);
-    
-                String password = passwordEncoder.encode(passwords.getNewPassword().trim());
-                user.setPassword(password);
-                userRepository.save(user);
-                
-                LOGGER.info(">>> Successfully change the password. (By ==> "+id+")");
-                return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
+                String currentPassword = passwordEncoder.encode(passwords.getCurrentPassword().trim());
+                if(user.getPassword().equals(currentPassword) && user != null) {
+                    String password = passwordEncoder.encode(passwords.getNewPassword().trim());
+                    user.setPassword(password);
+                    userRepository.save(user);
+
+                    LOGGER.info(">>> Successfully change the password. (By ==> "+id+")");
+                    return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
+                } else {
+                    LOGGER.warn(">>> Current password not correct to change password");
+                    return ResponseEntity.ok(new ApiResponse(false, "Current password did not match"));
+                }
             } else {
                 LOGGER.warn(">>> User authentication failed");
                 return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
             } 
         }catch(Exception e){
             LOGGER.error(">>> Unable to change the password");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to change the password"));
         }
-    }      
-    
+    }
+
+    @PostMapping("/first_login_password")
+    public ResponseEntity<?> firstLoginChangePassword(@RequestBody ChangePassword passwords) {
+
+        try{
+            String userId = passwords.getEmail();
+            User user = userRepository.findByUsername(userId);
+
+            if(user != null) {
+                String password = passwordEncoder.encode(passwords.getNewPassword().trim());
+                user.setPassword(password);
+                user.setIsFirstLogin(false);
+                userRepository.save(user);
+
+                LOGGER.info(">>> Successfully change the first login password. (By ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
+            } else {
+                LOGGER.warn(">>> Current password not correct to change first login password");
+                return ResponseEntity.ok(new ApiResponse(false, "Current password did not match"));
+            }
+        }catch(Exception e){
+            LOGGER.error(">>> Unable to change the password");
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to change the password"));
+        }
+    }
+
     @GetMapping("/correct")
     public ResponseEntity<?> correctToken(@RequestHeader("Authorization") String token) {
         try { 
@@ -348,6 +395,7 @@ public class AuthController {
             }
         } catch(Exception e){
             LOGGER.error(">>> Unable to get summery of user");
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable authenticate token"));
         }
     }

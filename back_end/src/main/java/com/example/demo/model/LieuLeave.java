@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "lieu_leaves")
+@Table(name = "hrms_lieu_leaves")
 public class LieuLeave {
 
     @Id
@@ -25,8 +25,8 @@ public class LieuLeave {
     @Column(name = "works_done", length = 1000)
     private String worksDone;
 
-    @Column(name = "is_approved")
-    private Boolean isApproved;
+    @Column(name = "status")
+    private Integer status;          // 0 - pending, 1 - approved, 2 - rejected
 
     @Column(name = "request_at")
     private Date requestAt;
@@ -35,12 +35,12 @@ public class LieuLeave {
     @JoinColumn(name = "request_by")
     private User employee;
 
-    @Column(name = "approved_at")
-    private Date approvedAt;
+    @Column(name = "checked_at")
+    private Date checkedAt;
 
     @ManyToOne( fetch = FetchType.EAGER )
-    @JoinColumn(name = "approved_by")
-    private User approvedBy;
+    @JoinColumn(name = "checked_by")
+    private User checkedBy;
     
     public LieuLeave() {
 
@@ -62,12 +62,12 @@ public class LieuLeave {
         this.date = date;
     }
 
-    public Boolean getIsApproved() {
-        return isApproved;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setIsApproved(Boolean isApproved) {
-        this.isApproved = isApproved;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getRequestAt() {
@@ -78,20 +78,20 @@ public class LieuLeave {
         this.requestAt = requestAt;
     }
 
-    public Date getApprovedAt() {
-        return approvedAt;
+    public Date getCheckedAt() {
+        return checkedAt;
     }
 
-    public void setApprovedAt(Date approvedAt) {
-        this.approvedAt = approvedAt;
+    public void setCheckedAt(Date checkedAt) {
+        this.checkedAt = checkedAt;
     }
 
-    public User getApprovedBy() {
-        return approvedBy;
+    public User getCheckedBy() {
+        return checkedBy;
     }
 
-    public void setApprovedBy(User approvedBy) {
-        this.approvedBy = approvedBy;
+    public void setCheckedBy(User checkedBy) {
+        this.checkedBy = checkedBy;
     }
 
     public String getProject() {

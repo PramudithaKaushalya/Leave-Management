@@ -309,20 +309,25 @@ class ViewOne extends Component {
               <Card hoverable='true'>  
                 <Row gutter={16}>
                   <center> 
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={summery[0].utilized / summery[0].entitlement * 100} format={percent => `${summery[0].utilized} / ${summery[0].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Casual</Tag>
                   </Col>
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={summery[1].utilized / summery[1].entitlement * 100} format={percent => `${summery[1].utilized} / ${summery[1].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Medical</Tag>
                   </Col> 
-                  <Col span={8}>
+                  <Col span={6}>
                     <Progress type="circle" percent={summery[2].utilized / summery[2].entitlement * 100} format={percent => `${summery[2].utilized} / ${summery[2].entitlement}`}/>
                     <br/><br/>
                     <Tag color="volcano">Annual</Tag>
+                  </Col>
+                  <Col span={6}>
+                    <Progress type="circle" percent={summery[3].utilized / summery[3].entitlement * 100} format={percent => `${summery[3].utilized} / ${summery[3].entitlement}`}/>
+                    <br/><br/>
+                    <Tag color="volcano">Lieu</Tag>
                   </Col>
                   </center>
                 </Row>
@@ -397,10 +402,10 @@ class ViewOne extends Component {
                 >
                    { 
                     leave.status === "Approved"?
-                      <Alert message="Approved request" type="success" style={{width:'460px'}}/>
+                      <Alert message="Request was approved" type="success" style={{width:'460px'}}/>
                     : leave.status === "Pending"?
-                      <Alert message="Pending request" type="info" style={{width:'460px'}}/>
-                    : <Alert message="Rejected request" type="error" style={{width:'460px'}}/>
+                      <Alert message="Request is still pending" type="info" style={{width:'460px'}}/>
+                    : <Alert message="Request was rejected" type="error" style={{width:'460px'}}/>
                   }
                   <br/>
                   <br/>
@@ -423,6 +428,7 @@ class ViewOne extends Component {
                     </Col>
                   </Row>
                   <br/>
+                  { leave.number_of_leave_days !== 0.5 ?
                   <Row>
                     <Col span={6}>
                     Start Date: 
@@ -433,7 +439,7 @@ class ViewOne extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    Start Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}> 
@@ -449,7 +455,7 @@ class ViewOne extends Component {
                       </Tag>
                     </Col>
                     <Col span={6}>
-                    End Time: 
+                    Full/ Half: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
                     <Tag color="volcano" style={{width:'105px'}}>
@@ -457,6 +463,26 @@ class ViewOne extends Component {
                     </Tag>
                     </Col>
                   </Row>
+                  : 
+                  <Row>
+                    <Col span={12}>
+                    Leave Date: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                      <Tag color="volcano" style={{width:'225px'}}>
+                        {leave.startDate} 
+                      </Tag>
+                    </Col>
+                    <Col span={12}>
+                    Leave Half: 
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
+                    <Tag color="volcano" style={{width:'225px'}}> 
+                      {leave.startHalf}
+                    </Tag>
+                    </Col>
+                  </Row> 
+                  }
                   <br/>
                   <Row>
                     <Col span={12}>
@@ -484,13 +510,13 @@ class ViewOne extends Component {
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'305px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'305px', whiteSpace:'normal'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>
                   { 
                     leave.status === "Rejected"?                  
-                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px'}}>{leave.reject}</Tag></p>
+                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.reject}</Tag></p>
                     : null
                   } 
                 </Modal>: null}    

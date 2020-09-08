@@ -8,15 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LeaveCountRepository extends JpaRepository<LeaveCount, Integer>{
 
+    boolean existsByUserAndTypeAndYear(User emp, LeaveType type, Integer year);
 
-	boolean existsByType(LeaveType type);
+	LeaveCount findByUserAndTypeAndYear(User emp, LeaveType type, int year);
 
-	boolean existsByUserAndType(User emp, LeaveType casual);
+	List<LeaveCount> findByUserAndYear(User employee, int year);
 
-	LeaveCount findByUserAndType(User emp, LeaveType casual);
+	boolean existsByUserAndYear(User employee, int year);
 
-	boolean existsByUser(User employee);
-
-	List<LeaveCount> findByUser(User employee);
-    
+	List<LeaveCount> findByYear(int year);
 }

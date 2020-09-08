@@ -81,4 +81,19 @@ public class LieuLeaveController {
         }
     }
 
+    @GetMapping("/reject/{id}")
+    public ResponseEntity<?> rejectLieuLeave(@RequestHeader("Authorization") String token, @PathVariable("id") Long id) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+
+            return lieuLeaveService.rejectLieuLeaves(id, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
 }

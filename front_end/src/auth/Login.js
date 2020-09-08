@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import './index.css';
 import { Form, Icon, Input, Button, Card, message } from 'antd';
 
+
 class NormalLoginForm extends React.Component {
 
   handleLogin = e => {
@@ -19,8 +20,13 @@ class NormalLoginForm extends React.Component {
         .then(token => {
 
           if (token.data.success === true) {
-            localStorage.setItem("header", token.data.accessToken);
-            this.props.history.push('/');
+            if (token.data.message === "firstLogin") {
+              localStorage.setItem("header", values.username);
+              this.props.history.push('/first_login');
+            } else {
+              localStorage.setItem("header", token.data.accessToken);
+              this.props.history.push('/');
+            }
           } else{
             message.error(token.data.message);
             this.props.form.resetFields(); 
@@ -69,12 +75,12 @@ class NormalLoginForm extends React.Component {
               <br/>
               <Form.Item>
                 {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Please input your username!' }],
+                  rules: [{ required: true, message: 'Please input your employee number!' }],
                 })(
                   <Input
                     style={{width: '300px'}}
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Username"
+                    placeholder="Employee number"
                   />,
                 )}
               </Form.Item>
@@ -94,6 +100,7 @@ class NormalLoginForm extends React.Component {
               <Form.Item {...tailFormItemLayout}>
                 
                 <Button onClick={this.handleLogin} type="primary" htmlType="submit" className="login-form-button" >
+                  <Icon type="check-circle" /> 
                   Log in
                 </Button>
                 <Link className="login-form-forgot" to='/forgot'>Forgot Password</Link>

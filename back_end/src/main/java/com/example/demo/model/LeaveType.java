@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "leave_type")
+@Table(name = "hrms_leave_type")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class LeaveType {
     

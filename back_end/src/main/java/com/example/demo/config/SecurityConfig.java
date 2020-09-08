@@ -83,9 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers(HttpMethod.GET, "/api/users/**")
                         .permitAll()
-                    .antMatchers("/api/auth/signup", "/api/auth/signin", "/api/auth/forgot", "/api/auth/forgot_password") 
+                    .antMatchers( "/api/auth/signin", "/api/auth/forgot", "/api/auth/forgot_password", "/api/auth/first_login_password")
                         .permitAll() 
-                    .antMatchers("/api/auth/correct", "/api/auth/change_password", "/api/auth/info")
+                    .antMatchers("/api/auth/signup", "/api/auth/correct", "/api/auth/change_password", "/api/auth/info")
                         .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin")    
                     .antMatchers("/calender/all")
                         .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
@@ -112,11 +112,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/user/all", "/user/get/**", "/user/name")
                         .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
                     .antMatchers("/pdf/**")
-                        .permitAll()   
-                    .antMatchers("/login", "/forgot", "/leave_history", "/history", "/dashboard", "/add_employee", 
+                        .permitAll()
+                    .antMatchers("/old_tables/**")
+                        .permitAll()
+                    .antMatchers("/login", "/first_login", "/forgot", "/leave_history", "/history", "/dashboard", "/add_employee",
                                  "/request_leave", "/pending_leaves", "/manage_employee", "/change_password", 
                                  "/view_profile", "/get_employee", "/leave_calender", "/contact_number", "/attendence", 
-                                 "/one_attendence", "/collect_lieu", "/pending_lieu", "/error404")  
+                                 "/one_attendence", "/collect_lieu", "/pending_lieu", "/own_pending", "/error404")
                         .permitAll()           
                     .anyRequest()
                         .authenticated();

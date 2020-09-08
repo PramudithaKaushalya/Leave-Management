@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import axios from '../../config/axios'
 import 'antd/dist/antd.css';
-import {Table, Button, Icon, Input, Card, message, Spin } from 'antd';
+import {Table, Button, Icon, Input, Card, message, Spin, Typography } from 'antd';
 import Highlighter from 'react-highlight-words';
 import './index.css';
+
+const { Text } = Typography;
 
 class ViewProfile extends Component {
     
@@ -125,33 +127,33 @@ class ViewProfile extends Component {
             align: 'center'
           },
           {
-            title: 'Maternity',
-            key: '3',
-            dataIndex: 'maternity',
-            align: 'center'
-          },
-          {
-            title: 'Paternity',
-            key: '4',
-            dataIndex: 'paternity',
-            align: 'center'
-          },
-          {
             title: 'Annual',
-            key: '5',
+            key: '3',
             dataIndex: 'annual',
             align: 'center'
           },
           {
             title: 'Lieu',
-            key: '6',
+            key: '4',
             dataIndex: 'lieu',
             align: 'center'
           },
           {
             title: 'Special',
-            key: '7',
+            key: '5',
             dataIndex: 'special',
+            align: 'center'
+          },
+          {
+            title: 'Maternity',
+            key: '6',
+            dataIndex: 'maternity',
+            align: 'center'
+          },
+          {
+            title: 'Paternity',
+            key: '7',
+            dataIndex: 'paternity',
             align: 'center'
           },
           {
@@ -164,7 +166,8 @@ class ViewProfile extends Component {
             title: 'No Pay',
             key: '9',
             dataIndex: 'nopay',
-            align: 'center'
+            align: 'center',
+            render: text => <Text type="danger">{text}</Text>,
           },
           {
             dataIndex: '',

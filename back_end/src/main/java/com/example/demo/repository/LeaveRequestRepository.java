@@ -24,5 +24,10 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Inte
 	List<LeaveRequest> findByUserAndStartDateIn(User user, List<String> totalDates);
 
 	List<LeaveRequest> findByUserInAndStartDateIn(List<User> users, List<String> totalDates);
-    
+
+    List<LeaveRequest> findByUserAndStatus(User employee, String pending);
+
+	boolean existsByUserAndStatus(User user, String pending);
+
+    boolean existsByUserAndFormatDateTime(User user, String formatDateTime);
 }

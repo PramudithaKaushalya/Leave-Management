@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,15 +48,17 @@ public class CalenderService {
     public ResponseEntity<?> getAll( Long userId) {
 
         try{
+            LocalDateTime nowTime = LocalDateTime.now();
             List<Calender> all = calenderRepository.findAll();
 
-            List<CalenderRecord> records = all.stream().map(var -> new CalenderRecord(var.getId(), var.getDate(), var.getReason(), var.getCreatedBy().getFirstName()+" "+var.getCreatedBy().getSecondName(), var.getCreatedAt()) ).collect(Collectors.toList());
+            List<CalenderRecord> records = all.stream().filter(x -> LocalDate.parse(x.getDate()).getYear() == nowTime.getYear()).map(var -> new CalenderRecord(var.getId(), var.getDate(), var.getReason(), var.getCreatedBy().getFirstName()+" "+var.getCreatedBy().getSecondName(), var.getCreatedAt()) ).collect(Collectors.toList());
 
             LOGGER.info(">>> Successfully get all calender records. (By user ==> "+userId+")");
 
             return ResponseEntity.ok(new ApiResponse(true, records));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all calender records. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all calender records"));
 
         }
@@ -69,6 +72,7 @@ public class CalenderService {
             return ResponseEntity.ok(new ApiResponse(true, "Remove Holiday successfull"));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to delete calender record "+id+". (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all calender records"));
         }
 
@@ -85,6 +89,7 @@ public class CalenderService {
             return ResponseEntity.ok(new ApiResponse(true, dates));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get dates. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to get all calender records"));
         }
     }

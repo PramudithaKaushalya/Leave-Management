@@ -19,7 +19,7 @@
 -- INSERT IGNORE INTO leave_type(type) VALUES('Casual');
 -- INSERT IGNORE INTO leave_type(type) VALUES('Medical');
 -- INSERT IGNORE INTO leave_type(type) VALUES('Maternity');
--- INSERT IGNORE INTO leave_type(type) VALUES('Paternit');
+-- INSERT IGNORE INTO leave_type(type) VALUES('Paternity');
 -- INSERT IGNORE INTO leave_type(type) VALUES('Annual');
 -- INSERT IGNORE INTO leave_type(type) VALUES('Lieu');
 -- INSERT IGNORE INTO leave_type(type) VALUES('Special');

@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LieuLeaveRepository extends JpaRepository<LieuLeave, Long> {
 
-	List<LieuLeave> findByIsApprovedOrderByIdDesc(boolean b);
+	List<LieuLeave> findByStatusOrderByIdDesc(Integer status);
 
 	List<LieuLeave> findByEmployeeOrderByIdDesc(User user);
 
 	boolean existsByEmployee(User user);
 
-	List<LieuLeave> findByEmployeeAndIsApproved(User employee, boolean b);
+	List<LieuLeave> findByEmployeeAndStatus(User employee, Integer status);
 }

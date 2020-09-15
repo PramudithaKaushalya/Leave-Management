@@ -24,11 +24,13 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 
 @Service
 public class LeaveRequestService {
@@ -50,6 +52,9 @@ public class LeaveRequestService {
 
     @Value("${login.url}")
     private String hostAndPort;
+
+    @Value("${spring.mail.username}")
+    private String mailSender;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveRequestService.class);
 
@@ -152,21 +157,24 @@ public class LeaveRequestService {
 
     private void applyLeaveMail (User supervisor, LeaveRequest leave ) {
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(supervisor.getEmail());
-        msg.setSubject("Request for leave.");
-        msg.setText("Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
-                "You have new pending leave request from "+leave.getUser().getFirstName()+" "+leave.getUser().getSecondName()+". \n\n"+
-                "Date of request: "+leave.getFormatDateTime()+"\n"+
-                "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n"+
-                "URL: "+hostAndPort+"pending_leaves \n\n"+
-                "Thanks. \nBest Regards"
-        );
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(supervisor.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Request for a leave.");
+            mimeMessage.setText(
+                    "Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
+                            "You have new pending leave request from "+leave.getUser().getFirstName()+" "+leave.getUser().getSecondName()+". \n\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n"+
+                            "URL: "+hostAndPort+"pending_leaves \n\n"+
+                            "Thanks. \nBest Regards");
+        };
 
         try {
-            javaMailSender.send(msg);
+            javaMailSender.send(mail);
             LOGGER.info(">>> E-mail send to ==> "+supervisor.getEmail());
         }catch (Exception e){
             e.printStackTrace();
@@ -277,20 +285,23 @@ public class LeaveRequestService {
 
     private void mailDelete (LeaveRequest leave ) {
         User employee = leave.getUser();
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(employee.getEmail());
-		msg.setSubject("Remove the leave request.");
-		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
-					"Deleted your following "+leave.getStatus()+" leave request. \n\n"+
-					"Date of request: "+leave.getFormatDateTime()+"\n"+
-                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
-					"Thanks. \nBest Regards"
-                    );
-                     
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(employee.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Removed the leave request.");
+            mimeMessage.setText(
+                    "Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+                            "Deleted your following "+leave.getStatus()+" leave request. \n\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            "Thanks. \nBest Regards");
+        };
 		try {
-            javaMailSender.send(msg);
+            javaMailSender.send(mail);
 			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
 		}catch (Exception e){
             e.printStackTrace();
@@ -301,17 +312,20 @@ public class LeaveRequestService {
     private void mailSupDelete (User supervisor, LeaveRequest leave ) {
         User employee = leave.getUser();
 
-        SimpleMailMessage mail= new SimpleMailMessage();
-        mail.setTo(supervisor.getEmail());
-		mail.setSubject("Remove the leave request of "+employee.getFirstName());
-		mail.setText("Hi "+supervisor.getFirstName() +" "+ supervisor.getSecondName()+",\n\n"+
-					"Deleted the following "+leave.getStatus()+" leave request of "+employee.getFirstName()+" "+employee.getSecondName()+". \n\n"+
-					"Date of request: "+leave.getFormatDateTime()+"\n"+
-                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                     "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
-					"Thanks. \nBest Regards"
-                    );
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(supervisor.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Removed the leave request of "+employee.getFirstName());
+            mimeMessage.setText(
+                    "Hi "+supervisor.getFirstName() +" "+ supervisor.getSecondName()+",\n\n"+
+                            "Deleted the following "+leave.getStatus()+" leave request of "+employee.getFirstName()+" "+employee.getSecondName()+". \n\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            "Thanks. \nBest Regards");
+        };
         try {
             javaMailSender.send(mail);
 			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
@@ -374,20 +388,23 @@ public class LeaveRequestService {
     private void mailDutyCover (User duty, LeaveRequest leave ) {
 
         User employee = leave.getUser();
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(duty.getEmail());
-		msg.setSubject("Aditional duty to cover.");
-		msg.setText("Hi "+duty.getFirstName()+" "+duty.getSecondName()+",\n"+
-					"You are asigned to cover the duty of following employee in these day/s. \n\n"+
-					"Name: "+employee.getFirstName()+" "+employee.getSecondName()+"\n"+
-					"Role: "+employee.getRoles().stream().findFirst().get().getName()+"\n"+
-                    "Department: "+employee.getDepartment().getName()+"\n"+
-                    "Date/s: "+leave.getStartDate()+" to "+leave.getEnd_date()+"\n\n"+
-					"Thanks. \n Best Regards"
-					);
 
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(duty.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Additional duty to cover.");
+            mimeMessage.setText(
+                    "Hi "+duty.getFirstName()+" "+duty.getSecondName()+",\n"+
+                            "You are assigned to cover the duty of following employee in these day/s. \n\n"+
+                            "Name: "+employee.getFirstName()+" "+employee.getSecondName()+"\n"+
+                            "Role: "+employee.getRoles().stream().findFirst().get().getName()+"\n"+
+                            "Department: "+employee.getDepartment().getName()+"\n"+
+                            "Date/s: "+leave.getStartDate()+" to "+leave.getEnd_date()+"\n\n"+
+                            "Thanks. \n Best Regards");
+        };
 		try {
-			javaMailSender.send(msg);
+			javaMailSender.send(mail);
 			LOGGER.info(">>> E-mail send to ==> "+duty.getEmail());
 		}catch (Exception e){
             e.printStackTrace();
@@ -398,20 +415,23 @@ public class LeaveRequestService {
     private void acceptRequest (LeaveRequest leave ) {
 
         User employee = leave.getUser();
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(employee.getEmail());
-		msg.setSubject("Accept leave request.");
-		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
-                    "Accept your following leave request. \n\n"+
-                    "Date of request: "+leave.getFormatDateTime()+"\n"+
-                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
-					"Thanks. \nBest Regards"
-					);
 
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(employee.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Accepted the leave request.");
+            mimeMessage.setText(
+                    "Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+                            "Accept your following leave request. \n\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            "Thanks. \nBest Regards");
+        };
 		try {
-			javaMailSender.send(msg);
+			javaMailSender.send(mail);
 			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
 		}catch (Exception e){
 			LOGGER.error(">>> (MailSender) ==> "+e);
@@ -421,20 +441,23 @@ public class LeaveRequestService {
     private void mailReject (LeaveRequest leave ) {
 
         User employee = leave.getUser();
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(employee.getEmail());
-		msg.setSubject("Reject Leave Request.");
-		msg.setText("Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
-                    "Reject your following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
-                    "Date of request: "+leave.getFormatDateTime()+"\n"+
-                    "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                    "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                    "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
-					"Sorry for the rejection.\nThanks\nBest Regards"
-					);
 
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(employee.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Rejected the Leave Request.");
+            mimeMessage.setText(
+                    "Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
+                            "Reject your following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            "Sorry for the rejection.\nThanks\nBest Regards");
+        };
 		try {
-			javaMailSender.send(msg);
+			javaMailSender.send(mail);
 			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
 		}catch (Exception e){
             e.printStackTrace();
@@ -489,7 +512,6 @@ public class LeaveRequestService {
     public ResponseEntity<?> getAbsence( Long userId) {
 
         try {
-            List<AbsenceUser> absence = new ArrayList<>();
             List<LeaveRequest> requests = leaveRequestRepository.findByStatus("Approved");
 
             List<AbsenceUser> approvedLeaves = checkYesterdayLeaves( requests );
@@ -765,16 +787,19 @@ public class LeaveRequestService {
         System.out.println("Run the schedule--------------------------");
         try {
             List<User> workingEmployees = userRepository.findByStatus("Working");
+            List<String> supervisors = new ArrayList<>();
 
             for (User user : workingEmployees) {
                 if(leaveRequestRepository.existsByUserAndStatus(user, "Pending") ) {
-                    if(!user.getSupervisor1().equals("No one")) {
+                    if(!user.getSupervisor1().equals("No one") && !supervisors.contains(user.getSupervisor1())) {
                         User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
                         informPendingLeaves(supervisor1);
+                        supervisors.add(user.getSupervisor1());
                     }
-                    if(!user.getSupervisor2().equals("No one")) {
+                    if(!user.getSupervisor2().equals("No one") && !supervisors.contains(user.getSupervisor2())) {
                         User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
                         informPendingLeaves(supervisor2);
+                        supervisors.add(user.getSupervisor2());
                     }
                 }
             }
@@ -786,17 +811,20 @@ public class LeaveRequestService {
 
     private void informPendingLeaves (User user) {
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(user.getEmail());
-        msg.setSubject("Pending Leave Requests.");
-        msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                "There are some leaves pending to get your approval. \n"+
-                "Check here: "+hostAndPort+"pending_leaves \n\n"+
-                "\nThanks\nBest Regards"
-        );
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Pending Leave Requests.");
+            mimeMessage.setText(
+                    "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                            "There are some leaves pending to get your approval. \n"+
+                            "Check here: "+hostAndPort+"pending_leaves \n\n"+
+                            "\nThanks\nBest Regards");
+        };
 
         try {
-            javaMailSender.send(msg);
+            javaMailSender.send(mail);
             LOGGER.info(">>> E-mail send to ==> "+user.getEmail());
         }catch (Exception e){
             LOGGER.error(">>> (MailSender) ==> "+e);

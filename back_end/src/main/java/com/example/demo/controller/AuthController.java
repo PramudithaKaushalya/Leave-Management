@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.net.URI;
 import java.util.Collections;
+import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import com.example.demo.exception.AppException;
@@ -25,8 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,6 +72,9 @@ public class AuthController {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${spring.mail.username}")
+    private String mailSender;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     
     @PostMapping("/signin")
@@ -98,10 +102,6 @@ public class AuthController {
 
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					String jwt = tokenProvider.generateToken(authentication);
-					
-//					user.setIsFirstLogin(true);
-
-					userRepository.save(user);
 
 					LOGGER.info(">>> Successfully user Login. (By ==> "+user.getId()+") ");
 					return ResponseEntity.ok(new JwtAuthenticationResponse(true, jwt));
@@ -183,21 +183,25 @@ public class AuthController {
     private String hostAndPort;
 
     public Boolean sendPassword(SignUpRequest user, String password) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(user.getEmail());
-        msg.setSubject("Credentials For VX HR Management System.");
-        msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                "Credentials for your new Account in VX HR Management System as follows. You can change your password when you logged in to your account.\n\n"+
-                "Username - "+ user.getEmail() + ".\n"+
-                "Password - "+ password + ".\n"+
-                "URL - "+ hostAndPort + "\n\n"+
-                "Thanks. \nBest Regards"
-                );
-        
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Credentials For VX HR Management System.");
+            mimeMessage.setText(
+                    "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                            "Credentials for your new Account in VX HR Management System as follows. You can change your password when you logged in to your account.\n\n"+
+                            "Username - "+ user.getEmail() + ".\n"+
+                            "Password - "+ password + ".\n"+
+                            "URL - "+ hostAndPort + "\n\n"+
+                            "Thanks. \nBest Regards");
+        };
+
         try {
             InternetAddress internetAddress = new InternetAddress(user.getEmail());
             internetAddress.validate();
-            javaMailSender.send(msg);
+            javaMailSender.send(mail);
             return true;
         }catch(Exception e){
             e.printStackTrace();
@@ -242,16 +246,18 @@ public class AuthController {
                     return new ResponseEntity(new ApiResponse(false, "Username incorrect!"), HttpStatus.BAD_REQUEST);
                 }
 
-                SimpleMailMessage msg = new SimpleMailMessage();
-                msg.setTo(request.getUsernameOrEmail());
-                msg.setSubject("Forgot credentials of VX Leave Management System.");
-                msg.setText("Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                        "You forgot your credentials and waiting for confirm code.\n"+
-                        "Your requested confirm code is "+ confirmCode + ".\n\n"+
-                        "Thanks. \nBest Regards"
-                        );
-                        
-                javaMailSender.send(msg);
+                MimeMessagePreparator mail = mimeMessage -> {
+
+                    mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(request.getUsernameOrEmail()));
+                    mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+                    mimeMessage.setSubject("Forgot credentials of VX Leave Management System.");
+                    mimeMessage.setText(
+                            "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                                    "You forgot your credentials and waiting for confirm code.\n"+
+                                    "Your requested confirm code is "+ confirmCode + ".\n\n"+
+                                    "Thanks. \nBest Regards");
+                };
+                javaMailSender.send(mail);
 
                 user.setConfirmCode(confirmCode);
                 userRepository.save(user);
@@ -325,32 +331,34 @@ public class AuthController {
     public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token, @RequestBody ChangePassword passwords) {
 
         try{
-
             if(StringUtils.hasText(token) && token.startsWith("Bearer ")){
 
                 String jwt = token.substring(7);
                 Long id = tokenProvider.getUserIdFromJWT(jwt);
                 User user = userRepository.getOne(id);
-                String currentPassword = passwordEncoder.encode(passwords.getCurrentPassword().trim());
-                if(user.getPassword().equals(currentPassword) && user != null) {
-                    String password = passwordEncoder.encode(passwords.getNewPassword().trim());
-                    user.setPassword(password);
-                    userRepository.save(user);
 
-                    LOGGER.info(">>> Successfully change the password. (By ==> "+id+")");
-                    return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
-                } else {
-                    LOGGER.warn(">>> Current password not correct to change password");
-                    return ResponseEntity.ok(new ApiResponse(false, "Current password did not match"));
-                }
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                user.getUsername(),
+                                passwords.getCurrentPassword().trim()
+                        ));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                String password = passwordEncoder.encode(passwords.getNewPassword().trim());
+                user.setPassword(password);
+                userRepository.save(user);
+
+                LOGGER.info(">>> Successfully change the password. (By ==> "+id+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
+
             } else {
                 LOGGER.warn(">>> User authentication failed");
                 return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
             } 
         }catch(Exception e){
-            LOGGER.error(">>> Unable to change the password");
+            LOGGER.warn(">>> Current password not correct to change password");
             e.printStackTrace();
-            return ResponseEntity.ok(new ApiResponse(false, "Unable to change the password"));
+            return ResponseEntity.ok(new ApiResponse(false, "Current password did not match"));
         }
     }
 

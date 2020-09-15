@@ -359,7 +359,7 @@ class ViewOne extends Component {
                         <br/> <br/> <br/>
                         {
                           employee.image === null ?
-                            <Avatar style={{float:'right'}} size={200} icon="user" src="/src/01.png"/>
+                            <Avatar style={{float:'right'}} size={160} icon="user" src="/src/01.png"/>
                           :
                             <Avatar style={{float:'right'}} size={200} icon="user" src={employee.image} />  
                         }

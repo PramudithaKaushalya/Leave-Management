@@ -38,7 +38,7 @@ class RequestLeave extends React.Component {
     if(localStorage.getItem("header") !== null){ 
    
 
-      axios.get('user/all', 
+      axios.get('user/duty_cover', 
       {
           headers: {
               Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -515,7 +515,7 @@ class RequestLeave extends React.Component {
                   {getFieldDecorator('leave_type', {
                     rules: [{ required: true, message: 'Please input leave type!' }],
                   })(
-                  <Radio.Group name="radiogroup" style={{ width: '450px' }} onChange={this.setType}>
+                  <Radio.Group name="radiogroup" style={{ width: '350px' }} onChange={this.setType}>
                   {types.map((item , index) => (
                           <Radio.Button key={item.leave_type_id} value={index}>{item.type}</Radio.Button>
                   ))}   
@@ -631,7 +631,7 @@ class RequestLeave extends React.Component {
                 <Col span={24}>
                   <Card hoverable='true'>
                   <h4>Holidays</h4>
-                  <Table rowKey={record => record.date} columns={columnsForHolidays} dataSource={saveDates} size="small" pagination={{ pageSize: 7 }}/>
+                  <Table rowKey={record => record.date} columns={columnsForHolidays} dataSource={saveDates} size="small" pagination={{ pageSize: 8 }}/>
                   </Card>
                 </Col>
               </Row>

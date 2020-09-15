@@ -49,7 +49,7 @@ public class CalenderService {
 
         try{
             LocalDateTime nowTime = LocalDateTime.now();
-            List<Calender> all = calenderRepository.findAll();
+            List<Calender> all = calenderRepository.findAllByOrderByDate();
 
             List<CalenderRecord> records = all.stream().filter(x -> LocalDate.parse(x.getDate()).getYear() == nowTime.getYear()).map(var -> new CalenderRecord(var.getId(), var.getDate(), var.getReason(), var.getCreatedBy().getFirstName()+" "+var.getCreatedBy().getSecondName(), var.getCreatedAt()) ).collect(Collectors.toList());
 

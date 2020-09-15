@@ -36,7 +36,7 @@ public class Employee {
                     String role, String department, String designation, String supervisor1, String supervisor2, String joinDate, String confirmDate, String resignDate,
                     String status, Float annual, Float casual, Float medical, String permanent, String dob, String marriageStatus, String religion, String nic ){
 
-        this.userId = userId;                
+        this.userId = userId;
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -68,7 +68,7 @@ public class Employee {
                     String role, String department, String designation, String supervisor1, String supervisor2, String joinDate, String confirmDate, String resignDate,
                     String status, Float annual, Float casual, Float medical, String image, String permanent, String dob, String marriageStatus, String religion, String nic ){
 
-        this.userId = userId;                
+        this.userId = userId;
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -95,6 +95,12 @@ public class Employee {
         this.marriageStatus = marriageStatus;
         this.religion = religion;
         this.nic = nic;
+    }
+
+    public Employee(Long id, String firstName, String secondName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
     }
 
     public String getEmail() {

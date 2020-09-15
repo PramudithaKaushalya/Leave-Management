@@ -55,6 +55,37 @@ public class UserService {
         } 
     }
 
+    public ResponseEntity<?> getManageEmployeesFiler(Long userId) {
+        try {
+            List<User> users = userRepository.findByStatusOrderByFirstName("Working");
+
+            List<Employee> employees = users.stream().map(user -> new Employee(user.getId(), user.getFirstName(),user.getSecondName())).collect(Collectors.toList());
+
+            LOGGER.info(">>> Successfully get all employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, employees));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get all employees. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get all employees"));
+        }
+    }
+
+    public ResponseEntity<?> getDutyCoverEmployees( Long userId) {
+        try {
+            User employee = userRepository.getOne(userId);
+            List<User> users = userRepository.findByStatusAndDepartmentOrderByFirstName("Working", employee.getDepartment());
+
+            List<Employee> employees = users.stream().map(user -> new Employee(user.getId(), user.getFirstName(),user.getSecondName())).collect(Collectors.toList());
+
+            LOGGER.info(">>> Successfully get all employees. (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, employees));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to get all employees. (By user ==> "+userId+")", e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to get all employees"));
+        }
+    }
+
     public ResponseEntity<?> resignEmployee(Employee emp, Long userId) {
         try {
             User employee = userRepository.getOne(emp.getId());
@@ -167,7 +198,7 @@ public class UserService {
 
         try { 
             User user = userRepository.getOne(id);
-            System.out.println("\n\n\n||||||||||||||||||||||||||||||||||"+user.getFirstName()+"\n\n\n");
+
             Employee employee = new Employee(user.getId(),user.getUserId(),user.getFirstName(),user.getSecondName(),user.getInitials(),user.getGender(),user.getEmail(),
                 user.getResidence(),user.getContact(),user.getRoles().stream().findFirst().get().getName().toString(),user.getDepartment().getName(),user.getDesignation(),
                 user.getSupervisor1(),user.getSupervisor2(),user.getJoinDate(),user.getConfirmDate(), user.getResignDate(), user.getStatus(),user.getAnnual(),

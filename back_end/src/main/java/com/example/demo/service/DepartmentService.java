@@ -18,7 +18,7 @@ public class DepartmentService {
     public ResponseEntity<?> getAll(long userId) {
         try {
             LOGGER.info(">>> Successfully get all departments. (By user ==> "+userId+")");
-            return ResponseEntity.ok(new ApiResponse(true, departmentRepository.findAll()));
+            return ResponseEntity.ok(new ApiResponse(true, departmentRepository.findAllByOrderByName()));
         } catch(Exception e) {
             LOGGER.error(">>> Unable to get all departments. (By user ==> "+userId+")", e.getMessage());
             e.printStackTrace();

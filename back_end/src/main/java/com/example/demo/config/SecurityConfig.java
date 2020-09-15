@@ -107,18 +107,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .hasAnyAuthority("Supervisor", "Admin")    
                     .antMatchers("/leave_type/all")
                         .permitAll()
-                    .antMatchers("/user/resign", "/user/update/**", "/user/supervisor", "/role/all")
+                    .antMatchers("/user/resign", "/user/update/**", "/user/supervisor", "/role/all", "/user/all")
                         .hasAuthority("Admin")
-                    .antMatchers("/user/all", "/user/get/**", "/user/name")
+                    .antMatchers("/user/all")
+                        .hasAnyAuthority("Supervisor", "Admin")
+                    .antMatchers("/user/duty_cover", "/user/get/**", "/user/name")
                         .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
                     .antMatchers("/pdf/**")
                         .permitAll()
                     .antMatchers("/old_tables/**")
                         .permitAll()
-                    .antMatchers("/login", "/first_login", "/forgot", "/leave_history", "/history", "/dashboard", "/add_employee",
-                                 "/request_leave", "/pending_leaves", "/manage_employee", "/change_password", 
-                                 "/view_profile", "/get_employee", "/leave_calender", "/contact_number", "/attendence", 
-                                 "/one_attendence", "/collect_lieu", "/pending_lieu", "/own_pending", "/error404")
+                    .antMatchers("/login", "/first_login", "/forgot", "/history", "/dashboard",
+                                 "/request_leave", "/change_password", "/contact_number", "/collect_lieu", "/own_pending",
+                            "/manage_employee", "/leave_calender", "/view_profile", "/get_employee", "/leave_history", "/pending_leaves", "/pending_lieu", "/error404")
                         .permitAll()           
                     .anyRequest()
                         .authenticated();

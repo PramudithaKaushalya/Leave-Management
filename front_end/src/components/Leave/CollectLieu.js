@@ -275,7 +275,9 @@ class CollectLieu extends React.Component {
           <Row gutter={16}>
             <Col span={12} > 
               <Card type="inner" title='Collect Lieu Leaves' bordered={false} hoverable='true'>  
-                <p>You can collect lieu leaves only for holidays or weekends. You have to collect lieu leaves one by one per day.</p>
+                <small>You can collect lieu leaves only for holidays or weekends.</small> <br/>
+                <small>You have to collect lieu leaves one by one per day. </small> <br/>
+                <small>You have to collect lieu leaves within a week. </small> <br/><br/>
                 <br/>
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 
@@ -334,6 +336,7 @@ class CollectLieu extends React.Component {
                   </Button>
                 </Form.Item>
               </Form>
+                  <br/>
               </Card>
             </Col>
             <Col span={12}>
@@ -341,14 +344,14 @@ class CollectLieu extends React.Component {
                 <Col span={24}>
                   <Card hoverable='true'>
                   <h4>Requested Lieu Leaves</h4>
-                  <Table rowKey={record => record.date} columns={columns} dataSource={lieuLeaves} size="small" pagination={{pageSize: 5}}/>
+                  <Table rowKey={record => record.date} columns={columns} dataSource={lieuLeaves} size="small" pagination={{pageSize: 2}}/>
                   </Card>
                   <br/>
                 </Col>
                 <Col span={24}>
                   <Card hoverable='true'>
                   <h4>Holidays</h4>
-                  <Table rowKey={record => record.date} columns={columnsForHolidays} dataSource={saveDates} size="small" pagination={{pageSize: 3}}/>
+                  <Table rowKey={record => record.date} columns={columnsForHolidays} dataSource={saveDates} size="small" pagination={{pageSize: 6}}/>
                   </Card>
                 </Col>
               </Row>

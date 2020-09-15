@@ -92,7 +92,7 @@ class History extends Component {
 
     usersAndDepartments () {
 
-      axios.get('user/all', 
+      axios.get('user/manage_emp_filter', 
         {
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem("header")
@@ -395,9 +395,9 @@ class History extends Component {
                             <Option value={2}>Selected Department</Option>
                             <Option value={3}>Selected Employee</Option>
                         </Select>
-                         )}
+                        )}
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         &nbsp;
                         {this.state.selectWhose === 3?
                         <Select placeholder="Please select employee" style={{ width: '250px' }} onChange={this.handleSelectedEmployee}>
@@ -417,7 +417,7 @@ class History extends Component {
                         :null
                         }
                     </Col>
-                    <Col span={11}>
+                    <Col span={9}>
                         
                         <Button  type="primary" icon="search"  onClick={this.handleFilter} style={{ width: '120px' }}> Search </Button>
                         &nbsp;&nbsp;&nbsp;&nbsp;

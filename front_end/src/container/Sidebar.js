@@ -6,7 +6,6 @@ import './index.css';
 import { Layout, Menu, Icon, Form, message, Spin } from 'antd';
 import Dashboard from './Dashboard';
 import LeavesHistory from '../components/Leave/ReadLeaves';
-import AddEmployee from '../components/Employee/AddEmployee';
 import RequestLeave from '../components/Leave/RequestLeave';
 import PendingLeaves from '../components/Leave/PendingLeaves';
 import ViewEmployee from '../components/Employee/ViewEmployee';
@@ -248,11 +247,11 @@ class SiderDemo extends React.Component {
         </Sider>
         <Layout style={{ marginLeft: 235 }}>
           
-          <Layout style={{ position: 'fixed', zIndex: 100, width: '90%' }}>
+          <Layout style={{ position: 'fixed', zIndex: 1000, width: '90%' }}>
               <Header name={user_name} role={user_role} department={user_department} image={user_image} designation={user_des}/>
           </Layout>
 
-          <Layout style={{marginTop:'120px'}} >
+          <Layout style={{marginTop:'100px'}} >
             
           <Spin size="large" spinning={this.state.spin}/>
           <Content style={{ margin: '20px', paddingTop: '20PX' }}>
@@ -261,7 +260,6 @@ class SiderDemo extends React.Component {
                 <Route path='/leave_history' component={LeavesHistory} />
                 <Route path='/history' component={History} />
                 <Route path='/dashboard' component={Dashboard} />
-                <Route path='/add_employee' component={AddEmployee} />
                 <Route path='/request_leave' component={RequestLeave} />
                 <Route path='/pending_leaves' component={PendingLeaves} />
                 <Route path='/manage_employee' component={ViewEmployee} />
@@ -270,8 +268,8 @@ class SiderDemo extends React.Component {
                 <Route path='/get_employee' component={ViewOne} /> 
                 <Route path='/leave_calender' component={LeaveCalender}/>
                 <Route path='/contact_number' component={ContactsNumber}/>
-                <Route path='/attendence' component={Attendence}/>
-                <Route path='/one_attendence' component={OneAttendence}/>
+                <Route path='/attendance' component={Attendence}/>
+                <Route path='/one_attendance' component={OneAttendence}/>
                 <Route path='/collect_lieu' component={CollectLieu}/>
                 <Route path='/pending_lieu' component={PendingLieu}/>
                 <Route path='/own_pending' component={OwnPending}/>
@@ -284,7 +282,7 @@ class SiderDemo extends React.Component {
               </Switch>
           </Content>
           
-          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HR Management System ©2019 Created by Pramuditha</Footer>
+          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HR Management System ©2020 V1.0.0</Footer>
           </Layout>
         </Layout>
       </Layout>

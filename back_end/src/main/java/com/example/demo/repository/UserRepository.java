@@ -12,15 +12,10 @@ import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
 
     Optional<User> findByUsernameOrEmail(String username, String email);
 
-    List<User> findByIdIn(List<Long> userIds);
-
     User findByUsername(String username);
-
-    Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
 
@@ -39,6 +34,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByOrderByUserId();
 
     List<User> findByStatusOrderByFirstName(String working);
+
+	List<User> findByStatusAndDepartmentOrderByFirstName(String working, Department department);
 
 //    @Query(value = "INSERT INTO hrms_users(id, user_id, username, first_name, second_name, initials, email, residence, department_id, join_date, confirm_date, resign_date, password, status, annual, casual, medical, permanent, is_loged_in) " +
 //                    "values(?1, ?2, ?3, ?4, ?5 , ?6, ?7, 'No residential address', ?8, ?9, ?10, ?11, ?12, ?13, 14.0, 7.0, 7.0, 'No permanent address', false )",nativeQuery = true)

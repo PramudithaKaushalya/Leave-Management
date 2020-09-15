@@ -478,7 +478,7 @@ class ViewEmployee extends Component {
                   <Col span={20}>
 
                   {this.state.departments.length !== 0 ?
-                    <Select style={{float:"right", width: 200}} placeholder="Select a department" onChange={this.onDepartmentSelect} defaultValue={this.state.departments[0].name}>
+                    <Select style={{float:"right", width: 220}} placeholder="Select a department" onChange={this.onDepartmentSelect} defaultValue={this.state.departments[0].name}>
                       {this.state.departments.map(item => (
                             <Option key={item.id}>{item.name}</Option>
                       ))}
@@ -616,16 +616,16 @@ class ViewEmployee extends Component {
                       &nbsp;&nbsp;&nbsp;
                       <Tag color="volcano" style={{width:'140px'}}>{emp.joinDate}</Tag>
                     </Col>
-                    { emp.role === "Intern" ?
+                    { emp.role === "Intern" || emp.role === "Probation" || emp.role === "Contract"?
                     <Col span={8}>
-                      Confirm Date:
+                      End Date:
                       &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; 
                       <Tag color="volcano" style={{width:'140px'}}>{emp.confirmDate}</Tag>
                     </Col> 
                     : 
                     <Col span={8}>
-                      End Date:
+                      Confirm Date:
                       &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; 
                       <Tag color="volcano" style={{width:'140px'}}>{emp.confirmDate}</Tag>

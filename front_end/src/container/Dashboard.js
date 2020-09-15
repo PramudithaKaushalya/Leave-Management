@@ -272,23 +272,23 @@ class Dashboard extends Component {
                   <center> 
                   <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[0].utilized / this.state.summery[0].entitlement * 100} format={percent => `${this.state.summery[0].utilized} / ${this.state.summery[0].entitlement}`}/>
-                    <br/><br/>
-                    <Tag color="volcano">Casual</Tag>
+                    <br/>
+                    <Tag color="volcano" style={{width:"70px"}}>Casual</Tag>
                   </Col>
                   <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[1].utilized / this.state.summery[1].entitlement * 100} format={percent => `${this.state.summery[1].utilized} / ${this.state.summery[1].entitlement}`}/>
-                    <br/><br/>
-                    <Tag color="volcano">Medical</Tag>
+                    <br/>
+                    <Tag color="volcano" style={{width:"70px"}}>Medical</Tag>
                   </Col> 
                   <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[2].utilized / this.state.summery[2].entitlement * 100} format={percent => `${this.state.summery[2].utilized} / ${this.state.summery[2].entitlement}`}/>
-                    <br/><br/>
-                    <Tag color="volcano">Annual</Tag>
+                    <br/>
+                    <Tag color="volcano" style={{width:"70px"}}>Annual</Tag>
                   </Col>
                   <Col span={6}>
                     <Progress type="circle" percent={this.state.summery[3].utilized / this.state.summery[3].entitlement * 100} format={percent => `${this.state.summery[3].utilized} / ${this.state.summery[3].entitlement}`}/>
-                    <br/><br/>
-                    <Tag color="volcano">Lieu</Tag>
+                    <br/>
+                    <Tag color="volcano" style={{width:"70px"}}>Lieu</Tag>
                   </Col>
                   </center>
                 </Row>

@@ -256,16 +256,16 @@ class ContactsNumber extends React.Component {
 
                             &nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
-                    <Form.Item>
+                            <Form.Item>
                                 <Button type="primary" onClick={this.handleContact} style={{ width: '100px' }}>
                                     <Icon type="check-circle" />
                                     Submit
-                        </Button>
+                                </Button>
                                 &nbsp;&nbsp;&nbsp;
-                        <Button type="danger" onClick={this.handelCancel} style={{ width: '100px' }}>
+                                <Button type="danger" onClick={this.handelCancel} style={{ width: '100px' }}>
                                     <Icon type="close-circle" />
                                     Cancel
-                        </Button>
+                                </Button>
                             </Form.Item>
                         </Form>
                     </Card>
@@ -276,11 +276,11 @@ class ContactsNumber extends React.Component {
                     <Card hoverable='true'>
                         <Table rowKey={record => record.contact_id} columns={columns} dataSource={this.state.data} pagination={{ pageSize: 5 }} size="middle" />
                     </Card>
-                 : 
-                 <div className="example2">
-                   <Spin size="large" />
-                 </div>
-                 } 
+                : 
+                <div className="example2">
+                    <Spin size="large" />
+                </div>
+                } 
                 </div>
             </div>
         );

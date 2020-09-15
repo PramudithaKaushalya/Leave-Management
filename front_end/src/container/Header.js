@@ -167,19 +167,14 @@ class Header extends React.Component {
     setInterval(this.getPendingLeaveCount, 3600000);
     return (
         <div>
-        {/* <PageHeader
-            style={{   
-            border: '2px solid rgb(235, 237, 240)'
-            }}
-        > */}
-        <Card hoverable='true'> 
+        <Card hoverable='true' className="header"> 
             <Row>
                 <Col span={3}>
                     {
                         this.props.image === null ?
-                        <Avatar size={90} icon="user" src="/public/images/01.png"/>
+                        <Avatar className="avatar" size={90} icon="user" src="/public/images/01.png"/>
                         :
-                        <Avatar size={90} icon="user" src= {this.props.image}/>
+                        <Avatar className="avatar" size={90} icon="user" src= {this.props.image}/>
                     }
                 </Col>
                 <Col span={16}>
@@ -212,67 +207,66 @@ class Header extends React.Component {
                 </Col>
             </Row>
         </Card>
-        {/* </PageHeader> */}
 
-            <Drawer    
-            title="Today Leaves"                                                                                                                                                                                                                                                                                                                                     
-            width={300}
-            onClose={this.onClose}
-            visible={this.state.visible}
-            >
-                <br/>
-                <Alert message="Approved" type="success" showIcon />
-                { this.state.absentRes ? 
-                <List
-                    itemLayout="horizontal"
-                    dataSource={this.state.data}
-                    renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                        avatar={<Avatar src={item.image}  icon="user"/>}
-                        title={item.name}
-                        />
-                    </List.Item>
-                    )}
-                />
-                : null }
-                <br/><br/>
-                <Alert message="Pending" type="info" showIcon /> 
-                { this.state.rejectedRes ?        
-                <List
-                    itemLayout="horizontal"
-                    dataSource={this.state.requested}
-                    renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                        avatar={<Avatar src={item.image}  icon="user"/>}
-                        title={item.name}
-                        />
-                    </List.Item>
-                    )}
-                />
-                : null }
+        <Drawer    
+        title="Today Leaves"                                                                                                                                                                                                                                                                                                                                     
+        width={300}
+        onClose={this.onClose}
+        visible={this.state.visible}
+        >
+            <br/>
+            <Alert message="Approved" type="success" showIcon />
+            { this.state.absentRes ? 
+            <List
+                itemLayout="horizontal"
+                dataSource={this.state.data}
+                renderItem={item => (
+                <List.Item>
+                    <List.Item.Meta
+                    avatar={<Avatar src={item.image}  icon="user"/>}
+                    title={item.name}
+                    />
+                </List.Item>
+                )}
+            />
+            : null }
+            <br/><br/>
+            <Alert message="Pending" type="info" showIcon /> 
+            { this.state.rejectedRes ?        
+            <List
+                itemLayout="horizontal"
+                dataSource={this.state.requested}
+                renderItem={item => (
+                <List.Item>
+                    <List.Item.Meta
+                    avatar={<Avatar src={item.image}  icon="user"/>}
+                    title={item.name}
+                    />
+                </List.Item>
+                )}
+            />
+            : null }
 
-                <br/><br/>
-                { this.props.role === 'Admin' || this.props.role === "Supervisor"? 
-                <Alert message="Rejected" type="error" showIcon />
-                : null }
-                { this.state.rejectedRes && (this.props.role === 'Admin' || this.props.role === "Supervisor")? 
-                <List
-                    itemLayout="horizontal"
-                    dataSource={this.state.rejected}
-                    renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                        avatar={<Avatar src={item.image}  icon="user"/>}
-                        title={item.name}
-                        />
-                    </List.Item>
-                    )}
-                />
-                : null }
-                
-            </Drawer>
+            <br/><br/>
+            { this.props.role === 'Admin' || this.props.role === "Supervisor"? 
+            <Alert message="Rejected" type="error" showIcon />
+            : null }
+            { this.state.rejectedRes && (this.props.role === 'Admin' || this.props.role === "Supervisor")? 
+            <List
+                itemLayout="horizontal"
+                dataSource={this.state.rejected}
+                renderItem={item => (
+                <List.Item>
+                    <List.Item.Meta
+                    avatar={<Avatar src={item.image}  icon="user"/>}
+                    title={item.name}
+                    />
+                </List.Item>
+                )}
+            />
+            : null }
+            
+        </Drawer>
 
         </div>
         );
@@ -280,5 +274,3 @@ class Header extends React.Component {
 }          
 
 export default withRouter(Header);
-
-// shape="circle"

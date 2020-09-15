@@ -12,8 +12,14 @@ import com.example.demo.repository.LieuLeaveRepository;
 import com.example.demo.repository.UserRepository;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 
 @Service
 public class LieuLeaveService {
@@ -23,6 +29,15 @@ public class LieuLeaveService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${login.url}")
+    private String hostAndPort;
+
+    @Value("${spring.mail.username}")
+    private String mailSender;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LieuLeaveService.class);
 
@@ -34,6 +49,13 @@ public class LieuLeaveService {
             lieuLeave.setStatus(0);
             lieuLeave.setRequestAt(date);
             lieuLeaveRepository.save(lieuLeave);
+
+            User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
+            requestLieuLeaveMail (supervisor1, lieuLeave);
+
+            User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
+            requestLieuLeaveMail (supervisor2, lieuLeave);
+
             LOGGER.info(">>> Successfully add the lieu leave. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully requested to collect lieu leave"));
         } catch(Exception e) {
@@ -125,6 +147,32 @@ public class LieuLeaveService {
             LOGGER.error(">>> Unable to reject the lieu leave. (By user ==> "+userId+")");
             e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to reject the lieu leave"));
+        }
+    }
+
+
+    private void requestLieuLeaveMail (User user, LieuLeave leave) {
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Request to collect lieu leave.");
+            mimeMessage.setText(
+                    "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                            "You have lieu leave collecting request from "+leave.getEmployee().getFirstName()+" "+leave.getEmployee().getSecondName()+". \n\n"+
+                            "Date of request: "+leave.getRequestAt()+"\n"+
+                            "Date of worked: "+leave.getDate()+"\n"+
+                            "Worked project: "+leave.getProject()+"\n"+
+                            "URL: "+hostAndPort+"collect_lieu \n\n"+
+                            "Thanks. \nBest Regards");
+        };
+
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+user.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
         }
     }
 }

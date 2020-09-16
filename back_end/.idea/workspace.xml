@@ -1,74 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5bf2958d-41ba-4d00-b7fe-347f5285b0dc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LeaveTypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LeaveTypeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/payload/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/payload/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CalenderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CalenderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DepartmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DepartmentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CalenderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CalenderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/DepartmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/DepartmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveTypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveTypeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/precache-manifest.2b7390e2107b55c7522e939f4e549458.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.3b1906ae.chunk.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.3b1906ae.chunk.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/1.ba289f6e.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/1.ba289f6e.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.57da3e9d.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.57da3e9d.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/IndexController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/IndexController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/LeaveTypeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/LeaveTypeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/payload/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/payload/Employee.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CalenderRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CalenderRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/DepartmentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/DepartmentRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CalenderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CalenderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/DepartmentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/DepartmentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveRequestService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveRequestService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveTypeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveTypeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/precache-manifest.2b7390e2107b55c7522e939f4e549458.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.3b1906ae.chunk.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.3b1906ae.chunk.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/1.ba289f6e.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/1.ba289f6e.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.57da3e9d.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.57da3e9d.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/CollectLieu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/CollectLieu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/History.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/History.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/RequestLeave.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/RequestLeave.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Settings/ContactsNumber.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Settings/ContactsNumber.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/index.css" afterDir="false" />
-    </list>
+    <list default="true" id="5bf2958d-41ba-4d00-b7fe-347f5285b0dc" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -86,7 +19,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="373">
-              <caret line="199" lean-forward="true" selection-start-line="199" selection-end-line="199" />
+              <caret line="199" selection-start-line="199" selection-end-line="199" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -94,11 +27,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1295">
-              <caret line="48" column="35" lean-forward="true" selection-start-line="48" selection-start-column="35" selection-end-line="48" selection-end-column="35" />
+              <caret line="48" column="35" selection-start-line="48" selection-start-column="35" selection-end-line="48" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -170,11 +103,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="142" column="56" lean-forward="true" selection-start-line="142" selection-start-column="56" selection-end-line="143" selection-end-column="88" />
+            <state relative-caret-position="70">
+              <caret line="787" column="13" selection-start-line="787" selection-start-column="13" selection-end-line="787" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -467,18 +400,17 @@
       <workItem from="1599712124484" duration="1751000" />
       <workItem from="1599813777104" duration="8373000" />
       <workItem from="1600058399357" duration="3627000" />
-      <workItem from="1600152519015" duration="6817000" />
+      <workItem from="1600152519015" duration="7562000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="196831000" />
+    <option name="totallyTimeSpent" value="197576000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1366" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2139808" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2139808" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -494,7 +426,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Spring" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.15677966" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.4608051" />
       <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Java Enterprise" order="11" />
@@ -971,7 +903,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="373">
-          <caret line="199" lean-forward="true" selection-start-line="199" selection-end-line="199" />
+          <caret line="199" selection-start-line="199" selection-end-line="199" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1031,20 +963,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="142" column="56" lean-forward="true" selection-start-line="142" selection-start-column="56" selection-end-line="143" selection-end-column="88" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1295">
-          <caret line="48" column="35" lean-forward="true" selection-start-line="48" selection-start-column="35" selection-end-line="48" selection-end-column="35" />
+          <caret line="48" column="35" selection-start-line="48" selection-start-column="35" selection-end-line="48" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="787" column="13" selection-start-line="787" selection-start-column="13" selection-end-line="787" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

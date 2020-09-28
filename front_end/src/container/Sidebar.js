@@ -282,7 +282,7 @@ class SiderDemo extends React.Component {
               </Switch>
           </Content>
           
-          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HR Management System ©2020 V1.0.0</Footer>
+          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HRMS(V1.0.1) © Powered By VizuaMatix </Footer>
           </Layout>
         </Layout>
       </Layout>

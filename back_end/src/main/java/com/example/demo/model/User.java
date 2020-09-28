@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User extends DateAudit{
 
 	@Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
     

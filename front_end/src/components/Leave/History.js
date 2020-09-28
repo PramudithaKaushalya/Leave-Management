@@ -397,7 +397,7 @@ class History extends Component {
                         </Select>
                         )}
                     </Col>
-                    <Col span={8}>
+                    <Col span={7}>
                         &nbsp;
                         {this.state.selectWhose === 3?
                         <Select placeholder="Please select employee" style={{ width: '250px' }} onChange={this.handleSelectedEmployee}>
@@ -417,12 +417,12 @@ class History extends Component {
                         :null
                         }
                     </Col>
-                    <Col span={9}>
+                    <Col span={10}>
                         
                         <Button  type="primary" icon="search"  onClick={this.handleFilter} style={{ width: '120px' }}> Search </Button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
                         <Button  type="primary" icon="undo"  onClick={this.handleReset} style={{ width: '120px' }}> Reset </Button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
                         <Button  type="primary" icon="download"  onClick={this.download.bind(this,{ filename: "Leave History.csv" })}> Download </Button>
                     </Col>
                 </Row> 

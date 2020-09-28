@@ -122,7 +122,8 @@ class PendingLeaves extends Component {
         count: [],
         countOfOne: [],
         employees : [],
-        employee : []
+        employee : [],
+        spinning : false
     };
     
       getColumnSearchProps = dataIndex => ({
@@ -225,23 +226,35 @@ class PendingLeaves extends Component {
       }else if(this.state.leave.type === 'Annual' && this.state.leave.number_of_leave_days > (this.state.employee.annual-this.state.countOfOne.annual)){
         message.error("Exceed annual limit");  
       }else { 
+        this.setState({
+          spinning : true
+        });
         axios.get('leave/approve/'+this.state.leave.id, 
-                  {
-                      headers: {
-                          Authorization: 'Bearer ' + localStorage.getItem("header")
-                      }
-                  })
-                  .then(res => { 
-                      if (res.data.success === true) {
-                        message.success(res.data.message); 
-                        this.reload();
-                      } else {
-                        message.error(res.data.message);
-                      }
-                  }).catch( err => {
-                      console.log(err.response.data.error);
-                      message.error("Something went wrong");
-                  })
+          {
+              headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem("header")
+              }
+          })
+          .then(res => { 
+              if (res.data.success === true) {
+                message.success(res.data.message); 
+                this.reload();
+                this.setState({
+                  spinning : false
+                });
+              } else {
+                message.error(res.data.message);
+                this.setState({
+                  spinning : false
+                });
+              }
+          }).catch( err => {
+              console.log(err.response.data.error);
+              message.error("Something went wrong");
+              this.setState({
+                spinning : false
+              });
+          })
       }
     };
 
@@ -263,7 +276,10 @@ class PendingLeaves extends Component {
     };
   
     handleReject = () => {
-      const { form } = this.formRef.props;        
+      const { form } = this.formRef.props;  
+      this.setState({
+        spinning : true
+      });      
       form.validateFields((err, values) => {
         if (!err) {
           
@@ -281,12 +297,21 @@ class PendingLeaves extends Component {
                       message.success(res.data.message); 
                       form.resetFields();
                       this.reload(); 
+                      this.setState({
+                        spinning : false
+                      });
                     } else {
                       message.error(res.data.message);
+                      this.setState({
+                        spinning : false
+                      });
                     }
                 }).catch( err => {
                     console.log(err.response.data.error);
                     message.error("Something went wrong");
+                    this.setState({
+                      spinning : false
+                    });
                 })
           this.setState({ visible: false });
         }
@@ -298,7 +323,7 @@ class PendingLeaves extends Component {
     };
 
     render() {
-      const { visibleAccept, confirmLoading, leave } = this.state;
+      const { visibleAccept, confirmLoading, leave, spinning } = this.state;
         const columns = [
             {
               title: 'Name',
@@ -356,16 +381,17 @@ class PendingLeaves extends Component {
           ];
 
         return (
-            <div>
+          <div>
+            <Spin tip="Waiting..." spinning={spinning}>
             { this.state.mounted? 
               <Card type="inner" title="Pending Leaves" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
               </Card> 
-             : 
-             <div className="example">
-               <Spin size="large" />
-             </div>
-             }  
+            : 
+            <div className="example">
+              <Spin size="large" />
+            </div>
+            }  
 
                 <CollectionCreateForm
                   wrappedComponentRef={this.saveFormRef}
@@ -502,7 +528,8 @@ class PendingLeaves extends Component {
                   <br/>
                   </div>
                 </Modal> : null}
-            </div>
+            </Spin>
+          </div>
         )
     }
 }    

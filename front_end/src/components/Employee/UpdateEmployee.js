@@ -18,7 +18,8 @@ import {
   Col,
   message,
   InputNumber,
-  Upload
+  Upload,
+  Spin
 } from 'antd';
 
 const { Option } = Select;
@@ -145,11 +146,15 @@ class UpdateEmployee extends React.Component {
     department: undefined,
     imageUrl: null,
     dateOfBirth: null,
-    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"]
+    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"],
+    spinning : false
   };
 
   handleSubmit = e => {
     e.preventDefault();
+    this.setState({
+      spinning : true
+    });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const employee = {
@@ -190,13 +195,21 @@ class UpdateEmployee extends React.Component {
           if (res.data.success === true) {  
             message.success(res.data.message);
             this.handleCancel();
+            this.setState({
+              spinning : false
+            });
           } else {
             message.error(res.data.message);
+            this.setState({
+              spinning : false
+            });
           }
         })
         .catch(e => {
-          message.error("Unsuccessfull");
-          console.log("res", e)
+          message.error("Something Went Wrong!");
+          this.setState({
+            spinning : false
+          });
         })
       
       
@@ -282,10 +295,11 @@ class UpdateEmployee extends React.Component {
       </div>
     );
 
-    const { imageUrl, role } = this.state;
+    const { imageUrl, role, spinning } = this.state;
 
     return (
         <div key={this.props.empId}>
+        <Spin tip="Creating New Employee..." spinning={spinning}>
         <Card bordered={false} style={{ height: '1000px'}}>  
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
         
@@ -575,6 +589,7 @@ class UpdateEmployee extends React.Component {
         </Row>
       </Form>
       </Card>
+      </Spin>
       </div>
     );
   }

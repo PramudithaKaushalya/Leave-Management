@@ -10,7 +10,7 @@ const { confirm } = Modal;
 class PendingLieu extends Component {
     
     componentWillMount(){
-       this.reload();
+      this.reload();
     } 
 
     state = {
@@ -18,7 +18,8 @@ class PendingLieu extends Component {
         leave : [],
         mounted : false, 
         reject: null,
-        visibleAccept: false
+        visibleAccept: false,
+        spinning : false
     };
     
     async reload () {
@@ -57,6 +58,9 @@ class PendingLieu extends Component {
         okText: 'Reject',
         okType: 'danger',
         onOk: () => {
+          this.setState({
+            spinning : true
+          });
           axios.get('lieu_leave/reject/'+leave.id, 
           {
               headers: {
@@ -67,12 +71,21 @@ class PendingLieu extends Component {
               if (res.data.success === true) {
                 message.success(res.data.message);
                 this.reload();
+                this.setState({
+                  spinning : false
+                });
               } else {
                 message.error(res.data.message);
+                this.setState({
+                  spinning : false
+                });
               }
           }).catch( err => {
               console.log(err);
               message.error("Something Went Wrong!");
+              this.setState({
+                spinning : false
+              });
           })
         },
         onCancel() {
@@ -102,6 +115,7 @@ class PendingLieu extends Component {
       
         this.setState({
           confirmLoading: true,
+          spinning: true
         });
         
         setTimeout(() => {
@@ -121,18 +135,27 @@ class PendingLieu extends Component {
             if (res.data.success === true) {
               message.success(res.data.message);
               this.reload();
+              this.setState({
+                spinning : false
+              });
             } else {
               message.error(res.data.message);
+              this.setState({
+                spinning : false
+              });
             }
         }).catch( err => {
             console.log(err);
             message.error("Something Went Wrong!");
+            this.setState({
+              spinning : false
+            });
         })
     };
     
     render() {
 
-        const { visibleAccept, confirmLoading, leave, pendingLieus } = this.state;
+        const { visibleAccept, confirmLoading, leave, pendingLieus, spinning } = this.state;
         const columns = [
             {
                 title: 'Emoloyee',
@@ -197,7 +220,8 @@ class PendingLieu extends Component {
           ];
 
         return (
-            <div>
+          <div>
+            <Spin tip="Waiting..." spinning={spinning}>
             { this.state.mounted ? 
               <Card type="inner" title="Pending Lieu Leaves" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={pendingLieus}  pagination={{ pageSize: 10 }} size="middle" />
@@ -266,7 +290,8 @@ class PendingLieu extends Component {
                   </div>
                 </Modal> : null}
 
-            </div>
+              </Spin>
+          </div>
         )
     }
 }    

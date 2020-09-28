@@ -89,11 +89,20 @@ public class UserService {
     public ResponseEntity<?> resignEmployee(Employee emp, Long userId) {
         try {
             User employee = userRepository.getOne(emp.getId());
-            employee.setStatus("Resign");
-            employee.setResignDate(emp.getResignDate());
-            userRepository.save(employee);
-            LOGGER.info(">>> Successfully resign the employee "+employee.getFirstName()+". (By user ==> "+userId+")");
-            return ResponseEntity.ok(new ApiResponse(true, "Successfully resign the employee"));
+
+            if(employee.getStatus().equals("Working")) {
+                employee.setStatus("Resign");
+                employee.setResignDate(emp.getResignDate());
+                userRepository.save(employee);
+                LOGGER.info(">>> Successfully resign the employee "+employee.getFirstName()+". (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Successfully resign the employee"));
+            } else {
+                employee.setStatus("Working");
+                employee.setResignDate("Not resign");
+                userRepository.save(employee);
+                LOGGER.info(">>> Successfully updated as working employee "+employee.getFirstName()+". (By user ==> "+userId+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Successfully updated as working employee"));
+            }
         } catch(Exception e) {
             LOGGER.error(">>> Unable to resign the employee. (By user ==> "+userId+")", e.getMessage());
             e.printStackTrace();

@@ -18,7 +18,8 @@ import {
   Col,
   InputNumber, 
   message,
-  Upload
+  Upload,
+  Spin
 } from 'antd';
 
 const { Option } = Select;
@@ -121,11 +122,15 @@ class AddEmployee extends React.Component {
     loading: false,
     dateOfBirth: null,
     selectedRole: null,
-    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"]
+    religion: ["Buddhist", "Catholic", "Hindu", "Islam", "None"],
+    spinning : false
   };
 
   handleSubmit = e => {
     e.preventDefault();
+    this.setState({
+      spinning : true
+    });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const employee = {
@@ -170,11 +175,20 @@ class AddEmployee extends React.Component {
             message.success(res.data.message);
             this.props.form.resetFields(); 
             this.props.close();
+            this.setState({
+              spinning : false
+            });
           } else {
             message.error(res.data.message); 
+            this.setState({
+              spinning : false
+            });
           } 
         }).catch(e => {
           message.error("Something Went Wrong!"); 
+          this.setState({
+            spinning : false
+          });
         })
       }
     });
@@ -276,10 +290,11 @@ class AddEmployee extends React.Component {
       </div>
     );
 
-    const { imageUrl, selectedRole } = this.state;
+    const { imageUrl, selectedRole, spinning } = this.state;
 
     return (
         <div>
+        <Spin tip="Creating New Employee..." spinning={spinning}>
         <Card bordered={false} style={{ height: '1000px'}}>  
         <Form {...formItemLayout}>  
         <Form.Item label="Employee ID">
@@ -538,6 +553,7 @@ class AddEmployee extends React.Component {
         </Row>
       </Form>
       </Card>
+      </Spin>
       </div>
     );
   }

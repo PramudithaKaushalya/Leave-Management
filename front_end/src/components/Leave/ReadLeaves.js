@@ -18,7 +18,8 @@ class ReadLeaves extends Component {
         searchText: '',
         data : [],
         visible: false,
-        leave : [] 
+        leave : [],
+        spinning : false 
     };
     
     async reload () {
@@ -112,8 +113,6 @@ class ReadLeaves extends Component {
         this.setState({ searchText: '' });
       };   
 
-    
-
     showModal = (leave) => {
       this.setState({
         visible: true,
@@ -135,6 +134,9 @@ class ReadLeaves extends Component {
         okText: 'Remove',
         okType: 'danger',
         onOk: () => {
+          this.setState({
+            spinning : true
+          });
           axios.get('leave/delete/'+leave.id, 
           {
               headers: {
@@ -145,12 +147,21 @@ class ReadLeaves extends Component {
               if (res.data.success === true) {
                 message.success(res.data.message);
                 this.reload();
+                this.setState({
+                  spinning : false
+                });
               } else {
                 message.error(res.data.message);
+                this.setState({
+                  spinning : false
+                });
               }
           }).catch( err => {
               console.log(err);
               message.error("Something Went Wrong");
+              this.setState({
+                spinning : false
+              });
           })
         },
         onCancel() {
@@ -160,7 +171,7 @@ class ReadLeaves extends Component {
 
     render() {
        
-        const {leave} = this.state;
+        const {leave, spinning} = this.state;
 
         const columns = [
             {
@@ -238,6 +249,7 @@ class ReadLeaves extends Component {
 
         return (
             <div>
+            <Spin tip="Waiting..." spinning={spinning}>
             { this.state.mounted? 
               <Card type="inner" title="All Leave Requests" hoverable='true'>
                 <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
@@ -399,7 +411,8 @@ class ReadLeaves extends Component {
                     : null
                   }
                 </Modal>: null}
-            </div>
+            </Spin>
+          </div>
         )
     }
 }    

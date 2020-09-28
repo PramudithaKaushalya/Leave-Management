@@ -14,33 +14,27 @@ class Forgot extends React.Component {
     changePassword = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-          const passwords = {
-            email: this.state.email,  
-            currentPassword : values.code,
-            newPassword : values.newPassword
-          }
+            const passwords = {
+                email: this.state.email,  
+                currentPassword : values.code,
+                newPassword : values.newPassword
+            }
 
-          if (!err) {
-            axios.post('api/auth/forgot_password', 
-            passwords,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem("header")
-                }
-            })
-            .then(res => {
-                if(res.data.success === true){
-                  message.success(res.data.message);
-                  this.props.form.resetFields(); 
-                }  else{
-                  message.error(res.data.message); 
-                }
-            }).catch(e => {
-              console.log(e);
-              message.error("Something went wrong"); 
-            })
-            
-          }
+            if (!err) {
+                axios.post('api/auth/forgot_password', passwords)
+                .then(res => {
+                    if(res.data.success === true){
+                    message.success(res.data.message);
+                    this.props.form.resetFields(); 
+                    }  else{
+                    message.error(res.data.message); 
+                    }
+                }).catch(e => {
+                console.log(e);
+                message.error("Something went wrong"); 
+                })
+                
+            }
         });
     }
     
@@ -57,15 +51,14 @@ class Forgot extends React.Component {
             axios.post('api/auth/forgot', 
                 user)
                 .then(res => {
-                    if(res.data.success === true){
+                    if(res.data.success){
                         message.success(res.data.message);
                     } else {
                         message.error(res.data.message); 
                     } 
                     this.setState({button: "Send Again"});
             }).catch(e => {
-                console.log("Error: ", e)
-                message.error("Incorrect email address"); 
+                message.error("Something went wrong"); 
                 this.setState({button: "Send Again"});
             })
         }
@@ -111,13 +104,13 @@ class Forgot extends React.Component {
         return(
             <div className="container">
                 <center>
-                    <Card title="Forgot Password" bordered={false} style={{ width: '500px', height: '500px'}}>
+                    <Card title="Forgot Password" bordered={false} style={{ width: '500px', height: '450px'}}>
                     
                         <Form layout="inline">
                             <Form.Item >
                                 <Input 
-                                    prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)"}} />}
-                                    placeholder="Your Email"
+                                    prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)"}} />}
+                                    placeholder="Your Employee Number"
                                     style={{ width: "300px" }}
                                     onChange={this.setEmail}
                                     required
@@ -133,7 +126,6 @@ class Forgot extends React.Component {
                     <br/> 
                     <br/>
                         <Form {...formItemLayout} layout="vertical" style={{width:'650px'}} hideRequiredMark>
-        
                             <Form.Item> 
                                 {getFieldDecorator('code', {
                                     rules: [{ 

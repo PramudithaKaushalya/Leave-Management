@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -94,18 +93,17 @@ public class AuthController {
 				LOGGER.warn(">>> Inactivate user Login. (By ==> "+loginRequest.getUsernameOrEmail()+")");
 				return ResponseEntity.ok(new ApiResponse(false, "Inactive account"));
 			} else{
-				 if(user.getIsFirstLogin()){
-				 	LOGGER.warn(">>> First login of user. (By ==> "+loginRequest.getUsernameOrEmail()+")");
-				 	return ResponseEntity.ok(new ApiResponse(true, "firstLogin"));
-				 }
-				 else {
-
+                if(user.getIsFirstLogin()){
+                    LOGGER.warn(">>> First login of user. (By ==> "+loginRequest.getUsernameOrEmail()+")");
+                    return ResponseEntity.ok(new ApiResponse(true, "firstLogin"));
+                }
+				else {
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					String jwt = tokenProvider.generateToken(authentication);
 
 					LOGGER.info(">>> Successfully user Login. (By ==> "+user.getId()+") ");
 					return ResponseEntity.ok(new JwtAuthenticationResponse(true, jwt));
-				 }
+				}
 			}
 		} catch ( Exception e ) {
             LOGGER.error(">>> Unable to login. (By ==> "+loginRequest.getUsernameOrEmail()+")", e.getMessage());
@@ -233,41 +231,36 @@ public class AuthController {
     }
     
     @PostMapping("/forgot")
-    public ResponseEntity<?> forgotPassword(@RequestHeader("Authorization") String token, @RequestBody LoginRequest request){
+    public ResponseEntity<?> forgotPassword(@RequestBody LoginRequest request){
 
         try {
-            if(StringUtils.hasText(token) && token.startsWith("Bearer ")){
-                String jwt = token.substring(7);
-                Long userId = tokenProvider.getUserIdFromJWT(jwt);
-                User user = userRepository.findByUsername(request.getUsernameOrEmail().trim());
-                String confirmCode =RandomStringUtils.randomAlphabetic(4);
+                if (!userRepository.existsByUserId(request.getUsernameOrEmail().trim())) {
+                    LOGGER.warn(">>> Incorrect employee number. (By user ==> "+request.getUsernameOrEmail()+")");
+                    return ResponseEntity.ok(new ApiResponse(false, "Incorrect employee number"));
+                } else {
+                    User user = userRepository.findByUsername(request.getUsernameOrEmail());
+                    String confirmCode =RandomStringUtils.randomAlphabetic(4);
 
-                if (!userRepository.existsByEmail(request.getUsernameOrEmail().trim())) {
-                    return new ResponseEntity(new ApiResponse(false, "Username incorrect!"), HttpStatus.BAD_REQUEST);
+                    MimeMessagePreparator mail = mimeMessage -> {
+
+                        mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+                        mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+                        mimeMessage.setSubject("Forgot credentials of VX Leave Management System.");
+                        mimeMessage.setText(
+                                "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                                        "You forgot your credentials and waiting for confirm code.\n"+
+                                        "Your requested confirm code is "+ confirmCode + ".\n\n"+
+                                        "Thanks. \nBest Regards");
+                    };
+                    javaMailSender.send(mail);
+
+                    user.setConfirmCode(confirmCode);
+                    userRepository.save(user);
+
+                    LOGGER.info(">>> Successfully send confirm code to email. (By ==> "+user.getId()+")");
+                    return ResponseEntity.ok(new ApiResponse(true, "Check email for confirm code"));
                 }
 
-                MimeMessagePreparator mail = mimeMessage -> {
-
-                    mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(request.getUsernameOrEmail()));
-                    mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
-                    mimeMessage.setSubject("Forgot credentials of VX Leave Management System.");
-                    mimeMessage.setText(
-                            "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                                    "You forgot your credentials and waiting for confirm code.\n"+
-                                    "Your requested confirm code is "+ confirmCode + ".\n\n"+
-                                    "Thanks. \nBest Regards");
-                };
-                javaMailSender.send(mail);
-
-                user.setConfirmCode(confirmCode);
-                userRepository.save(user);
-
-                LOGGER.info(">>> Successfully send confirm code to email. (By ==> "+userId+")");
-                return ResponseEntity.ok(new ApiResponse(true, "Check email for confirm code"));
-            }else{
-                LOGGER.warn(">>> User authentication failed");
-                return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
-            }    
 		}catch (Exception e){
             LOGGER.error(">>> Unable to change the forgot password.", e.getMessage());
             e.printStackTrace();
@@ -276,31 +269,24 @@ public class AuthController {
     }
 
     @PostMapping("/forgot_password")
-    public ResponseEntity<?> changeForgotPassword(@RequestHeader("Authorization") String token, @RequestBody ChangePassword passwords){
+    public ResponseEntity<?> changeForgotPassword(@RequestBody ChangePassword passwords){
 
         try {
-            if(StringUtils.hasText(token) && token.startsWith("Bearer ")){
-                String jwt = token.substring(7);
-                Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            User user = userRepository.findByUsername(passwords.getEmail());
 
-                User user = userRepository.findByUsername(passwords.getEmail().trim());
-                String code = user.getConfirmCode();
-        
-                if(passwords.getCurrentPassword().equals(code)){
-                    String password = passwordEncoder.encode(passwords.getNewPassword().trim());
-                    user.setPassword(password);
-                    user.setConfirmCode(null);
-                    userRepository.save(user);
+            String code = user.getConfirmCode();
 
-                    LOGGER.info(">>> Successfully change the forgot password. (By ==> "+userId+")");
-                    return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
-                }else{
-                    LOGGER.warn(">>> Confirm code not match. (By ==> "+userId+")");
-                    return ResponseEntity.ok(new ApiResponse(false, "Confirm code not match"));
-                }
-            } else {
-                LOGGER.warn(">>> User authentication failed");
-                return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+            if(passwords.getCurrentPassword().trim().equals(code)){
+                String password = passwordEncoder.encode(passwords.getNewPassword().trim());
+                user.setPassword(password);
+                user.setConfirmCode(null);
+                userRepository.save(user);
+
+                LOGGER.info(">>> Successfully change the forgot password. (By ==> "+user.getId()+")");
+                return ResponseEntity.ok(new ApiResponse(true, "Successfully change the password"));
+            }else{
+                LOGGER.warn(">>> Confirm code not match. (By ==> "+user.getId()+")");
+                return ResponseEntity.ok(new ApiResponse(false, "Confirm code not match"));
             }
         }catch (Exception e){
             LOGGER.error(">>> Unable to change the forgot password.", e.getMessage());

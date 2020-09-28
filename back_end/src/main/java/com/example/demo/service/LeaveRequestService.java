@@ -219,7 +219,7 @@ public class LeaveRequestService {
             Float days = leaveRequest.getNumber_of_leave_days();
 
             LeaveCount filter = leaveCountRepository.findByUserAndTypeAndYear(emp, type, startDate.getYear());
-            filter.setCount(filter.getCount()-days);
+            filter.setCount(filter.getPending()-days);
             leaveCountRepository.save(filter);
 
             mailDelete(leaveRequest);
@@ -262,6 +262,11 @@ public class LeaveRequestService {
                 mailDelete(leaveRequest);
                 mailSupDelete(supervisor1, leaveRequest);
                 mailSupDelete(supervisor2, leaveRequest);
+
+                if(leaveRequest.getDuty()!=null){
+                    mailDeleteDutyCoverer(leaveRequest);
+                }
+
                 LOGGER.info(">>> Successfully remove the approved leave requests. (By user ==> "+userId+")");
                 return ResponseEntity.ok(new ApiResponse(true, "Remove the approved request"));
             }else if(leaveRequest.getStatus().equals("Rejected")){
@@ -280,6 +285,32 @@ public class LeaveRequestService {
             LOGGER.error(">>> Unable to delete the leave requests. (By user ==> "+userId+")", e.getMessage());
             e.printStackTrace();
             return ResponseEntity.ok(new ApiResponse(false, "Unable to delete the leave requests"));
+        }
+    }
+
+    private void mailDeleteDutyCoverer (LeaveRequest leave ) {
+        User employee = leave.getUser();
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(employee.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Removed the assigned duty.");
+            mimeMessage.setText(
+                    "Hi " + employee.getFirstName() + " " + employee.getSecondName() + ",\n\n" +
+                            "Removed your assigned duty of following employee in these day/s. \n\n" +
+                            "Name: " + employee.getFirstName() + " " + employee.getSecondName() + "\n" +
+                            "Role: " + employee.getRoles().stream().findFirst().get().getName() + "\n" +
+                            "Department: " + employee.getDepartment().getName() + "\n" +
+                            "Date/s: " + leave.getStartDate() + " to " + leave.getEnd_date() + "\n\n" +
+                            "Thanks. \n Best Regards");
+        };
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+        }catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error(">>> (MailSender) ==> "+e);
         }
     }
 
@@ -334,6 +365,8 @@ public class LeaveRequestService {
 			LOGGER.error(">>> (MailSender) ==> "+e);
 		}
     }
+
+
 
     public ResponseEntity<?> approveRequest(Long check_id, LeaveRequest leaveRequest) {
         try {             
@@ -575,7 +608,7 @@ public class LeaveRequestService {
                 absence.add(user);
             }
         }
-        return  absence;
+        return absence;
     }
 
     public ResponseEntity<?> getFilterd( Long userId, LeaveFilter filters) {

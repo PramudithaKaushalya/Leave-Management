@@ -16,7 +16,8 @@ import {
   Table,
   Modal,
   Radio,
-  Tag
+  Tag,
+  Spin
 } from 'antd';
 
 const { TextArea } = Input;
@@ -27,7 +28,8 @@ class CollectLieu extends React.Component {
     state = {
         lieuLeaves : [],
         saveDates : [],
-        holidays : []
+        holidays : [],
+        spinning : false
     };
   
   componentWillMount() {
@@ -46,7 +48,7 @@ class CollectLieu extends React.Component {
           }
       })
       .then(res => {
-         
+        
         if (res.data.success) {  
           this.setState({
             lieuLeaves : res.data.list
@@ -107,8 +109,8 @@ class CollectLieu extends React.Component {
   }
 
   handleSubmit = e => {
-    
     e.preventDefault();
+
     this.props.form.validateFieldsAndScroll((err, values) => {
     
         if (!err) {
@@ -130,6 +132,11 @@ class CollectLieu extends React.Component {
   }
 
   saveRequest = (values) => {
+
+    this.setState({
+      spinning : true
+    });
+
     const leave = {
       date : values.date,
       period : values.period,
@@ -147,17 +154,28 @@ class CollectLieu extends React.Component {
         }
     )
     .then(res => {
-        if (res.data.success) {              
-            message.success(res.data.message); 
-            this.getLieuLeaves();
-            this.handleCancel();
+        if (res.data.success) {  
+          this.handleCancel();            
+          message.success(res.data.message); 
+          this.getLieuLeaves();
+
+          this.setState({
+            spinning : false
+          });
         } else {
             message.error(res.data.message);
+            this.setState({
+              spinning : false
+            });
         }
     })
     .catch(e => {
         console.log(e.response.data.error);
         message.error("Something went wrong"); 
+
+        this.setState({
+          spinning : false
+        });
     })
   };
 
@@ -172,7 +190,7 @@ class CollectLieu extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { lieuLeaves, saveDates } = this.state;
+    const { lieuLeaves, saveDates, spinning } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -271,7 +289,8 @@ class CollectLieu extends React.Component {
     ];
 
     return (
-        <div>
+      <div>
+        <Spin tip="Sending..." spinning={spinning}>
           <Row gutter={16}>
             <Col span={12} > 
               <Card type="inner" title='Collect Lieu Leaves' bordered={false} hoverable='true'>  
@@ -357,7 +376,7 @@ class CollectLieu extends React.Component {
               </Row>
             </Col>
           </Row>
-        
+        </Spin>
     </div>
     );
   }

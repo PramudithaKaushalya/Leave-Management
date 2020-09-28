@@ -17,7 +17,8 @@ import {
   Row,
   Col,
   Table,
-  Modal
+  Modal, 
+  Spin
 } from 'antd';
 
 const { TextArea } = Input;
@@ -65,7 +66,7 @@ class RequestLeave extends React.Component {
           }
       })
       .then(res => {
-         
+        
         if (res.data.success === true) {  
           this.setState({
             types : res.data.list
@@ -152,7 +153,8 @@ class RequestLeave extends React.Component {
     start_day : null,
     end_day : null,
     saveDates : [],
-    count: 0
+    count: 0,
+    spinning : false
   };
 
   handleSubmit = e => {
@@ -177,7 +179,9 @@ class RequestLeave extends React.Component {
   }
 
   sendRequest = (values) => {
-            
+    this.setState({
+      spinning : true
+    });
     if(this.state.duty !== null){ 
       const leave = {
       leave_type : { leave_type_id : this.state.type } || undefined,
@@ -203,16 +207,25 @@ class RequestLeave extends React.Component {
         }
       )
       .then(res => {
-        if (res.data.success === true) {              
+        if (res.data.success === true) { 
+          this.handleCancel();             
           message.success(res.data.message); 
-          this.handleCancel();
+          this.setState({
+            spinning : false
+          });
         } else {
             message.error(res.data.message);
+            this.setState({
+              spinning : false
+            });
         }
       })
       .catch(e => {
         console.log(e.response.data.error);
         message.error("Something went wrong"); 
+        this.setState({
+          spinning : false
+        });
       })
     }else{
       const leave = {
@@ -227,7 +240,6 @@ class RequestLeave extends React.Component {
         status : "Pending",
         reject : "Not reject"
       }
-
       axios.post(
         'leave/request', 
         leave, 
@@ -238,16 +250,25 @@ class RequestLeave extends React.Component {
         }
       )
       .then(res => {
-        if (res.data.success === true) {              
+        if (res.data.success === true) {  
+          this.handleCancel();            
           message.success(res.data.message); 
-          this.handleCancel();
+          this.setState({
+            spinning : false
+          });
         } else {
           message.error(res.data.message);
+          this.setState({
+            spinning : false
+          });
         }
       })
       .catch(e => {
         console.log(e.response.data.error);
         message.error("Something went wrong"); 
+        this.setState({
+          spinning : false
+        });
       })  
     }
   }
@@ -262,7 +283,9 @@ class RequestLeave extends React.Component {
       start_half : "Full Day",
       end_half : "Full Day",
       error: null,
-      count : 0
+      count : 0,
+      startValue: null,
+      endValue: null
     });
     this.getLeaveSummary();
   };
@@ -375,7 +398,16 @@ class RequestLeave extends React.Component {
 
   halfDay = (value) => {
     this.onChange('half_day', value);
-    this.handleCancel();
+    this.setState({
+      disable : false,
+      period : null,
+      start_full_disable : false,
+      start_morning_disable : true,
+      start_half : "Full Day",
+      end_half : "Full Day",
+      error: null,
+      count : 0,
+    });
     if(value){
       this.setState({
         period : 0.5,
@@ -433,7 +465,7 @@ class RequestLeave extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { endOpen, summery, types, saveDates } = this.state;
+    const { endOpen, summery, types, saveDates, spinning } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -505,7 +537,8 @@ class RequestLeave extends React.Component {
     ];
 
     return (
-        <div>
+      <div>
+        <Spin tip="Sending..." spinning={spinning}>
           <Row gutter={16}>
             <Col span={13} > 
               <Card type="inner" title='Leave Request Form' bordered={false} hoverable='true'>  
@@ -624,7 +657,7 @@ class RequestLeave extends React.Component {
                 <Col span={24}>
                   <Card hoverable='true'>
                   <h4>Leave Summary</h4>
-                  <Table rowKey={record => record.type} columns={columns} dataSource={summery} size="small" pagination={{pageSize: 3}}/>
+                  <Table rowKey={record => record.type} columns={columns} dataSource={summery} size="small" pagination={false}/>
                   </Card>
                   <br/>
                 </Col>
@@ -637,7 +670,7 @@ class RequestLeave extends React.Component {
               </Row>
             </Col>
           </Row>
-        
+        </Spin>
     </div>
     );
   }

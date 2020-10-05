@@ -379,9 +379,9 @@ class RequestLeave extends React.Component {
       this.onChange('error', "* Exceeded your casual limit");
     }else if(this.state.type === 2 && period > (this.state.summery[1].remaining)){
       this.onChange('error', "* Exceeded your medical limit");
-    }else if(this.state.type === 5 && period > (this.state.summery[2].remaining)){
+    }else if(this.state.type === 3 && period > (this.state.summery[2].remaining)){
       this.onChange('error', "* Exceeded your annual limit");  
-    }else if(this.state.type === 6 && period > (this.state.summery[3].remaining)){
+    }else if(this.state.type === 4 && period > (this.state.summery[3].remaining)){
       this.onChange('error', "* Exceeded your lieu limit");  
     }else this.onChange('error', null);  
   }

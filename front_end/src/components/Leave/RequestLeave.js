@@ -568,6 +568,26 @@ class RequestLeave extends React.Component {
                   )}
                 </Form.Item>
 
+                {this.state.disable ? 
+                <Form.Item label="Leave date">
+                  {getFieldDecorator('start_date', {
+                    rules: [{ required: true, message: 'Please input Leave Date!' }],
+                  })(
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Pickup a Date"
+                    onChange={this.onEndChange}
+                    onOpenChange={this.handleEndChange}
+                    style={{ width: '280px' }}
+                  />
+                  )}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <Radio.Group onChange={this.startHalfChange} value={this.state.start_half}>
+                    <Radio value="Morning" disabled={this.state.period === 0 || this.state.startValue === this.state.endValue? true: false}>Morning</Radio>
+                    <Radio value="Evening" disabled={this.state.period === 0 || this.state.startValue === this.state.endValue? true: false}>Afternoon</Radio>
+                  </Radio.Group>
+                </Form.Item> 
+                :
+                <div>
                 <Form.Item label="Start date">
                 {getFieldDecorator('start_date', {
                     rules: [{ required: true, message: 'Please input Start Date!' }],
@@ -588,9 +608,10 @@ class RequestLeave extends React.Component {
                   </Radio.Group>
                 </Form.Item>
 
-                {this.state.disable ? null :
                 <Form.Item label="End date">
-                  {getFieldDecorator('end_date')(
+                  {getFieldDecorator('end_date', {
+                    rules: [{ required: true, message: 'Please input End Date!' }],
+                  })(
                   <DatePicker
                     disabledDate={this.disabledEndDate}
                     format="YYYY-MM-DD"
@@ -606,6 +627,7 @@ class RequestLeave extends React.Component {
                     <Radio value="Morning" disabled={this.state.period === 0 || this.state.startValue === this.state.endValue? true: false}>Morning</Radio>
                   </Radio.Group>
                 </Form.Item>
+                </div>
                 }
 
                 <Form.Item label="Number of leave days">

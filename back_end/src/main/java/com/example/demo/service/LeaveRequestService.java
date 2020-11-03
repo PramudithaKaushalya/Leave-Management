@@ -56,6 +56,9 @@ public class LeaveRequestService {
     @Value("${spring.mail.username}")
     private String mailSender;
 
+    @Value("${hr.mail}")
+    private String hrEmail;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveRequestService.class);
 
     public ResponseEntity<?> getAll(Long userId) {
@@ -145,7 +148,6 @@ public class LeaveRequestService {
                 applyLeaveMail(supervisor2, leaveRequest);
             }
 
-
             LOGGER.info(">>> Successfully add the leave request. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully submit your leave request"));
         } catch(Exception e) {
@@ -209,9 +211,6 @@ public class LeaveRequestService {
             LeaveRequest leaveRequest = leaveRequestRepository.getOne(id);
             User emp = leaveRequest.getUser();
 
-            User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
-            User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
-
             LocalDate startDate = LocalDate.parse(leaveRequest.getStartDate());
             leaveRequestRepository.deleteById(id);
 
@@ -219,12 +218,18 @@ public class LeaveRequestService {
             Float days = leaveRequest.getNumber_of_leave_days();
 
             LeaveCount filter = leaveCountRepository.findByUserAndTypeAndYear(emp, type, startDate.getYear());
-            filter.setCount(filter.getPending()-days);
+            filter.setPending(filter.getPending()-days);
             leaveCountRepository.save(filter);
 
-            mailDelete(leaveRequest);
-            mailSupDelete(supervisor1, leaveRequest);
-            mailSupDelete(supervisor2, leaveRequest);
+            if(!emp.getSupervisor1().equals("No one")) {
+                User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
+                mailSupDelete(supervisor1, leaveRequest);
+            }
+            if(!emp.getSupervisor2().equals("No one")) {
+                User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
+                mailSupDelete(supervisor2, leaveRequest);
+            }
+
             LOGGER.info(">>> Successfully remove the own pending leave requests. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Remove the pending request"));
 
@@ -245,9 +250,6 @@ public class LeaveRequestService {
                 return ResponseEntity.ok(new ApiResponse(false, "Not allowed to delete the own leave requests"));
             }
 
-            User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
-            User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
-
             LocalDate startDate = LocalDate.parse(leaveRequest.getStartDate());
 
             if(leaveRequest.getStatus().equals("Approved")){
@@ -258,22 +260,44 @@ public class LeaveRequestService {
                 filter.setCount(filter.getCount()-days);
                 leaveCountRepository.save(filter);
                 
-                leaveRequestRepository.deleteById(id);   
+                leaveRequestRepository.deleteById(id);
+
                 mailDelete(leaveRequest);
-                mailSupDelete(supervisor1, leaveRequest);
-                mailSupDelete(supervisor2, leaveRequest);
+
+                if(!emp.getSupervisor1().equals("No one")) {
+                    User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
+                    mailSupDelete(supervisor1, leaveRequest);
+                }
+                if(!emp.getSupervisor2().equals("No one")) {
+                    User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
+                    mailSupDelete(supervisor2, leaveRequest);
+                }
 
                 if(leaveRequest.getDuty()!=null){
                     mailDeleteDutyCoverer(leaveRequest);
                 }
+
+                User hr = new User();
+                hr.setFirstName("HR");
+                hr.setSecondName("Admin");
+                hr.setEmail(hrEmail);
+                mailSupDelete(hr, leaveRequest);
 
                 LOGGER.info(">>> Successfully remove the approved leave requests. (By user ==> "+userId+")");
                 return ResponseEntity.ok(new ApiResponse(true, "Remove the approved request"));
             }else if(leaveRequest.getStatus().equals("Rejected")){
                 leaveRequestRepository.deleteById(id);
                 mailDelete(leaveRequest);
-                mailSupDelete(supervisor1, leaveRequest);
-                mailSupDelete(supervisor2, leaveRequest);
+
+                if(!emp.getSupervisor1().equals("No one")) {
+                    User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
+                    mailSupDelete(supervisor1, leaveRequest);
+                }
+                if(!emp.getSupervisor2().equals("No one")) {
+                    User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
+                    mailSupDelete(supervisor2, leaveRequest);
+                }
+
                 LOGGER.info(">>> Successfully remove the rejected leave requests. (By user ==> "+userId+")");
                 return ResponseEntity.ok(new ApiResponse(true, "Remove the rejected request"));
             }
@@ -359,13 +383,12 @@ public class LeaveRequestService {
         };
         try {
             javaMailSender.send(mail);
-			LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+			LOGGER.info(">>> E-mail send to ==> "+supervisor.getEmail());
 		}catch (Exception e){
             e.printStackTrace();
 			LOGGER.error(">>> (MailSender) ==> "+e);
 		}
     }
-
 
 
     public ResponseEntity<?> approveRequest(Long check_id, LeaveRequest leaveRequest) {
@@ -392,7 +415,6 @@ public class LeaveRequestService {
 
             leaveRequestRepository.save(request);
 
-
             LocalDate startDate = LocalDate.parse(leaveRequest.getStartDate());
 
             // Reduce days count from pending and add to count in leave_count
@@ -408,7 +430,13 @@ public class LeaveRequestService {
             if(request.getDuty()!=null){
                 mailDutyCover(request.getDuty() , request);
             }
-            
+
+            User hr = new User();
+            hr.setFirstName("HR");
+            hr.setSecondName("Admin");
+            hr.setEmail(hrEmail);
+            acceptRequestHrMail(hr, leaveRequest);
+
             LOGGER.info(">>> Successfully approve the leave request. (By user ==> "+check_id+")");
             return ResponseEntity.ok(new ApiResponse(true, "Approved the leave requests"));
         } catch(Exception e) {
@@ -469,6 +497,31 @@ public class LeaveRequestService {
 		}catch (Exception e){
 			LOGGER.error(">>> (MailSender) ==> "+e);
 		}
+    }
+
+    private void acceptRequestHrMail(User hr, LeaveRequest leave ) {
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(hr.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Accepted the leave request.");
+            mimeMessage.setText(
+                    "Hi "+hr.getFirstName()+" "+hr.getSecondName()+",\n\n"+
+                            "Accepted the following leave request. \n\n"+
+                            "Employee: " + leave.getUser().getFirstName() + " " + leave.getUser().getSecondName()+"\n"+
+                            "Date of request: "+leave.getFormatDateTime()+"\n"+
+                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            "Thanks. \nBest Regards");
+        };
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+hr.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
     }
 
     private void mailReject (LeaveRequest leave ) {

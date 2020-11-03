@@ -190,7 +190,7 @@ public class AuthController {
             mimeMessage.setText(
                     "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
                             "Credentials for your new Account in VX HR Management System as follows. You can change your password when you logged in to your account.\n\n"+
-                            "Username - "+ user.getEmail() + ".\n"+
+                            "Employee Number - "+ user.getUserId() + ".\n"+
                             "Password - "+ password + ".\n"+
                             "URL - "+ hostAndPort + "\n\n"+
                             "Thanks. \nBest Regards");

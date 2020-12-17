@@ -116,7 +116,6 @@ class AddEmployee extends React.Component {
     supervisors: [],
     departments: [],
     roles: [],
-    confirmDirty: false,
     join_date: null,
     confirm_date: null,
     loading: false,
@@ -192,28 +191,6 @@ class AddEmployee extends React.Component {
         })
       }
     });
-  };
-
-  handleConfirmBlur = e => {
-    const { value } = e.target;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
   };
 
   onChangeDOB = (date, dateString) => {

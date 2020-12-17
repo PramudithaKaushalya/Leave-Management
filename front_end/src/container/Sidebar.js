@@ -186,7 +186,7 @@ class SiderDemo extends React.Component {
           }
             <Menu.Item key="14">
                 {/* <a href='http://leaves.vizuamatix.com:6077/Docs/LeavePolicy.pdf' target='_blank' rel="noopener noreferrer"> */}
-                <a href='http://192.168.10.119:5000/pdf/leave_policy' target='_blank' rel="noopener noreferrer" >
+                <a href='http://leaves.vizuamatix.com:5000/pdf/leave_policy' target='_blank' rel="noopener noreferrer" >
                 <Icon type="file-protect" />
                 <span>Leave Policy</span></a>
             </Menu.Item>

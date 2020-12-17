@@ -108,7 +108,7 @@ public class AuthController {
 		} catch ( Exception e ) {
             LOGGER.error(">>> Unable to login. (By ==> "+loginRequest.getUsernameOrEmail()+")", e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+            return ResponseEntity.ok(new ApiResponse(false, e.getLocalizedMessage()));
         }
     }
 

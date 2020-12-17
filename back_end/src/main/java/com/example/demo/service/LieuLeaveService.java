@@ -164,7 +164,7 @@ public class LieuLeaveService {
                             "Date of request: "+leave.getRequestAt()+"\n"+
                             "Date of worked: "+leave.getDate()+"\n"+
                             "Worked project: "+leave.getProject()+"\n"+
-                            "URL: "+hostAndPort+"collect_lieu \n\n"+
+                            "Check here: "+hostAndPort+"collect_lieu \n\n"+
                             "Thanks. \nBest Regards");
         };
 

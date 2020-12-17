@@ -10,7 +10,7 @@ const { confirm } = Modal;
 class OwnPending extends Component {
     
     componentWillMount(){
-       this.reload();
+      this.reload();
     } 
 
     state = {
@@ -18,7 +18,8 @@ class OwnPending extends Component {
         searchText: '',
         data : [],
         visible: false,
-        leave : [] 
+        leave : [],
+        spinning : false 
     };
     
     async reload () {
@@ -134,6 +135,9 @@ class OwnPending extends Component {
         okText: 'Remove',
         okType: 'danger',
         onOk: () => {
+          this.setState({
+            spinning: true
+          });
           axios.get('leave/delete_own/'+leave.id, 
           {
               headers: {
@@ -144,11 +148,20 @@ class OwnPending extends Component {
               if (res.data.success === true) {
                 message.success(res.data.message);
                 this.reload();
+                this.setState({
+                  spinning: false
+                });
               } else {
+                this.setState({
+                  spinning: false
+                });
                 message.error(res.data.message);
               }
           }).catch( err => {
               console.log(err);
+              this.setState({
+                spinning: false
+              });
               message.error("Something Went Wrong");
           })
         },
@@ -159,7 +172,7 @@ class OwnPending extends Component {
 
     render() {
        
-        const {leave} = this.state;
+        const {leave, spinning} = this.state;
 
         const columns = [ 
             {
@@ -207,15 +220,17 @@ class OwnPending extends Component {
 
         return (
             <div>
-            { this.state.mounted? 
-              <Card type="inner" title="Own Pending Leave Requests" hoverable='true'>
-                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
-              </Card> 
-            : 
-            <div className="example">
-              <Spin size="large" />
-            </div>
-            } 
+              <Spin tip="Deleting..." spinning={spinning}>
+                { this.state.mounted? 
+                  <Card type="inner" title="Own Pending Leave Requests" hoverable='true'>
+                    <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
+                  </Card> 
+                : 
+                <div className="example">
+                  <Spin size="large" />
+                </div>
+                } 
+              </Spin>  
                 {leave.length!==0? 
                 <Modal
                   title="Full Leave Record"

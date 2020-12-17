@@ -16,10 +16,7 @@ import com.example.demo.payload.AbsenceUser;
 import com.example.demo.payload.ApiResponse;
 import com.example.demo.payload.LeaveFilter;
 import com.example.demo.payload.LeaveRecord;
-import com.example.demo.repository.DepartmentRepository;
-import com.example.demo.repository.LeaveCountRepository;
-import com.example.demo.repository.LeaveRequestRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +37,9 @@ public class LeaveRequestService {
 
     @Autowired
     private LeaveCountRepository leaveCountRepository;
+
+    @Autowired
+    private LeaveTypeRepository leaveTypeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -127,7 +127,7 @@ public class LeaveRequestService {
             leaveRequest.setUser(emp);
             leaveRequestRepository.save(leaveRequest);
 
-            LeaveType type = leaveRequest.getLeave_type();
+            LeaveType type = leaveTypeRepository.getOne(leaveRequest.getLeave_type().getLeave_type_id());
             Float days = leaveRequest.getNumber_of_leave_days();
 
             if(leaveCountRepository.existsByUserAndTypeAndYear(emp, type, datetime1.getYear())) {
@@ -141,12 +141,13 @@ public class LeaveRequestService {
 
             if(!emp.getSupervisor1().equals("No one")) {
                 User supervisor1 = userRepository.findByFirstName(emp.getSupervisor1());
-                applyLeaveMail(supervisor1, leaveRequest);
+                applyLeaveMail(supervisor1, leaveRequest, type);
             }
             if(!emp.getSupervisor2().equals("No one")) {
                 User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
-                applyLeaveMail(supervisor2, leaveRequest);
+                applyLeaveMail(supervisor2, leaveRequest, type);
             }
+            applyHrMail(hrEmail, leaveRequest, type);
 
             LOGGER.info(">>> Successfully add the leave request. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully submit your leave request"));
@@ -157,22 +158,27 @@ public class LeaveRequestService {
         }
     }
 
-    private void applyLeaveMail (User supervisor, LeaveRequest leave ) {
-
+    private void applyLeaveMail (User supervisor, LeaveRequest leave, LeaveType leaveType ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
         MimeMessagePreparator mail = mimeMessage -> {
 
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(supervisor.getEmail()));
             mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
             mimeMessage.setSubject("Request for a leave.");
             mimeMessage.setText(
-                    "Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
-                            "You have new pending leave request from "+leave.getUser().getFirstName()+" "+leave.getUser().getSecondName()+". \n\n"+
-                            "Date of request: "+leave.getFormatDateTime()+"\n"+
-                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n"+
-                            "URL: "+hostAndPort+"pending_leaves \n\n"+
-                            "Thanks. \nBest Regards");
+                "Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
+                "You have new pending leave request from "+leave.getUser().getFirstName()+" "+leave.getUser().getSecondName()+". \n\n"+
+                "Date of request: "+leave.getFormatDateTime()+"\n"+
+                "Leave type: "+leaveType.getType()+"\n"+
+                "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                timePeriod+"\n\n"+
+                "Check here: "+hostAndPort+"pending_leaves \n\n"+
+                "Thanks. \nBest Regards");
         };
 
         try {
@@ -180,6 +186,36 @@ public class LeaveRequestService {
             LOGGER.info(">>> E-mail send to ==> "+supervisor.getEmail());
         }catch (Exception e){
             e.printStackTrace();
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
+    }
+
+    private void applyHrMail(String hrEmail, LeaveRequest leave, LeaveType leaveType ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(hrEmail));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Request for a leave.");
+            mimeMessage.setText(
+                "Hi HR Admin,\n\n"+
+                leave.getUser().getFirstName() + " " + leave.getUser().getSecondName()+" requested for a leave.\n"+
+                "Date of request: "+leave.getFormatDateTime()+"\n"+
+                "Leave type: "+leaveType.getType()+"\n"+
+                "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                timePeriod+"\n\n"+
+                "Thanks. \nBest Regards");
+        };
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+hrEmail);
+        }catch (Exception e){
             LOGGER.error(">>> (MailSender) ==> "+e);
         }
     }
@@ -229,6 +265,12 @@ public class LeaveRequestService {
                 User supervisor2 = userRepository.findByFirstName(emp.getSupervisor2());
                 mailSupDelete(supervisor2, leaveRequest);
             }
+
+            User hr = new User();
+            hr.setFirstName("HR");
+            hr.setSecondName("Admin");
+            hr.setEmail(hrEmail);
+            mailSupDelete(hr, leaveRequest);
 
             LOGGER.info(">>> Successfully remove the own pending leave requests. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Remove the pending request"));
@@ -339,6 +381,12 @@ public class LeaveRequestService {
     }
 
     private void mailDelete (LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
         User employee = leave.getUser();
 
         MimeMessagePreparator mail = mimeMessage -> {
@@ -352,7 +400,7 @@ public class LeaveRequestService {
                             "Date of request: "+leave.getFormatDateTime()+"\n"+
                             "Leave type: "+leave.getLeave_type().getType()+"\n"+
                             "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            timePeriod+"\n\n"+
                             "Thanks. \nBest Regards");
         };
 		try {
@@ -365,6 +413,12 @@ public class LeaveRequestService {
     }
 
     private void mailSupDelete (User supervisor, LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
         User employee = leave.getUser();
 
         MimeMessagePreparator mail = mimeMessage -> {
@@ -378,7 +432,7 @@ public class LeaveRequestService {
                             "Date of request: "+leave.getFormatDateTime()+"\n"+
                             "Leave type: "+leave.getLeave_type().getType()+"\n"+
                             "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            timePeriod+"\n\n"+
                             "Thanks. \nBest Regards");
         };
         try {
@@ -431,11 +485,7 @@ public class LeaveRequestService {
                 mailDutyCover(request.getDuty() , request);
             }
 
-            User hr = new User();
-            hr.setFirstName("HR");
-            hr.setSecondName("Admin");
-            hr.setEmail(hrEmail);
-            acceptRequestHrMail(hr, leaveRequest);
+            acceptRequestHrMail(hrEmail, leaveRequest);
 
             LOGGER.info(">>> Successfully approve the leave request. (By user ==> "+check_id+")");
             return ResponseEntity.ok(new ApiResponse(true, "Approved the leave requests"));
@@ -474,6 +524,12 @@ public class LeaveRequestService {
     }
     
     private void acceptRequest (LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
 
         User employee = leave.getUser();
 
@@ -488,7 +544,7 @@ public class LeaveRequestService {
                             "Date of request: "+leave.getFormatDateTime()+"\n"+
                             "Leave type: "+leave.getLeave_type().getType()+"\n"+
                             "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            timePeriod+"\n\n"+
                             "Thanks. \nBest Regards");
         };
 		try {
@@ -499,32 +555,44 @@ public class LeaveRequestService {
 		}
     }
 
-    private void acceptRequestHrMail(User hr, LeaveRequest leave ) {
+    private void acceptRequestHrMail(String hrEmail, LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
 
         MimeMessagePreparator mail = mimeMessage -> {
 
-            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(hr.getEmail()));
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(hrEmail));
             mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
             mimeMessage.setSubject("Accepted the leave request.");
             mimeMessage.setText(
-                    "Hi "+hr.getFirstName()+" "+hr.getSecondName()+",\n\n"+
-                            "Accepted the following leave request. \n\n"+
-                            "Employee: " + leave.getUser().getFirstName() + " " + leave.getUser().getSecondName()+"\n"+
-                            "Date of request: "+leave.getFormatDateTime()+"\n"+
-                            "Leave type: "+leave.getLeave_type().getType()+"\n"+
-                            "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
-                            "Thanks. \nBest Regards");
+                "Hi HR Admin,\n\n"+
+                "Accepted the following leave request. \n\n"+
+                "Employee: " + leave.getUser().getFirstName() + " " + leave.getUser().getSecondName()+"\n"+
+                "Date of request: "+leave.getFormatDateTime()+"\n"+
+                "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                timePeriod+"\n\n"+
+                "Thanks. \nBest Regards");
         };
         try {
             javaMailSender.send(mail);
-            LOGGER.info(">>> E-mail send to ==> "+hr.getEmail());
+            LOGGER.info(">>> E-mail send to ==> "+hrEmail);
         }catch (Exception e){
             LOGGER.error(">>> (MailSender) ==> "+e);
         }
     }
 
     private void mailReject (LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
 
         User employee = leave.getUser();
 
@@ -535,11 +603,11 @@ public class LeaveRequestService {
             mimeMessage.setSubject("Rejected the Leave Request.");
             mimeMessage.setText(
                     "Hi "+employee.getFirstName()+" "+employee.getSecondName()+",\n\n"+
-                            "Reject your following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
+                            "Rejected your following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
                             "Date of request: "+leave.getFormatDateTime()+"\n"+
                             "Leave type: "+leave.getLeave_type().getType()+"\n"+
                             "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
-                            "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n\n"+
+                            timePeriod+"\n\n"+
                             "Sorry for the rejection.\nThanks\nBest Regards");
         };
 		try {
@@ -549,6 +617,37 @@ public class LeaveRequestService {
             e.printStackTrace();
 			LOGGER.error(">>> (MailSender) ==> "+e);
 		}
+    }
+
+    private void mailRejectHr ( String hrEmail, LeaveRequest leave ) {
+        String timePeriod;
+        if(leave.getNumber_of_leave_days()==0.5) {
+            timePeriod = "Leave date: "+leave.getEnd_date()+"\n";
+        } else {
+            timePeriod = "Leave period: "+leave.getStartDate()+ " to " +leave.getEnd_date()+"\n";
+        }
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(hrEmail));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Rejected the Leave Request.");
+            mimeMessage.setText(
+                "Hi HR Admin,\n\n"+
+                "Rejected the following leave request according to "+ "\""+leave.getReject()+"\""+"\n\n"+
+                "Date of request: "+leave.getFormatDateTime()+"\n"+
+                "Leave type: "+leave.getLeave_type().getType()+"\n"+
+                "Number of leave days: "+leave.getNumber_of_leave_days()+"\n"+
+                timePeriod+"\n\n"+
+                "Thanks\nBest Regards");
+        };
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+hrEmail);
+        }catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
     }
     
     public ResponseEntity<?> rejectRequest(Integer id, LeaveRequest reason, Long check_id) {
@@ -585,6 +684,7 @@ public class LeaveRequestService {
             leaveCountRepository.save(filter);
 
             mailReject(request);
+            mailRejectHr(hrEmail, request);
 
             LOGGER.info(">>> Successfully reject the leave request. (By user ==> "+check_id+")");
             return ResponseEntity.ok(new ApiResponse(true, "Reject the leave request"));
@@ -870,7 +970,7 @@ public class LeaveRequestService {
     @PostConstruct
     @Scheduled(cron = "0 17 * * FRI")
     public void sendEmailsToSupervisors() {
-        System.out.println("Run the schedule--------------------------");
+        System.out.println("\n\n\nRun the schedule--------------------------\n\n\n");
         try {
             List<User> workingEmployees = userRepository.findByStatus("Working");
             List<String> supervisors = new ArrayList<>();

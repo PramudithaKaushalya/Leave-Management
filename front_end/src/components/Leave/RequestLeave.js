@@ -154,7 +154,8 @@ class RequestLeave extends React.Component {
     end_day : null,
     saveDates : [],
     count: 0,
-    spinning : false
+    spinning : false,
+    disableSwitch : false
   };
 
   handleSubmit = e => {
@@ -186,7 +187,7 @@ class RequestLeave extends React.Component {
       const leave = {
       leave_type : { leave_type_id : this.state.type } || undefined,
       user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
-      startDate : this.state.startValue || undefined,
+      startDate : this.state.startValue || this.state.endValue ,
       end_date : this.state.endValue || this.state.startValue,
       startHalf : this.state.start_half,
       endHalf : this.state.end_half,
@@ -208,7 +209,8 @@ class RequestLeave extends React.Component {
       )
       .then(res => {
         if (res.data.success === true) { 
-          this.handleCancel();             
+          this.handleCancel();  
+          this.getLeaveSummary();           
           message.success(res.data.message); 
           this.setState({
             spinning : false
@@ -231,7 +233,7 @@ class RequestLeave extends React.Component {
       const leave = {
         leave_type : { leave_type_id : this.state.type } || undefined,
         user : { id : this.parseJwt(localStorage.getItem("header")) } || undefined,
-        startDate : this.state.startValue || undefined,
+        startDate : this.state.startValue || this.state.endValue,
         end_date : this.state.endValue || this.state.startValue,
         startHalf : this.state.start_half,
         endHalf : this.state.end_half,
@@ -251,7 +253,8 @@ class RequestLeave extends React.Component {
       )
       .then(res => {
         if (res.data.success === true) {  
-          this.handleCancel();            
+          this.handleCancel();     
+          this.getLeaveSummary();       
           message.success(res.data.message); 
           this.setState({
             spinning : false
@@ -280,14 +283,16 @@ class RequestLeave extends React.Component {
       period : null,
       start_full_disable : false,
       start_morning_disable : true,
-      start_half : "Full Day",
+      start_half : "Full Day" || "Morning",
       end_half : "Full Day",
       error: null,
       count : 0,
+      start_day : null,
+      end_day : null,
       startValue: null,
-      endValue: null
+      endValue: null,
+      disableSwitch: false
     });
-    this.getLeaveSummary();
   };
 
   disabledStartDate = startValue => {
@@ -334,7 +339,11 @@ class RequestLeave extends React.Component {
 
     this.onChange('endValue', dateString);
     this.onChange('end_day', date);
-    this.onChange('start_half', "Full Day");
+    if(this.state.half_day) {
+      this.onChange('start_half', "Morning");
+    } else {
+      this.onChange('start_half', "Full Day");
+    }
     this.onChange('end_half', "Full Day");
 
     setTimeout(() => {
@@ -368,6 +377,9 @@ class RequestLeave extends React.Component {
     e.preventDefault();
     this.handleCancel();
     this.onChange('type', this.state.types[e.target.value].leave_type_id);
+    if(this.state.types[e.target.value].leave_type_id === 3) {
+      this.onChange('disableSwitch', true)
+    }
   }
 
   checkCount = (period) => {
@@ -379,8 +391,16 @@ class RequestLeave extends React.Component {
       this.onChange('error', "* Exceeded your casual limit");
     }else if(this.state.type === 2 && period > (this.state.summery[1].remaining)){
       this.onChange('error', "* Exceeded your medical limit");
-    }else if(this.state.type === 3 && period > (this.state.summery[2].remaining)){
-      this.onChange('error', "* Exceeded your annual limit");  
+    }else if(this.state.type === 3 ){
+      if( period > (this.state.summery[2].remaining) ) {
+        this.onChange('error', "* Exceeded your annual limit"); 
+      } else if((this.state.summery[2].remaining === 14 || this.state.summery[2].remaining === 7) && period !== 7 ) {
+        this.onChange('error', "* Should be taken 7 days together"); 
+      } else if(this.state.summery[2].entitlement === 10 && period !== 7 && period !== 3 ) {
+        this.onChange('error', "* Should be taken 7 days or 3 days together"); 
+      } else if(this.state.summery[2].entitlement === 4 && period !== 4) {
+        this.onChange('error', "* Should be taken all days together"); 
+      } else this.onChange('error', null); 
     }else if(this.state.type === 4 && period > (this.state.summery[3].remaining)){
       this.onChange('error', "* Exceeded your lieu limit");  
     }else this.onChange('error', null);  
@@ -465,7 +485,7 @@ class RequestLeave extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { endOpen, summery, types, saveDates, spinning } = this.state;
+    const { endOpen, summery, types, saveDates, spinning, disableSwitch } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -511,13 +531,13 @@ class RequestLeave extends React.Component {
       },   
       {
         title: 'Pending',
-        key: '2',
+        key: '3',
         dataIndex: 'pending',
         align: 'center'
       },
       {
         title: 'Remaining',
-        key: '3',
+        key: '4',
         dataIndex: 'remaining',
         align: 'center'
       }
@@ -561,6 +581,7 @@ class RequestLeave extends React.Component {
                     valuePropName: 'checked'
                   })(
                   <Switch
+                    disabled={disableSwitch}
                     checkedChildren={<Icon type="check" />}
                     unCheckedChildren={<Icon type="close" />}
                     onChange= {this.halfDay} 

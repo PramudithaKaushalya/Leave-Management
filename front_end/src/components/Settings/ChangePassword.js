@@ -52,7 +52,7 @@ class ChangePassword extends React.Component {
     compareToFirstPassword = (rule, value, callback) => {
         const { form } = this.props;
         if (value && value !== form.getFieldValue("newPassword")) {
-          callback("Two passwords that you enter is inconsistent!");
+          callback("The two passwords you entered is inconsistent!");
         } else {
           callback();
         }

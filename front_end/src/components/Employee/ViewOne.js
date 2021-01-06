@@ -223,7 +223,8 @@ class ViewOne extends Component {
             },
             {
                 title: 'Leave Type',
-                dataIndex: 'type'
+                dataIndex: 'type',
+                align: 'center'
             },
             {
                 title: 'Start Date',
@@ -235,11 +236,13 @@ class ViewOne extends Component {
             },
             {
                 title: 'Number of days',
-                dataIndex: 'number_of_leave_days'
+                dataIndex: 'number_of_leave_days',
+                align: 'center'
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
+                align: 'center',
                 render: tag => {
                     let color = tag.length 
                     if (tag === 'Pending') {

@@ -1,11 +1,43 @@
 import React, { Component } from 'react';
 import axios from '../../config/axios'
 import 'antd/dist/antd.css';
-import {Table, Button, Icon, Input, Card, message, Spin, Typography } from 'antd';
+import {Table, Button, Icon, Input, Card, message, Spin, Typography, Row, Col } from 'antd';
 import Highlighter from 'react-highlight-words';
 import './index.css';
+// import { Row } from 'react-bootstrap';
 
 const { Text } = Typography;
+
+function convertArrayOfObjectsToCSV(args) {
+  var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+
+  data = args.data || null;
+  if (data == null || !data.length) {
+      return null;
+  }
+
+  columnDelimiter = args.columnDelimiter || ',';
+  lineDelimiter = args.lineDelimiter || '\n';
+
+  keys = Object.keys(data[0]);
+
+  result = '';
+  result += keys.join(columnDelimiter);
+  result += lineDelimiter;
+
+  data.forEach(function(item) {
+      ctr = 0;
+      keys.forEach(function(key) {
+          if (ctr > 0) result += columnDelimiter;
+
+          result += item[key];
+          ctr++;
+      });
+      result += lineDelimiter;
+  });
+
+  return result;
+}
 
 class ViewProfile extends Component {
     
@@ -105,6 +137,27 @@ class ViewProfile extends Component {
       this.props.history.push('/get_employee');
     }
 
+    download = (args) => {
+      var data, filename, link;
+
+      var csv = convertArrayOfObjectsToCSV({
+          data: this.state.data
+      });
+      if (csv == null) return;
+
+      filename = args.filename || 'export.csv';
+
+      if (!csv.match(/^data:text\/csv/i)) {
+          csv = 'data:text/csv;charset=utf-8,' + csv;
+      }
+      data = encodeURI(csv);
+
+      link = document.createElement('a');
+      link.setAttribute('href', data);
+      link.setAttribute('download', filename);
+      link.click();
+    }
+
     render() {
 
         const columns = [
@@ -181,6 +234,14 @@ class ViewProfile extends Component {
           <div>
           { this.state.data !== 0? 
             <Card type="inner" title="View Summary" hoverable='true'>
+              <Row>
+                <Col span={21}>
+                </Col>
+                <Col span={3}>
+                  <Button type="primary" icon="download" onClick={this.download.bind(this,{ filename: "Leave Summary.csv" })} > Download </Button>
+                </Col>
+              </Row> 
+              <br/>
               <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
             </Card>
             : 

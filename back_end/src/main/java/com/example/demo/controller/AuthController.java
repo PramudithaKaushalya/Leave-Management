@@ -96,12 +96,14 @@ public class AuthController {
                 if(user.getIsFirstLogin()){
                     LOGGER.warn(">>> First login of user. (By ==> "+loginRequest.getUsernameOrEmail()+")");
                     return ResponseEntity.ok(new ApiResponse(true, "firstLogin"));
-                }
-				else {
+                } else if(user.getRoles().stream().findFirst().get().getName().toString().equals("Admin")) {
+                    LOGGER.warn(">>> Successfully user login. (By ==> "+loginRequest.getUsernameOrEmail()+")");
+                    return ResponseEntity.ok(new ApiResponse(true, "Admin"));
+                } else {
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					String jwt = tokenProvider.generateToken(authentication);
 
-					LOGGER.info(">>> Successfully user Login. (By ==> "+user.getId()+") ");
+					LOGGER.info(">>> Successfully user login. (By ==> "+user.getId()+") ");
 					return ResponseEntity.ok(new JwtAuthenticationResponse(true, jwt));
 				}
 			}

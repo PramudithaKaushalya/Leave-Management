@@ -65,6 +65,30 @@ public class LieuLeaveService {
         }
     }
 
+    public ResponseEntity<?> addLieuLeaveByAdmin(LieuLeave lieuLeave, Long userId) {
+        try {
+            Date date = new Date();
+            User user = userRepository.getOne(lieuLeave.getId());
+            lieuLeave.setEmployee(user);
+            lieuLeave.setStatus(0);
+            lieuLeave.setRequestAt(date);
+            lieuLeaveRepository.save(lieuLeave);
+
+            User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
+            requestLieuLeaveMail (supervisor1, lieuLeave);
+
+            User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
+            requestLieuLeaveMail (supervisor2, lieuLeave);
+
+            LOGGER.info(">>> Successfully added the lieu leave to "+user.getFirstName()+". (By user ==> "+userId+")");
+            return ResponseEntity.ok(new ApiResponse(true, "Successfully added the lieu leave"));
+        } catch(Exception e) {
+            LOGGER.error(">>> Unable to add lieu leave. (By user ==> "+userId+")");
+            e.printStackTrace();
+            return ResponseEntity.ok(new ApiResponse(false, "Unable to add contact"));
+        }
+    }
+
     public ResponseEntity<?> getAllLieuLeaves(Long userId) {
         try {
             User user = userRepository.getOne(userId);

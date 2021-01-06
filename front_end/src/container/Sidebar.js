@@ -20,6 +20,7 @@ import ViewOne from './../components/Employee/ViewOne';
 import Attendence from './../components/Attendence/Attendence';
 import OneAttendence from './../components/Attendence/OneAttendence';
 import CollectLieu from '../components/Leave/CollectLieu';
+import AddLieu from '../components/Leave/AddLieu';
 import PendingLieu from '../components/Leave/PendingLieu';
 import OwnPending from '../components/Leave/OwnPending';
 import Error from './../components/Error';
@@ -69,6 +70,11 @@ class SiderDemo extends React.Component {
                   user_image: res.data.employee.image,
                   spin: false 
               }) 
+              if(res.data.employee.role === "Admin") {
+                this.setState({
+                  defaultSelectedKeys : '2'
+                }) 
+              }
             }  else{
               message.error(res.data.message); 
             }
@@ -92,7 +98,8 @@ class SiderDemo extends React.Component {
     user_des: null,
     user_department: null,
     user_image: null,
-    spin: true
+    spin: true,
+    defaultSelectedKeys: '1'
   };
 
   render() {
@@ -118,20 +125,20 @@ class SiderDemo extends React.Component {
           <div className="logo" />
           <br/>
           <br/>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={[this.state.defaultSelectedKeys]} mode="inline">
             
-            <Menu.Item key="1">
-              <Link to='/'/>
-              <Icon type="home" />
-              <span>Home</span>
-            </Menu.Item>
           { user_role === "Admin"?
             <Menu.Item key="2">
                 <Link to='/manage_employee'/>
                 <Icon type="team" />
                 <span>Manage Employee</span>
             </Menu.Item>
-            :null
+            :
+            <Menu.Item key="1">
+              <Link to='/'/>
+              <Icon type="home" />
+              <span>Home</span>
+            </Menu.Item>
           }
             <SubMenu
               key="sub1"
@@ -142,48 +149,60 @@ class SiderDemo extends React.Component {
                 </span>
               }
             >
-            <Menu.Item key="3">
-                <Link to='/request_leave'/>
-                <Icon type="paper-clip" />
-                <span>Request Leave</span>
-            </Menu.Item>
-
-            <Menu.Item key="15">
-                <Link to='/collect_lieu'/>
-                <Icon type="paper-clip" />
-                <span>Collect Lieu</span>
-            </Menu.Item>
-            
-            <Menu.Item key="17">
-                  <Link to='/own_pending'/>
-                  <Icon type="question-circle" />
-                  <span>Own Pending Leaves</span>
-            </Menu.Item>
-          { user_role === "Admin" || user_role === "Supervisor"?
-            
-              <Menu.Item key="4">
-                  <Link to='/leave_history'/>
-                  <Icon type="file-search" />
-                  <span>Review Leaves</span>
+            { user_role !== "Admin"?
+              <Menu.Item key="3">
+                  <Link to='/request_leave'/>
+                  <Icon type="paper-clip" />
+                  <span>Request Leave</span>
               </Menu.Item>
+              :null
+            }
+            { user_role === "Admin"?
+              <Menu.Item key="18">
+                <Link to='/add_lieu'/>
+                <Icon type="paper-clip" />
+                <span>Add Lieu</span>
+              </Menu.Item>
+            :
+              <Menu.Item key="15">
+                  <Link to='/collect_lieu'/>
+                  <Icon type="paper-clip" />
+                  <span>Collect Lieu</span>
+              </Menu.Item>
+            }
+            { user_role !== "Admin"?
+              <Menu.Item key="17">
+                    <Link to='/own_pending'/>
+                    <Icon type="question-circle" />
+                    <span>Own Pending Leaves</span>
+              </Menu.Item>
+              :null
+            }
+            { user_role === "Admin" || user_role === "Supervisor"?
+              
+                <Menu.Item key="4">
+                    <Link to='/leave_history'/>
+                    <Icon type="file-search" />
+                    <span>Review Leaves</span>
+                </Menu.Item>
+              :null
+            }
+            { user_role === "Admin" || user_role === "Supervisor"?
+                <Menu.Item key="5">
+                    <Link to='/pending_leaves'/>
+                    <Icon type="question-circle" />
+                    <span>Pending Leaves</span>
+                </Menu.Item>
             :null
-          }
-          { user_role === "Admin" || user_role === "Supervisor"?
-              <Menu.Item key="5">
-                  <Link to='/pending_leaves'/>
-                  <Icon type="question-circle" />
-                  <span>Pending Leaves</span>
-              </Menu.Item>
-          :null
-          }
-          { user_role === "Admin" || user_role === "Supervisor"?
-              <Menu.Item key="16">
-                  <Link to='/pending_lieu'/>
-                  <Icon type="question-circle" />
-                  <span>Pending Lieu</span>
-              </Menu.Item>
-          :null
-          }
+            }
+            { user_role === "Admin" || user_role === "Supervisor"?
+                <Menu.Item key="16">
+                    <Link to='/pending_lieu'/>
+                    <Icon type="question-circle" />
+                    <span>Pending Lieu</span>
+                </Menu.Item>
+            :null
+            }
             <Menu.Item key="14">
                 {/* <a href='http://leaves.vizuamatix.com:6077/Docs/LeavePolicy.pdf' target='_blank' rel="noopener noreferrer"> */}
                 <a href='http://leaves.vizuamatix.com:5000/pdf/leave_policy' target='_blank' rel="noopener noreferrer" >
@@ -224,11 +243,14 @@ class SiderDemo extends React.Component {
                 </span>
               }
             >
+            { user_role !== "Admin"?
               <Menu.Item key="8">
                 <Link to='/contact_number'/>
                 <Icon type="phone" />
                 <span>Contact Numbers</span>
               </Menu.Item>
+              :null
+            }
               <Menu.Item key="9">
                 <Link to='/change_password'/>
                 <Icon type="lock" />
@@ -270,6 +292,7 @@ class SiderDemo extends React.Component {
                 <Route path='/contact_number' component={ContactsNumber}/>
                 <Route path='/attendance' component={Attendence}/>
                 <Route path='/one_attendance' component={OneAttendence}/>
+                <Route path='/add_lieu' component={AddLieu}/>
                 <Route path='/collect_lieu' component={CollectLieu}/>
                 <Route path='/pending_lieu' component={PendingLieu}/>
                 <Route path='/own_pending' component={OwnPending}/>

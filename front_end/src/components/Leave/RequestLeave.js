@@ -297,7 +297,10 @@ class RequestLeave extends React.Component {
 
   disabledStartDate = startValue => {
     // return startValue && startValue < moment().endOf('day');
-    return startValue && startValue < moment().subtract(7,'d');
+    
+    if(this.state.type === 3) {
+      return startValue && startValue < moment().subtract(-14,'d');
+    } else return false;
   };
 
   disabledEndDate = endValue => {
@@ -320,7 +323,6 @@ class RequestLeave extends React.Component {
   };
 
   onEndChange = (date, dateString) => {
-
     var e = new Date(date)
     var s = new Date(this.state.startValue)
     var dif = parseInt(e-s)/(1000*60*60*24)
@@ -328,7 +330,6 @@ class RequestLeave extends React.Component {
     var leaveCount = 0;
     this.state.saveDates.map(leaveDate => {
       var x = new Date(leaveDate.date)
-      // console.log("s----------",s,"e---------------",e,"x----------",x, "s<x----------",s<=x )/
       if(s<=x && x<=e) {
         leaveCount++;
         // console.log("------------------------",leaveCount )
@@ -354,10 +355,10 @@ class RequestLeave extends React.Component {
         }else if(this.state.start_day._d.getDay() === 0){
           this.onChange('period', parseInt(dif)-this.state.count);
           this.checkCount(parseInt(dif)); 
-        }else if(date._d.getDay() > this.state.start_day._d.getDay() && parseInt(dif)+1 < 6){
+        }else if(date._d.getDay() > this.state.start_day._d.getDay() && parseInt(dif)+1 <= 6){
           this.onChange('period', parseInt(dif)+1-this.state.count);
           this.checkCount(parseInt(dif)+1-this.state.count); 
-        }else if(date._d.getDay() < this.state.start_day._d.getDay() && parseInt(dif)+1 < 6 ){
+        }else if(date._d.getDay() < this.state.start_day._d.getDay() && parseInt(dif)+1 <= 6 ){
           this.onChange('period', parseInt(dif)+1-2-this.state.count);
           this.checkCount(parseInt(dif)+1-2);
         }else if(date._d.getMonth() !== this.state.start_day._d.getMonth()){
@@ -614,7 +615,7 @@ class RequestLeave extends React.Component {
                     rules: [{ required: true, message: 'Please input Start Date!' }],
                   })(
                   <DatePicker
-                    // disabledDate={this.disabledStartDate}
+                    disabledDate={this.disabledStartDate}
                     format="YYYY-MM-DD"
                     placeholder="Pickup a Date"
                     onChange={this.onStartChange}

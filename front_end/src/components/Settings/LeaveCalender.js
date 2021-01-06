@@ -22,7 +22,7 @@ const ReasonForm = Form.create({ name: 'form_in_modal' })(
           onOk={onCreate}
         >
           <Form layout="vertical">
-            <Form.Item label="Reason for give leave">
+            <Form.Item label="Reason for the leave">
               {getFieldDecorator('reason', {
                 rules: [{ required: true, message: 'Please input the reason' }],
               })(<Input type="textarea"/>)}

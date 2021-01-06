@@ -619,13 +619,13 @@ class History extends Component {
                     Special Note: 
                     &nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;
-                    <Tag color="volcano" style={{width:'460px'}}>{leave.specialNotes}</Tag>
+                    <Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.specialNotes}</Tag>
                     </Col>
                   </Row>
                   <br/>
                   { 
                     leave.status === "Rejected"?                  
-                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px'}}>{leave.reject}</Tag></p>
+                      <p>Reason For Reject: <br/><Tag color="volcano" style={{width:'460px', whiteSpace:'normal'}}>{leave.reject}</Tag></p>
                     : null
                   }
                 </Modal>: null}

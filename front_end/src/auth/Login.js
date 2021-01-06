@@ -23,6 +23,9 @@ class NormalLoginForm extends React.Component {
             if (token.data.message === "firstLogin") {
               localStorage.setItem("header", values.username);
               this.props.history.push('/first_login');
+            } else if (token.data.message === "Admin") {
+              localStorage.setItem("header", token.data.accessToken);
+              this.props.history.push('/manage_employee');
             } else {
               localStorage.setItem("header", token.data.accessToken);
               this.props.history.push('/');

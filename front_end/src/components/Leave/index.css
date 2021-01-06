@@ -13,3 +13,7 @@
     padding: 200px 50px;
     margin: 20px 0;
   } 
+
+  .ant-calendar-picker-container {
+    z-index: 950;
+  }

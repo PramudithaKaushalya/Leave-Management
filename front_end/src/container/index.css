@@ -99,3 +99,7 @@ h3 {
 .avatar {
   margin-left: 20px;
 }
+
+.card-height {
+  min-height: 360px;
+}

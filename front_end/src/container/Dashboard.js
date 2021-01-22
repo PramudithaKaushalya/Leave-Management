@@ -296,7 +296,7 @@ class Dashboard extends Component {
               <br/>
               <Row gutter={16}>
                 <Col span={9} > 
-                  <Card hoverable='true'>
+                  <Card hoverable='true' className="card-height">
                     <h3>Leave Summery</h3>
                     <Table rowKey={record => record.type} columns={summeryCol} dataSource={summery} size="small" pagination={false}/>
                   </Card>

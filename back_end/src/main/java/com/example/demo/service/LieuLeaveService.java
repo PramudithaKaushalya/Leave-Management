@@ -50,11 +50,14 @@ public class LieuLeaveService {
             lieuLeave.setRequestAt(date);
             lieuLeaveRepository.save(lieuLeave);
 
-            User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
-            requestLieuLeaveMail (supervisor1, lieuLeave);
-
-            User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
-            requestLieuLeaveMail (supervisor2, lieuLeave);
+            if(!user.getSupervisor1().equals("No one")) {
+                User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
+                requestLieuLeaveMail (supervisor1, lieuLeave);
+            }
+            if(!user.getSupervisor2().equals("No one")) {
+                User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
+                requestLieuLeaveMail (supervisor2, lieuLeave);
+            }
 
             LOGGER.info(">>> Successfully add the lieu leave. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully requested to collect lieu leave"));
@@ -74,11 +77,16 @@ public class LieuLeaveService {
             lieuLeave.setRequestAt(date);
             lieuLeaveRepository.save(lieuLeave);
 
-            User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
-            requestLieuLeaveMail (supervisor1, lieuLeave);
+            requestLieuLeaveMailByHrToEmp(lieuLeave);
 
-            User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
-            requestLieuLeaveMail (supervisor2, lieuLeave);
+            if(!user.getSupervisor1().equals("No one")) {
+                User supervisor1 = userRepository.findByFirstName(user.getSupervisor1());
+                requestLieuLeaveMailByHr (supervisor1, lieuLeave);
+            }
+            if(!user.getSupervisor2().equals("No one")) {
+                User supervisor2 = userRepository.findByFirstName(user.getSupervisor2());
+                requestLieuLeaveMailByHr (supervisor2, lieuLeave);
+            }
 
             LOGGER.info(">>> Successfully added the lieu leave to "+user.getFirstName()+". (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully added the lieu leave"));
@@ -147,6 +155,8 @@ public class LieuLeaveService {
             leave.setStatus(1);
             leave.setCheckedAt(date);
             lieuLeaveRepository.save(leave);
+
+            approveLieuLeaveMail(leave);
             LOGGER.info(">>> Successfully approved the lieu leave. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully approved the lieu leave"));
         } catch(Exception e) {
@@ -165,6 +175,8 @@ public class LieuLeaveService {
             leave.setStatus(2);
             leave.setCheckedAt(date);
             lieuLeaveRepository.save(leave);
+
+            rejectLieuLeaveMail(leave);
             LOGGER.info(">>> Successfully reject the lieu leave. (By user ==> "+userId+")");
             return ResponseEntity.ok(new ApiResponse(true, "Successfully reject the lieu leave"));
         } catch(Exception e) {
@@ -174,21 +186,129 @@ public class LieuLeaveService {
         }
     }
 
+    private void requestLieuLeaveMail (User supervisor, LieuLeave leave) {
 
-    private void requestLieuLeaveMail (User user, LieuLeave leave) {
+        MimeMessagePreparator mail = mimeMessage -> {
 
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(supervisor.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Request to collect lieu leave.");
+            mimeMessage.setText(
+                    "Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
+                            "You have lieu leave collecting request from "+leave.getEmployee().getFirstName()+" "+leave.getEmployee().getSecondName()+". \n\n"+
+                            "Date of request: "+leave.getRequestAt()+"\n"+
+                            "Date of worked: "+leave.getDate()+"\n"+
+                            "Worked project: "+leave.getProject()+"\n"+
+                            "Check here: "+hostAndPort+"pending_lieu \n\n"+
+                            "Thanks. \nBest Regards");
+        };
+
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+supervisor.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
+    }
+
+    private void requestLieuLeaveMailByHr (User supervisor, LieuLeave leave) {
+
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(supervisor.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Request to collect lieu leave.");
+            mimeMessage.setText(
+                    "Hi "+supervisor.getFirstName()+" "+supervisor.getSecondName()+",\n\n"+
+                            "You have following lieu leave collecting request from HR admin. \n\n"+
+                            "Employee: "+leave.getEmployee().getFirstName()+" "+leave.getEmployee().getSecondName()+"\n"+
+                            "Date of request: "+leave.getRequestAt()+"\n"+
+                            "Date of worked: "+leave.getDate()+"\n"+
+                            "Worked project: "+leave.getProject()+"\n"+
+                            "Check here: "+hostAndPort+"pending_lieu \n\n"+
+                            "Thanks. \nBest Regards");
+        };
+
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+supervisor.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
+    }
+
+    private void requestLieuLeaveMailByHrToEmp (LieuLeave leave) {
+
+        User user = leave.getEmployee();
+        String period;
+        if(leave.getPeriod()==0) {
+            period = "Half Day";
+        } else {
+            period = "Full Day";
+        }
         MimeMessagePreparator mail = mimeMessage -> {
 
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
             mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
             mimeMessage.setSubject("Request to collect lieu leave.");
             mimeMessage.setText(
+                "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                    "Your following lieu leave collecting request sent to get approval. \n\n"+
+                    "Date of worked: "+leave.getDate()+"\n"+
+                    "Period: "+period+"\n"+
+                    "Worked project: "+leave.getProject()+"\n"+
+                    "Works done: "+leave.getWorksDone()+"\n"+
+                    "Check here: "+hostAndPort+"collect_lieu \n\n"+
+                    "Thanks. \nBest Regards");
+        };
+
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+user.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
+    }
+
+    private void approveLieuLeaveMail (LieuLeave leave) {
+
+        User user = leave.getEmployee();
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Approved the request of collect lieu leave.");
+            mimeMessage.setText(
                     "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
-                            "You have lieu leave collecting request from "+leave.getEmployee().getFirstName()+" "+leave.getEmployee().getSecondName()+". \n\n"+
+                            "Your following lieu leave collecting request is approved by "+leave.getCheckedBy().getFirstName()+". \n\n"+
                             "Date of request: "+leave.getRequestAt()+"\n"+
                             "Date of worked: "+leave.getDate()+"\n"+
                             "Worked project: "+leave.getProject()+"\n"+
-                            "Check here: "+hostAndPort+"collect_lieu \n\n"+
+                            "Thanks. \nBest Regards");
+        };
+
+        try {
+            javaMailSender.send(mail);
+            LOGGER.info(">>> E-mail send to ==> "+user.getEmail());
+        }catch (Exception e){
+            LOGGER.error(">>> (MailSender) ==> "+e);
+        }
+    }
+
+    private void rejectLieuLeaveMail (LieuLeave leave) {
+
+        User user = leave.getEmployee();
+        MimeMessagePreparator mail = mimeMessage -> {
+
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
+            mimeMessage.setSubject("Rejected the request of collect lieu leave.");
+            mimeMessage.setText(
+                    "Hi "+user.getFirstName()+" "+user.getSecondName()+",\n\n"+
+                            "Your following lieu leave collecting request is rejected by "+leave.getCheckedBy().getFirstName()+". \n\n"+
+                            "Date of request: "+leave.getRequestAt()+"\n"+
+                            "Date of worked: "+leave.getDate()+"\n"+
+                            "Worked project: "+leave.getProject()+"\n"+
                             "Thanks. \nBest Regards");
         };
 

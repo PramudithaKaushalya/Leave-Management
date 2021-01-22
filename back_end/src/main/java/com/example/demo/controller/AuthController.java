@@ -97,8 +97,11 @@ public class AuthController {
                     LOGGER.warn(">>> First login of user. (By ==> "+loginRequest.getUsernameOrEmail()+")");
                     return ResponseEntity.ok(new ApiResponse(true, "firstLogin"));
                 } else if(user.getRoles().stream().findFirst().get().getName().toString().equals("Admin")) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String jwt = tokenProvider.generateToken(authentication);
+
                     LOGGER.warn(">>> Successfully user login. (By ==> "+loginRequest.getUsernameOrEmail()+")");
-                    return ResponseEntity.ok(new ApiResponse(true, "Admin"));
+                    return ResponseEntity.ok(new JwtAuthenticationResponse(true, jwt,"Admin"));
                 } else {
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					String jwt = tokenProvider.generateToken(authentication);

@@ -10,6 +10,11 @@ public class JwtAuthenticationResponse {
         this.accessToken = accessToken;
     }
 
+    public JwtAuthenticationResponse(Boolean status, String accessToken, String tokenType) {
+        this.success = status;
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+    }
     public String getAccessToken() {
         return accessToken;
     }

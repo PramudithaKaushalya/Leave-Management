@@ -178,7 +178,7 @@ public class LeaveCountService {
             LeaveCountDTO annual = getCountsOfLeaveTypes("Annual", employee.getAnnual(), 3, employee);
             summeryAll.add(annual);
 
-            LeaveCountDTO lieu = getCountsOfLeaveTypes("Lieu", getLieuCount(employee), 4, employee);
+            LeaveCountDTO lieu = getCountsOfLieu("Lieu", getLieuCount(employee), 4, employee);
             summeryAll.add(lieu);
 
             if(leaveCountRepository.existsByUserAndYear(employee, nowTime.getYear())){
@@ -249,6 +249,29 @@ public class LeaveCountService {
         return summery;
     }
 
+    public LeaveCountDTO getCountsOfLieu(String leaveTypeName, Float entitlement, Integer leaveTypeId, User employee) {
+
+        LeaveCountDTO summery = new LeaveCountDTO();
+        summery.setType(leaveTypeName);
+        summery.setEntitlement(entitlement);
+
+        LeaveType leaveType = new LeaveType();
+        leaveType.setLeave_type_id(leaveTypeId);
+
+        if(leaveCountRepository.existsByUserAndType(employee, leaveType)){
+            LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, leaveType);
+            Float count = count_object.getCount();
+            summery.setUtilized(count);
+        }else{
+            summery.setUtilized(0.0F);
+        }
+
+
+        summery.setRemaining(summery.getEntitlement()-summery.getUtilized());
+
+        return summery;
+    }
+
     public Float getLieuCount(User employee){
         List<LieuLeave> lieuLeaves = lieuLeaveRepository.findByEmployeeAndStatus(employee, 1);
 
@@ -280,7 +303,7 @@ public class LeaveCountService {
             LeaveCountDTO annual = getRemainingCountsOfLeaveTypes("Annual", employee.getAnnual(), 3, employee);
             summeryAll.add(annual);
 
-            LeaveCountDTO lieu = getRemainingCountsOfLeaveTypes("Lieu", getLieuCount(employee), 4, employee);
+            LeaveCountDTO lieu = getRemainingLieuCounts("Lieu", getLieuCount(employee), 4, employee);
             summeryAll.add(lieu);
 
             LOGGER.info(">>> Successfully get leave summery to request page of user "+id+". (By user ==> "+userId+")");
@@ -304,6 +327,30 @@ public class LeaveCountService {
 
         if(leaveCountRepository.existsByUserAndTypeAndYear(employee, leaveType, nowTime.getYear())){
             LeaveCount count_object = leaveCountRepository.findByUserAndTypeAndYear(employee, leaveType, nowTime.getYear());
+            Float accepted = count_object.getCount();
+            Float pending = count_object.getPending();
+            summery.setUtilized(accepted);
+            summery.setPending(pending);
+        }else{
+            summery.setUtilized(0.0F);
+            summery.setPending(0.0F);
+        }
+        summery.setRemaining(summery.getEntitlement()-(summery.getUtilized()+summery.getPending()));
+
+        return summery;
+    }
+
+    public LeaveCountDTO getRemainingLieuCounts(String leaveTypeName, Float entitlement, Integer leaveTypeId, User employee) {
+
+        LeaveCountDTO summery = new LeaveCountDTO();
+        summery.setType(leaveTypeName);
+        summery.setEntitlement(entitlement);
+
+        LeaveType leaveType = new LeaveType();
+        leaveType.setLeave_type_id(leaveTypeId);
+
+        if(leaveCountRepository.existsByUserAndType(employee, leaveType)){
+            LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, leaveType);
             Float accepted = count_object.getCount();
             Float pending = count_object.getPending();
             summery.setUtilized(accepted);

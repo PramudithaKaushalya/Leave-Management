@@ -118,7 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/old_tables/**")
                         .permitAll()
                     .antMatchers("/login", "/first_login", "/forgot", "/history", "/dashboard",
-                                 "/request_leave", "/change_password", "/contact_number", "/collect_lieu", "/own_pending",
+                                 "/request_leave", "/change_password", "/contact_number", "/collect_lieu", "/own_pending", "/add_lieu",
                             "/manage_employee", "/leave_calender", "/view_profile", "/get_employee", "/leave_history", "/pending_leaves", "/pending_lieu", "/error404")
                         .permitAll()           
                     .anyRequest()

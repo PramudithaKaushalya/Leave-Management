@@ -356,14 +356,15 @@ public class LeaveRequestService {
 
     private void mailDeleteDutyCoverer (LeaveRequest leave ) {
         User employee = leave.getUser();
+        User dutyCoverer = leave.getDuty();
 
         MimeMessagePreparator mail = mimeMessage -> {
 
-            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(employee.getEmail()));
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(dutyCoverer.getEmail()));
             mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
             mimeMessage.setSubject("Removed the assigned duty.");
             mimeMessage.setText(
-                    "Hi " + employee.getFirstName() + " " + employee.getSecondName() + ",\n\n" +
+                    "Hi " + dutyCoverer.getFirstName() + " " + dutyCoverer.getSecondName() + ",\n\n" +
                             "Removed your assigned duty of following employee in these day/s. \n\n" +
                             "Name: " + employee.getFirstName() + " " + employee.getSecondName() + "\n" +
                             "Role: " + employee.getRoles().stream().findFirst().get().getName() + "\n" +
@@ -373,7 +374,7 @@ public class LeaveRequestService {
         };
         try {
             javaMailSender.send(mail);
-            LOGGER.info(">>> E-mail send to ==> "+employee.getEmail());
+            LOGGER.info(">>> E-mail send to ==> "+dutyCoverer.getEmail());
         }catch (Exception e){
             e.printStackTrace();
             LOGGER.error(">>> (MailSender) ==> "+e);
@@ -482,7 +483,7 @@ public class LeaveRequestService {
             acceptRequest(request);
 
             if(request.getDuty()!=null){
-                mailDutyCover(request.getDuty() , request);
+                mailDutyCover(request);
             }
 
             acceptRequestHrMail(hrEmail, leaveRequest);
@@ -496,17 +497,18 @@ public class LeaveRequestService {
         }
     }
 
-    private void mailDutyCover (User duty, LeaveRequest leave ) {
+    private void mailDutyCover (LeaveRequest leave ) {
 
         User employee = leave.getUser();
+        User dutyCoverer = leave.getDuty();
 
         MimeMessagePreparator mail = mimeMessage -> {
 
-            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(duty.getEmail()));
+            mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(dutyCoverer.getEmail()));
             mimeMessage.setFrom(new InternetAddress(mailSender, "VX HRMS"));
             mimeMessage.setSubject("Additional duty to cover.");
             mimeMessage.setText(
-                    "Hi "+duty.getFirstName()+" "+duty.getSecondName()+",\n"+
+                    "Hi "+dutyCoverer.getFirstName()+" "+dutyCoverer.getSecondName()+",\n"+
                             "You are assigned to cover the duty of following employee in these day/s. \n\n"+
                             "Name: "+employee.getFirstName()+" "+employee.getSecondName()+"\n"+
                             "Role: "+employee.getRoles().stream().findFirst().get().getName()+"\n"+
@@ -516,7 +518,7 @@ public class LeaveRequestService {
         };
 		try {
 			javaMailSender.send(mail);
-			LOGGER.info(">>> E-mail send to ==> "+duty.getEmail());
+			LOGGER.info(">>> E-mail send to ==> "+dutyCoverer.getEmail());
 		}catch (Exception e){
             e.printStackTrace();
 			LOGGER.error(">>> (MailSender) ==> "+e);

@@ -491,14 +491,14 @@ class ViewEmployee extends Component {
                 </Row>
                 
                 <br/><br/>
-              { this.state.dataReceived ? 
-                <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
+                { this.state.dataReceived ? 
+                  <Table rowKey={record => record.id} columns={columns} dataSource={this.state.data}  pagination={{ pageSize: 10 }} size="middle" />
 
-              : 
-                <div className="example">
-                  <Spin size="large" />
-                </div>
-              } 
+                : 
+                  <div className="example">
+                    <Spin size="large" />
+                  </div>
+                } 
                 <Drawer
                 title="Update Existing Employee"
                 width={570}

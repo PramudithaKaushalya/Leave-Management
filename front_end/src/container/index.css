@@ -13,7 +13,7 @@
   margin: 5px;
   /* margin-top: 30px; */
   background-image: url("../HRMS.png");
-  background-size: 170px;
+  background-size: 200px;
   background-position: center;
   background-repeat: no-repeat;
   flex: auto;
@@ -102,4 +102,12 @@ h3 {
 
 .card-height {
   min-height: 360px;
+}
+
+.footer{
+  color: red;
+}
+
+.version {
+  color: grey;
 }

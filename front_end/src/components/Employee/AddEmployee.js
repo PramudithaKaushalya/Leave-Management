@@ -439,9 +439,9 @@ class AddEmployee extends React.Component {
             rules: [{ required: false, message: 'Please input second supervisor!' }],
           })(
             <Select placeholder="Please select a supervisor">
-            {this.state.supervisors.map(item => (
-               <Option key={item.firstName}>{item.firstName} {item.secondName}</Option>
-             ))}
+              {this.state.supervisors.map(item => (
+                <Option key={item.firstName}>{item.firstName} {item.secondName}</Option>
+              ))}
             </Select> 
           )}
         </Form.Item>

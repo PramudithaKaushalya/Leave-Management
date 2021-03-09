@@ -70,11 +70,6 @@ class SiderDemo extends React.Component {
                   user_image: res.data.employee.image,
                   spin: false 
               }) 
-              if(res.data.employee.role === "Admin") {
-                this.setState({
-                  defaultSelectedKeys : '2'
-                }) 
-              }
             }  else{
               message.error(res.data.message); 
             }
@@ -98,8 +93,7 @@ class SiderDemo extends React.Component {
     user_des: null,
     user_department: null,
     user_image: null,
-    spin: true,
-    defaultSelectedKeys: '1'
+    spin: true
   };
 
   render() {
@@ -125,10 +119,10 @@ class SiderDemo extends React.Component {
           <div className="logo" />
           <br/>
           <br/>
-          <Menu theme="dark" defaultSelectedKeys={[this.state.defaultSelectedKeys]} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={"1"} mode="inline">
             
           { user_role === "Admin"?
-            <Menu.Item key="2">
+            <Menu.Item key="1">
                 <Link to='/manage_employee'/>
                 <Icon type="team" />
                 <span>Manage Employee</span>
@@ -213,7 +207,7 @@ class SiderDemo extends React.Component {
             { user_role === "Admin" ?
               <Menu.Item key="6">
                   <Link to='/view_profile'/>
-                  <Icon type="team" />
+                  <Icon type="eye" />
                   <span>View Profiles</span>
               </Menu.Item>
             :null
@@ -305,7 +299,7 @@ class SiderDemo extends React.Component {
               </Switch>
           </Content>
           
-          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HRMS(V1.0.2) © Powered By VizuaMatix </Footer>
+          <Footer style={{ textAlign: 'center', height: '0px'}}>VX HRMS (<span className="version">V1.0.2</span>) © Powered By <a href="https://www.vizuamatix.com/" target="_blank" rel="noopener noreferrer" className="footer">VizuaMatix</a> </Footer>
           </Layout>
         </Layout>
       </Layout>

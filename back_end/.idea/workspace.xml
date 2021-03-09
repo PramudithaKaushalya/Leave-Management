@@ -3,25 +3,34 @@
   <component name="ChangeListManager">
     <list default="true" id="5bf2958d-41ba-4d00-b7fe-347f5285b0dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/payload/JwtAuthenticationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/payload/JwtAuthenticationResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/IndexController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/IndexController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/payload/JwtAuthenticationResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/payload/JwtAuthenticationResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/LeaveCountRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/LeaveCountRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveCountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveCountService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveRequestService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LeaveRequestService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LieuLeaveService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LieuLeaveService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/precache-manifest.50cc89f8d0ae0276452fe0af9b965c62.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.f4a60e2e.chunk.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.f4a60e2e.chunk.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.b7ae2359.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.b7ae2359.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/service-worker.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/auth/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/precache-manifest.50cc89f8d0ae0276452fe0af9b965c62.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/service-worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.f4a60e2e.chunk.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.f4a60e2e.chunk.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.b7ae2359.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.b7ae2359.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/AddEmployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/AddEmployee.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/AddLieu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/AddLieu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_end/src/container/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/index.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -45,11 +54,41 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
+            <state relative-caret-position="1485">
               <caret line="120" column="135" selection-start-line="120" selection-start-column="135" selection-end-line="120" selection-end-column="135" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1560">
+              <caret line="144" column="18" selection-start-line="144" selection-start-column="18" selection-end-line="144" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="261" column="50" selection-start-line="261" selection-start-column="50" selection-end-line="261" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -179,11 +218,11 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/payload/JwtAuthenticationResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" />
       </list>
     </option>
   </component>
@@ -199,10 +238,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1366" />
-    <option name="y" value="27" />
     <option name="width" value="1366" />
-    <option name="height" value="741" />
+    <option name="height" value="768" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -210,8 +247,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -276,6 +311,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -283,7 +320,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../sampath-ews/EWS/Backend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -386,16 +423,22 @@
       <workItem from="1611120273817" duration="43000" />
       <workItem from="1611120862926" duration="3997000" />
       <workItem from="1611128073320" duration="16000" />
+      <workItem from="1611662718335" duration="1068000" />
+      <workItem from="1611724289839" duration="14000" />
+      <workItem from="1611750363779" duration="797000" />
+      <workItem from="1612326914421" duration="14000" />
+      <workItem from="1615318252195" duration="1138000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="251654000" />
+    <option name="totallyTimeSpent" value="254685000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1366" y="27" width="1366" height="741" extended-state="6" />
+    <frame x="0" y="0" width="1366" height="768" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24848485" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26363635" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -411,7 +454,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Spring" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.3586777" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.16297469" />
       <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Java Enterprise" order="11" />
@@ -851,24 +894,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2685">
-          <caret line="197" column="56" selection-start-line="197" selection-start-column="56" selection-end-line="197" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/Calender.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="23" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -890,16 +919,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="101" selection-start-line="101" selection-end-line="101" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -931,6 +950,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1485">
+          <caret line="120" column="135" selection-start-line="120" selection-start-column="135" selection-end-line="120" selection-end-column="135" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1560">
+          <caret line="144" column="18" selection-start-line="144" selection-start-column="18" selection-end-line="144" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4200">
@@ -955,10 +991,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="120" column="135" selection-start-line="120" selection-start-column="135" selection-end-line="120" selection-end-column="135" />
+        <state relative-caret-position="15">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="261" column="50" selection-start-line="261" selection-start-column="50" selection-end-line="261" selection-end-column="50" />
         </state>
       </provider>
     </entry>

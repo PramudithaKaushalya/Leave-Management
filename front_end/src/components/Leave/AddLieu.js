@@ -228,7 +228,7 @@ render() {
         <Spin tip="Sending..." spinning={spinning}>
           <Row gutter={16}>
             <Col span={13} > 
-            <Card type="inner" title='Add Lieu Leaves' bordered={false} hoverable='true'>  
+            <Card type="inner" title='Add Lieu Leaves to Employees' bordered={false} hoverable='true'>  
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 
                     {this.state.employees.length!==0?  

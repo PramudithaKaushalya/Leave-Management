@@ -20,5 +20,5 @@ public interface LeaveCountRepository extends JpaRepository<LeaveCount, Integer>
 
     boolean existsByUserAndType(User employee, LeaveType leaveType);
 
-	LeaveCount findByUserAndType(User employee, LeaveType leaveType);
+	List<LeaveCount> findByUserAndType(User employee, LeaveType leaveType);
 }

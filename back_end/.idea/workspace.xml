@@ -3,34 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5bf2958d-41ba-4d00-b7fe-347f5285b0dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/precache-manifest.50cc89f8d0ae0276452fe0af9b965c62.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.f4a60e2e.chunk.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/css/main.f4a60e2e.chunk.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.b7ae2359.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/js/main.b7ae2359.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/precache-manifest.50cc89f8d0ae0276452fe0af9b965c62.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/build/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.f4a60e2e.chunk.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/css/main.f4a60e2e.chunk.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.b7ae2359.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/build/static/js/main.b7ae2359.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/AddEmployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/AddEmployee.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Employee/ViewEmployee.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/AddLieu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/AddLieu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/components/Leave/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/components/Leave/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/Sidebar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front_end/src/container/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../front_end/src/container/index.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -46,24 +20,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="915">
-              <caret line="80" selection-start-line="80" selection-end-line="80" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1485">
-              <caret line="120" column="135" selection-start-line="120" selection-start-column="135" selection-end-line="120" selection-end-column="135" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1560">
@@ -78,17 +34,53 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
+            <state relative-caret-position="195">
               <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="261" column="50" selection-start-line="261" selection-start-column="50" selection-end-line="261" selection-end-column="50" />
+            <state relative-caret-position="3900">
+              <caret line="278" column="17" selection-start-line="278" selection-start-column="17" selection-end-line="278" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/LeaveRequestController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="544">
+              <caret line="204" column="45" selection-start-line="204" selection-start-column="45" selection-end-line="204" selection-end-column="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveRequest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="42" column="21" selection-start-line="42" selection-start-column="17" selection-end-line="42" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -105,10 +97,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LieuLeave.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
+            <state relative-caret-position="210">
               <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
             </state>
           </provider>
@@ -134,9 +126,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>findByUserAndType(</find>
-      <find>profile</find>
-      <find>summery</find>
       <find>existsByUserAndType</find>
       <find>existsByUser</find>
       <find>leaveCountRepository</find>
@@ -164,6 +153,9 @@
       <find>getRemainingCountsOfLeaveTypes</find>
       <find>getLieuCount</find>
       <find>getCountsOfLeaveTypes</find>
+      <find>findByUserAndType</find>
+      <find>unable to get leave su</find>
+      <find>unable to get leave summery of</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -217,11 +209,11 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LieuLeaveController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/payload/JwtAuthenticationResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LieuLeaveService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java" />
       </list>
     </option>
@@ -247,6 +239,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -305,13 +298,21 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="demo" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="back_end" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
               <item name="service" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -320,7 +321,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ops-2020-admin-portal/backend" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -427,18 +428,21 @@
       <workItem from="1611724289839" duration="14000" />
       <workItem from="1611750363779" duration="797000" />
       <workItem from="1612326914421" duration="14000" />
-      <workItem from="1615318252195" duration="1138000" />
+      <workItem from="1615318252195" duration="2362000" />
+      <workItem from="1615365318071" duration="183000" />
+      <workItem from="1616647797468" duration="1795000" />
+      <workItem from="1616994242976" duration="15000" />
+      <workItem from="1617012466416" duration="806000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="254685000" />
+    <option name="totallyTimeSpent" value="258708000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="768" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26363635" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27727273" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -454,7 +458,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Spring" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.16297469" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.049050633" />
       <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Java Enterprise" order="11" />
@@ -857,13 +861,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/LeaveRequestController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2925">
-          <caret line="204" column="45" selection-start-line="204" selection-start-column="45" selection-end-line="204" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/ContactService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -877,13 +874,6 @@
           <folding>
             <element signature="e#0#890#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="22" column="14" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -901,24 +891,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="42" column="21" selection-start-line="42" selection-start-column="17" selection-end-line="42" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/Role.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -967,6 +943,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3900">
+          <caret line="278" column="17" selection-start-line="278" selection-start-column="17" selection-end-line="278" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/repository/LeaveCountRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveRequestService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4200">
@@ -977,13 +974,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LieuLeave.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/IndexController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -991,17 +981,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/User.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="105">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/service/LeaveCountService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/LeaveRequestController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="261" column="50" selection-start-line="261" selection-start-column="50" selection-end-line="261" selection-end-column="50" />
+        <state relative-caret-position="544">
+          <caret line="204" column="45" selection-start-line="204" selection-start-column="45" selection-end-line="204" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LeaveRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="17" selection-end-line="42" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/demo/model/LieuLeave.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
         </state>
       </provider>
     </entry>

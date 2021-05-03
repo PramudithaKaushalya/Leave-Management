@@ -259,8 +259,12 @@ public class LeaveCountService {
         leaveType.setLeave_type_id(leaveTypeId);
 
         if(leaveCountRepository.existsByUserAndType(employee, leaveType)){
-            LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, leaveType);
-            Float count = count_object.getCount();
+            List<LeaveCount> count_objects = leaveCountRepository.findByUserAndType(employee, leaveType);
+            Float count = 0.0F;
+            for (LeaveCount leaveCount : count_objects) {
+                count = count + leaveCount.getCount();
+            }
+            System.out.println(">>>>>>>>>>>>>> lieu count - "+count);
             summery.setUtilized(count);
         }else{
             summery.setUtilized(0.0F);
@@ -350,9 +354,13 @@ public class LeaveCountService {
         leaveType.setLeave_type_id(leaveTypeId);
 
         if(leaveCountRepository.existsByUserAndType(employee, leaveType)){
-            LeaveCount count_object = leaveCountRepository.findByUserAndType(employee, leaveType);
-            Float accepted = count_object.getCount();
-            Float pending = count_object.getPending();
+            List<LeaveCount> count_objects = leaveCountRepository.findByUserAndType(employee, leaveType);
+            Float accepted = 0.0F;
+            Float pending = 0.0F;
+            for (LeaveCount leaveCount : count_objects) {
+                accepted = accepted + leaveCount.getCount();
+                pending = pending + leaveCount.getPending();
+            }
             summery.setUtilized(accepted);
             summery.setPending(pending);
         }else{
